@@ -1,0 +1,1281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rolling Window Lottery Simulator</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0a0e17;
+  --surface: #111827;
+  --surface2: #1a2235;
+  --border: #2a3550;
+  --text: #e2e8f0;
+  --text-dim: #8892a8;
+  --accent: #3b82f6;
+  --green: #10b981;
+  --orange: #f59e0b;
+  --red: #ef4444;
+  --yellow: #fbbf24;
+  --mono: 'JetBrains Mono', monospace;
+  --sans: 'DM Sans', sans-serif;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--sans);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+.app {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 2rem 2rem 4rem;
+}
+
+header {
+  margin-bottom: 2.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--border);
+}
+
+header h1 {
+  font-family: var(--mono);
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin-bottom: 0.35rem;
+}
+
+header p {
+  color: var(--text-dim);
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+.controls-bar {
+  display: flex;
+  gap: 1.5rem;
+  align-items: flex-end;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+
+.control-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.control-group label {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-dim);
+}
+
+.control-group input {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text);
+  font-family: var(--mono);
+  font-size: 0.85rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  outline: none;
+  transition: border-color 0.2s;
+  width: 140px;
+}
+
+.control-group input:focus { border-color: var(--accent); }
+
+.btn {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 0.55rem 1.25rem;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.15s;
+  letter-spacing: 0.02em;
+}
+
+.btn-primary { background: var(--accent); color: white; }
+.btn-primary:hover { background: #2563eb; transform: translateY(-1px); }
+.btn-primary:active { transform: translateY(0); }
+.btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+.btn-secondary {
+  background: var(--surface2);
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+.btn-secondary:hover { background: var(--border); }
+
+.btn-green { background: var(--green); color: white; }
+.btn-green:hover { background: #059669; transform: translateY(-1px); }
+
+.btn-group { display: flex; gap: 0.5rem; align-items: flex-end; }
+
+.main-grid {
+  display: grid;
+  grid-template-columns: 340px 1fr;
+  gap: 2rem;
+  align-items: start;
+}
+
+.bids-panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.bids-panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.85rem 1rem;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface2);
+}
+
+.bids-panel-header h2 {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-dim);
+}
+
+.total-credits {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  color: var(--accent);
+}
+
+.bids-sort-bar {
+  display: grid;
+  grid-template-columns: 52px 1fr 80px;
+  align-items: center;
+  padding: 0.3rem 1rem;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface2);
+}
+
+.sort-btn {
+  background: none; border: none; color: var(--text-dim);
+  font-family: var(--mono); font-size: 0.65rem; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.06em; cursor: pointer;
+  padding: 0.25rem 0; text-align: left; transition: color 0.15s;
+  display: flex; align-items: center; gap: 0.25rem;
+}
+
+.sort-btn:last-child { text-align: right; justify-content: flex-end; }
+.sort-btn:hover { color: var(--text); }
+.sort-btn.active { color: var(--accent); }
+
+.sort-arrow { font-size: 0.6rem; opacity: 0; transition: opacity 0.15s; }
+.sort-btn.active .sort-arrow { opacity: 1; }
+
+.bids-list {
+  max-height: 640px; overflow-y: auto;
+  scrollbar-width: thin; scrollbar-color: var(--border) transparent;
+}
+
+.bid-row {
+  display: grid; grid-template-columns: 52px 1fr 80px;
+  align-items: center; padding: 0.4rem 1rem;
+  border-bottom: 1px solid rgba(42, 53, 80, 0.4); transition: background 0.1s;
+}
+
+.bid-row:hover { background: rgba(59, 130, 246, 0.04); }
+
+.team-abbr { font-family: var(--mono); font-size: 0.8rem; font-weight: 600; }
+
+.team-name {
+  font-size: 0.75rem; color: var(--text-dim);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+
+.bid-input {
+  background: var(--bg); border: 1px solid var(--border); color: var(--text);
+  font-family: var(--mono); font-size: 0.8rem; padding: 0.3rem 0.5rem;
+  border-radius: 4px; width: 100%; text-align: right; outline: none;
+  transition: border-color 0.2s;
+}
+
+.bid-input:focus { border-color: var(--accent); }
+
+.results-panel { display: flex; flex-direction: column; gap: 1.5rem; }
+
+.chart-container {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 10px; padding: 1.5rem; position: relative;
+}
+
+.chart-title {
+  font-family: var(--mono); font-size: 0.75rem; text-transform: uppercase;
+  letter-spacing: 0.08em; color: var(--text-dim); margin-bottom: 1rem;
+}
+
+canvas { width: 100% !important; height: auto !important; }
+
+.status-bar {
+  font-family: var(--mono); font-size: 0.75rem; color: var(--text-dim);
+  display: flex; gap: 2rem; align-items: center;
+}
+
+.status-bar .running { color: var(--orange); }
+.status-bar .done { color: var(--green); }
+
+.progress-bar-outer {
+  width: 200px; height: 4px; background: var(--surface2);
+  border-radius: 2px; overflow: hidden;
+}
+
+.progress-bar-inner {
+  height: 100%; background: var(--accent);
+  border-radius: 2px; transition: width 0.1s; width: 0%;
+}
+
+.summary-table-container {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 10px; overflow: hidden;
+}
+
+.summary-table-header {
+  padding: 0.85rem 1rem; border-bottom: 1px solid var(--border);
+  background: var(--surface2); font-family: var(--mono); font-size: 0.75rem;
+  text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-dim);
+}
+
+.summary-table {
+  width: 100%; border-collapse: collapse;
+  font-family: var(--mono); font-size: 0.75rem;
+}
+
+.summary-table th {
+  background: var(--surface2); color: var(--text-dim); font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.05em; font-size: 0.65rem;
+  padding: 0.5rem 0.6rem; text-align: right;
+  border-bottom: 1px solid var(--border); position: sticky; top: 0;
+}
+
+.summary-table th:first-child,
+.summary-table th:nth-child(2) { text-align: left; }
+
+.summary-table td {
+  padding: 0.4rem 0.6rem; text-align: right;
+  border-bottom: 1px solid rgba(42, 53, 80, 0.3);
+}
+
+.summary-table td:first-child,
+.summary-table td:nth-child(2) { text-align: left; }
+.summary-table td:first-child { font-weight: 600; }
+.summary-table td:nth-child(2) { color: var(--text-dim); }
+.summary-table tbody tr:hover { background: rgba(59, 130, 246, 0.04); }
+
+.summary-table-scroll {
+  max-height: 500px; overflow-y: auto;
+  scrollbar-width: thin; scrollbar-color: var(--border) transparent;
+}
+
+.preset-btns { display: flex; gap: 0.35rem; flex-wrap: wrap; }
+.btn-xs { font-size: 0.65rem; padding: 0.3rem 0.6rem; }
+
+.empty-state {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  min-height: 400px; color: var(--text-dim); font-family: var(--mono);
+  font-size: 0.85rem; text-align: center; gap: 0.5rem;
+}
+
+.empty-state .arrow { font-size: 2rem; opacity: 0.3; margin-bottom: 0.5rem; }
+
+.heatmap-container { position: relative; overflow-x: auto; }
+.heatmap-canvas { display: block; cursor: crosshair; }
+
+.heatmap-tooltip {
+  position: absolute; pointer-events: none; background: #1a2540;
+  border: 1px solid var(--accent); border-radius: 6px; padding: 0.55rem 0.85rem;
+  font-family: var(--mono); font-size: 0.8rem; color: var(--text);
+  white-space: nowrap; z-index: 100; display: none;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.6); line-height: 1.7;
+}
+
+.tt-team { font-weight: 700; color: var(--accent); }
+.tt-label { color: var(--text-dim); font-size: 0.7rem; }
+.tt-prob { font-weight: 700; font-size: 0.95rem; }
+
+/* --- Share bar --- */
+.share-bar {
+  display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap;
+}
+
+.share-url-input {
+  background: var(--bg); border: 1px solid var(--border); color: var(--text-dim);
+  font-family: var(--mono); font-size: 0.7rem; padding: 0.45rem 0.65rem;
+  border-radius: 6px; flex: 1; min-width: 200px; outline: none;
+  cursor: pointer; transition: border-color 0.2s;
+}
+
+.share-url-input:focus { border-color: var(--accent); color: var(--text); }
+
+.copied-flash {
+  font-family: var(--mono); font-size: 0.7rem; color: var(--green);
+  opacity: 0; transition: opacity 0.3s;
+}
+
+.copied-flash.show { opacity: 1; }
+
+/* --- Step-through panel --- */
+.stepthrough-panel {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 10px; overflow: hidden;
+}
+
+.stepthrough-header {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 0.85rem 1rem; border-bottom: 1px solid var(--border);
+  background: var(--surface2); cursor: pointer; user-select: none;
+}
+
+.stepthrough-header h2 {
+  font-family: var(--mono); font-size: 0.75rem; text-transform: uppercase;
+  letter-spacing: 0.08em; color: var(--text-dim);
+  display: flex; align-items: center; gap: 0.5rem;
+}
+
+.stepthrough-header .toggle-arrow {
+  font-size: 0.7rem; transition: transform 0.2s;
+}
+
+.stepthrough-header .toggle-arrow.open { transform: rotate(90deg); }
+
+.stepthrough-body {
+  display: none; padding: 1rem;
+}
+
+.stepthrough-body.open { display: block; }
+
+.step-controls {
+  display: flex; gap: 0.5rem; align-items: center; margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+.step-info {
+  font-family: var(--mono); font-size: 0.8rem; color: var(--text-dim);
+  margin-left: 0.5rem;
+}
+
+.step-table-scroll {
+  max-height: 500px; overflow-y: auto;
+  scrollbar-width: thin; scrollbar-color: var(--border) transparent;
+}
+
+.step-table {
+  width: 100%; border-collapse: collapse;
+  font-family: var(--mono); font-size: 0.75rem;
+}
+
+.step-table th {
+  background: var(--surface2); color: var(--text-dim); font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.05em; font-size: 0.65rem;
+  padding: 0.5rem 0.6rem; text-align: left;
+  border-bottom: 1px solid var(--border); position: sticky; top: 0;
+}
+
+.step-table th.r { text-align: right; }
+
+.step-table td {
+  padding: 0.45rem 0.6rem; text-align: left;
+  border-bottom: 1px solid rgba(42, 53, 80, 0.3);
+}
+
+.step-table td.r { text-align: right; }
+.step-table td.team-cell { font-weight: 600; }
+
+.step-table tr.in-window { background: rgba(59, 130, 246, 0.08); }
+.step-table tr.winner { background: rgba(16, 185, 129, 0.15); }
+.step-table tr.already-picked { opacity: 0.35; }
+
+.step-pick-label {
+  font-family: var(--mono); font-size: 0.85rem; font-weight: 700;
+  color: var(--accent); margin-bottom: 0.75rem;
+}
+
+.step-winner-banner {
+  font-family: var(--mono); font-size: 0.8rem; padding: 0.6rem 0.85rem;
+  background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3);
+  border-radius: 6px; margin-bottom: 1rem; color: var(--green);
+}
+
+.step-winner-banner .winner-team { font-weight: 700; color: var(--text); }
+.step-winner-banner .winner-detail { color: var(--text-dim); font-size: 0.7rem; }
+
+.step-allocated {
+  margin-top: 1rem; padding-top: 0.75rem;
+  border-top: 1px solid var(--border);
+}
+
+.step-allocated-title {
+  font-family: var(--mono); font-size: 0.7rem; text-transform: uppercase;
+  letter-spacing: 0.06em; color: var(--text-dim); margin-bottom: 0.5rem;
+}
+
+.step-allocated-list {
+  display: flex; flex-wrap: wrap; gap: 0.35rem;
+}
+
+.step-pick-chip {
+  font-family: var(--mono); font-size: 0.65rem; padding: 0.2rem 0.5rem;
+  background: var(--surface2); border: 1px solid var(--border);
+  border-radius: 4px; color: var(--text-dim);
+}
+
+.step-pick-chip .chip-pick { color: var(--accent); font-weight: 600; }
+.step-pick-chip .chip-team { color: var(--text); font-weight: 600; }
+
+@media (max-width: 900px) {
+  .main-grid { grid-template-columns: 1fr; }
+  .app { padding: 1rem; }
+  .controls-bar { flex-direction: column; align-items: stretch; }
+  .control-group input { width: 100%; }
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <h1>Rolling Window Lottery Simulator</h1>
+    <p>Simulate the Team-Building Credits draft lottery mechanism. Set bids for each team, run simulations, and visualize pick distributions.</p>
+  </header>
+
+  <div class="controls-bar">
+    <div class="control-group">
+      <label>Simulations</label>
+      <input type="number" id="numSims" value="10000" min="100" max="1000000" step="100">
+    </div>
+    <div class="control-group">
+      <label>Window Size</label>
+      <input type="number" id="windowSize" value="4" min="1" max="30">
+    </div>
+    <div class="btn-group">
+      <button class="btn btn-primary" id="runBtn" onclick="runSimulations()">Run Simulations</button>
+      <button class="btn btn-secondary" id="stopBtn" onclick="stopSimulations()" style="display:none;">Stop</button>
+    </div>
+    <div class="btn-group">
+      <div class="control-group">
+        <label>Presets</label>
+        <div class="preset-btns">
+          <button class="btn btn-secondary btn-xs" onclick="loadPreset('random')">Random</button>
+          <button class="btn btn-secondary btn-xs" onclick="loadPreset('uniform')">Uniform</button>
+          <button class="btn btn-secondary btn-xs" onclick="loadPreset('linear')">Linear</button>
+          <button class="btn btn-secondary btn-xs" onclick="loadPreset('skewed')">Skewed</button>
+        </div>
+      </div>
+    </div>
+    <div class="btn-group share-bar">
+      <button class="btn btn-secondary btn-xs" onclick="shareConfig()" title="Copy shareable URL">Share Link</button>
+      <input class="share-url-input" id="shareUrl" readonly onclick="this.select()" placeholder="Click Share Link to generate URL">
+      <span class="copied-flash" id="copiedFlash">Copied!</span>
+    </div>
+    <div class="status-bar" id="statusBar">
+      <span id="statusText">Ready</span>
+      <div class="progress-bar-outer" id="progressOuter" style="display:none;">
+        <div class="progress-bar-inner" id="progressInner"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="main-grid">
+    <div class="bids-panel">
+      <div class="bids-panel-header">
+        <h2>Team Bids</h2>
+        <span class="total-credits" id="totalCredits">Total: 0</span>
+      </div>
+      <div class="bids-sort-bar">
+        <button class="sort-btn active" id="sortTeamBtn" onclick="sortBidsBy('team')">
+          Team <span class="sort-arrow" id="sortTeamArrow">&#9650;</span>
+        </button>
+        <span></span>
+        <button class="sort-btn" id="sortBidBtn" onclick="sortBidsBy('bid')">
+          Bid <span class="sort-arrow" id="sortBidArrow">&#9660;</span>
+        </button>
+      </div>
+      <div class="bids-list" id="bidsList"></div>
+    </div>
+
+    <div class="results-panel">
+      <div class="chart-container" id="chartArea">
+        <div class="empty-state" id="emptyState">
+          <div class="arrow">&#8592;</div>
+          <div>Set team bids and click Run Simulations</div>
+          <div style="font-size:0.7rem; opacity:0.6;">Or load a preset to get started</div>
+        </div>
+        <div id="heatmapArea" style="display:none;">
+          <div class="chart-title">Pick Distribution by Bid Amount <span id="simCount"></span></div>
+          <div class="heatmap-container">
+            <canvas id="heatmapCanvas" class="heatmap-canvas"></canvas>
+            <div class="heatmap-tooltip" id="heatmapTooltip"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step-through panel -->
+      <div class="stepthrough-panel">
+        <div class="stepthrough-header" onclick="toggleStepthrough()">
+          <h2><span class="toggle-arrow" id="stepToggleArrow">&#9654;</span> Single Lottery Step-Through</h2>
+        </div>
+        <div class="stepthrough-body" id="stepBody">
+          <div class="step-controls">
+            <button class="btn btn-green btn-xs" onclick="stepNew()">New Lottery</button>
+            <button class="btn btn-secondary btn-xs" id="stepPrevBtn" onclick="stepPrev()" disabled>&#9664; Prev</button>
+            <button class="btn btn-primary btn-xs" id="stepNextBtn" onclick="stepNext()" disabled>Next &#9654;</button>
+            <button class="btn btn-secondary btn-xs" id="stepAllBtn" onclick="stepAll()" disabled>Skip to End</button>
+            <span class="step-info" id="stepInfo">Click "New Lottery" to begin</span>
+          </div>
+          <div id="stepContent"></div>
+        </div>
+      </div>
+
+      <div class="summary-table-container" id="summaryArea" style="display:none;">
+        <div class="summary-table-header">Summary Statistics</div>
+        <div class="summary-table-scroll">
+          <table class="summary-table">
+            <thead>
+              <tr>
+                <th>Team</th>
+                <th>Bid</th>
+                <th>Avg Pick</th>
+                <th>Median</th>
+                <th>Best</th>
+                <th>Worst</th>
+                <th>P(Top 3)</th>
+                <th>P(Top 10)</th>
+                <th>Avg Cost</th>
+                <th>Avg Refund</th>
+              </tr>
+            </thead>
+            <tbody id="summaryBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const TEAMS = [
+  { abbr: 'ATL', name: 'Atlanta Hawks' },
+  { abbr: 'BOS', name: 'Boston Celtics' },
+  { abbr: 'BKN', name: 'Brooklyn Nets' },
+  { abbr: 'CHA', name: 'Charlotte Hornets' },
+  { abbr: 'CHI', name: 'Chicago Bulls' },
+  { abbr: 'CLE', name: 'Cleveland Cavaliers' },
+  { abbr: 'DAL', name: 'Dallas Mavericks' },
+  { abbr: 'DEN', name: 'Denver Nuggets' },
+  { abbr: 'DET', name: 'Detroit Pistons' },
+  { abbr: 'GSW', name: 'Golden State Warriors' },
+  { abbr: 'HOU', name: 'Houston Rockets' },
+  { abbr: 'IND', name: 'Indiana Pacers' },
+  { abbr: 'LAC', name: 'LA Clippers' },
+  { abbr: 'LAL', name: 'Los Angeles Lakers' },
+  { abbr: 'MEM', name: 'Memphis Grizzlies' },
+  { abbr: 'MIA', name: 'Miami Heat' },
+  { abbr: 'MIL', name: 'Milwaukee Bucks' },
+  { abbr: 'MIN', name: 'Minnesota Timberwolves' },
+  { abbr: 'NOP', name: 'New Orleans Pelicans' },
+  { abbr: 'NYK', name: 'New York Knicks' },
+  { abbr: 'OKC', name: 'Oklahoma City Thunder' },
+  { abbr: 'ORL', name: 'Orlando Magic' },
+  { abbr: 'PHI', name: 'Philadelphia 76ers' },
+  { abbr: 'PHX', name: 'Phoenix Suns' },
+  { abbr: 'POR', name: 'Portland Trail Blazers' },
+  { abbr: 'SAC', name: 'Sacramento Kings' },
+  { abbr: 'SAS', name: 'San Antonio Spurs' },
+  { abbr: 'TOR', name: 'Toronto Raptors' },
+  { abbr: 'UTA', name: 'Utah Jazz' },
+  { abbr: 'WAS', name: 'Washington Wizards' },
+];
+
+let bids = new Array(30).fill(100);
+let simResults = null;
+let isRunning = false;
+let shouldStop = false;
+
+// --- Bids panel sorting ---
+let bidsSortField = 'team';
+let bidsSortDir = 'asc';
+
+function getBidsSortOrder() {
+  const indices = Array.from({ length: 30 }, (_, i) => i);
+  if (bidsSortField === 'team') {
+    indices.sort((a, b) => {
+      const cmp = TEAMS[a].abbr.localeCompare(TEAMS[b].abbr);
+      return bidsSortDir === 'asc' ? cmp : -cmp;
+    });
+  } else {
+    indices.sort((a, b) => {
+      const cmp = bids[a] - bids[b];
+      if (cmp !== 0) return bidsSortDir === 'asc' ? cmp : -cmp;
+      return TEAMS[a].abbr.localeCompare(TEAMS[b].abbr);
+    });
+  }
+  return indices;
+}
+
+function sortBidsBy(field) {
+  if (bidsSortField === field) {
+    bidsSortDir = bidsSortDir === 'asc' ? 'desc' : 'asc';
+  } else {
+    bidsSortField = field;
+    bidsSortDir = field === 'bid' ? 'desc' : 'asc';
+  }
+  updateSortButtons();
+  renderBidsList();
+}
+
+function updateSortButtons() {
+  document.getElementById('sortTeamBtn').classList.toggle('active', bidsSortField === 'team');
+  document.getElementById('sortBidBtn').classList.toggle('active', bidsSortField === 'bid');
+  document.getElementById('sortTeamArrow').innerHTML = bidsSortDir === 'asc' ? '&#9650;' : '&#9660;';
+  document.getElementById('sortBidArrow').innerHTML = bidsSortDir === 'asc' ? '&#9650;' : '&#9660;';
+}
+
+function renderBidsList() {
+  const list = document.getElementById('bidsList');
+  list.innerHTML = '';
+  for (const i of getBidsSortOrder()) {
+    const row = document.createElement('div');
+    row.className = 'bid-row';
+    row.innerHTML = `
+      <span class="team-abbr">${TEAMS[i].abbr}</span>
+      <span class="team-name">${TEAMS[i].name}</span>
+      <input class="bid-input" type="number" min="0" max="9999" value="${bids[i]}"
+        data-idx="${i}" onchange="updateBid(this)" onfocus="this.select()">
+    `;
+    list.appendChild(row);
+  }
+  updateTotal();
+}
+
+function updateBid(el) {
+  const idx = parseInt(el.dataset.idx);
+  bids[idx] = Math.max(0, parseInt(el.value) || 0);
+  updateTotal();
+}
+
+function updateTotal() {
+  const total = bids.reduce((a, b) => a + b, 0);
+  document.getElementById('totalCredits').textContent = `Total: ${total.toLocaleString()}`;
+}
+
+function loadPreset(type) {
+  if (type === 'random') {
+    bids = TEAMS.map(() => Math.floor(Math.random() * 200) + 1);
+  } else if (type === 'uniform') {
+    bids = new Array(30).fill(100);
+  } else if (type === 'linear') {
+    const shuffled = Array.from({ length: 30 }, (_, i) => i);
+    for (let i = 29; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    bids = new Array(30).fill(0);
+    for (let rank = 0; rank < 30; rank++) bids[shuffled[rank]] = 5 * rank;
+  } else if (type === 'skewed') {
+    bids = TEAMS.map(() => {
+      const z = (Math.random() + Math.random() + Math.random() - 1.5) / 0.5;
+      return Math.max(0, Math.min(500, Math.round(Math.exp(3.8 + 0.9 * z))));
+    });
+  }
+  renderBidsList();
+}
+
+// =============================================
+// URL SHARING
+// =============================================
+
+function shareConfig() {
+  const params = new URLSearchParams();
+  params.set('b', bids.join(','));
+  params.set('w', document.getElementById('windowSize').value);
+  params.set('n', document.getElementById('numSims').value);
+  const qs = '?' + params.toString();
+
+  // Try to build a full URL; fall back to just the query string if in an iframe
+  let url;
+  try {
+    const origin = window.location.origin;
+    const path = window.location.pathname;
+    if (origin && origin !== 'null' && !path.includes('srcdoc')) {
+      url = origin + path + qs;
+    } else {
+      url = qs;
+    }
+  } catch (e) {
+    url = qs;
+  }
+
+  const input = document.getElementById('shareUrl');
+  input.value = url;
+  input.select();
+
+  navigator.clipboard.writeText(url).then(() => {
+    const flash = document.getElementById('copiedFlash');
+    flash.classList.add('show');
+    setTimeout(() => flash.classList.remove('show'), 1500);
+  }).catch(() => {});
+}
+
+function loadFromUrl() {
+  const params = new URLSearchParams(window.location.search);
+  if (params.has('b')) {
+    const vals = params.get('b').split(',').map(Number);
+    if (vals.length === 30 && vals.every(v => !isNaN(v) && v >= 0)) {
+      bids = vals;
+    }
+  }
+  if (params.has('w')) {
+    const w = parseInt(params.get('w'));
+    if (w >= 1 && w <= 30) document.getElementById('windowSize').value = w;
+  }
+  if (params.has('n')) {
+    const n = parseInt(params.get('n'));
+    if (n >= 100 && n <= 1000000) document.getElementById('numSims').value = n;
+  }
+}
+
+// =============================================
+// HEATMAP
+// =============================================
+
+const HEATMAP = { cellW: 38, cellH: 32, labelW: 86, labelH: 68, bidColW: 60 };
+let heatmapSortedTeams = [];
+
+// =============================================
+// SIMULATION
+// =============================================
+
+function simulateOnce(teamBids, windowSize) {
+  const n = teamBids.length;
+  const indices = Array.from({ length: n }, (_, i) => i);
+  const tiebreakers = indices.map(() => Math.random());
+  indices.sort((a, b) => {
+    if (teamBids[b] !== teamBids[a]) return teamBids[b] - teamBids[a];
+    return tiebreakers[a] - tiebreakers[b];
+  });
+
+  const picks = new Array(n).fill(-1);
+  const costs = new Array(n).fill(0);
+  const sortedBids = indices.map(i => teamBids[i]);
+
+  const zeroBidders = [];
+  const nonZeroBidders = [];
+  for (let j = 0; j < n; j++) {
+    if (sortedBids[j] === 0) zeroBidders.push(j);
+    else nonZeroBidders.push(j);
+  }
+
+  let pickNum = 0;
+  let windowStart = 0;
+  let win = [];
+  for (let j = 0; j < Math.min(windowSize, nonZeroBidders.length); j++) {
+    win.push(nonZeroBidders[j]);
+    windowStart = j + 1;
+  }
+
+  while (win.length > 0 && pickNum < n) {
+    const totalInWindow = win.reduce((s, j) => s + sortedBids[j], 0);
+    if (totalInWindow === 0) break;
+    let r = Math.random() * totalInWindow;
+    let winnerIdx = win[0];
+    for (const j of win) { r -= sortedBids[j]; if (r <= 0) { winnerIdx = j; break; } }
+    const minBid = Math.min(...win.map(j => sortedBids[j]));
+    picks[indices[winnerIdx]] = pickNum;
+    costs[indices[winnerIdx]] = minBid;
+    pickNum++;
+    win = win.filter(j => j !== winnerIdx);
+    if (windowStart < nonZeroBidders.length) { win.push(nonZeroBidders[windowStart]); windowStart++; }
+    if (win.length === 0 && windowStart < nonZeroBidders.length) { win.push(nonZeroBidders[windowStart]); windowStart++; }
+  }
+
+  while (win.length > 0 && pickNum < n) {
+    const totalInWindow = win.reduce((s, j) => s + sortedBids[j], 0);
+    if (totalInWindow === 0) break;
+    let r = Math.random() * totalInWindow;
+    let winnerIdx = win[0];
+    for (const j of win) { r -= sortedBids[j]; if (r <= 0) { winnerIdx = j; break; } }
+    const minBid = Math.min(...win.map(j => sortedBids[j]));
+    picks[indices[winnerIdx]] = pickNum;
+    costs[indices[winnerIdx]] = minBid;
+    win = win.filter(j => j !== winnerIdx);
+    pickNum++;
+  }
+
+  const shuffled = zeroBidders.sort(() => Math.random() - 0.5);
+  for (const j of shuffled) { picks[indices[j]] = pickNum; costs[indices[j]] = 0; pickNum++; }
+
+  return { picks, costs };
+}
+
+async function runSimulations() {
+  const numSims = Math.min(1000000, Math.max(100, parseInt(document.getElementById('numSims').value) || 10000));
+  const windowSize = Math.min(30, Math.max(1, parseInt(document.getElementById('windowSize').value) || 4));
+  document.getElementById('numSims').value = numSims;
+  document.getElementById('windowSize').value = windowSize;
+
+  const teamBids = [...bids];
+  const n = 30;
+  const pickDist = Array.from({ length: n }, () => new Array(n).fill(0));
+  const totalCosts = new Array(n).fill(0);
+
+  isRunning = true; shouldStop = false;
+  document.getElementById('runBtn').disabled = true;
+  document.getElementById('stopBtn').style.display = '';
+  document.getElementById('progressOuter').style.display = '';
+
+  const batchSize = 500;
+  let completed = 0;
+  const statusText = document.getElementById('statusText');
+  const progressInner = document.getElementById('progressInner');
+
+  for (let batch = 0; batch < numSims && !shouldStop; batch += batchSize) {
+    const end = Math.min(batch + batchSize, numSims);
+    for (let s = batch; s < end; s++) {
+      const result = simulateOnce(teamBids, windowSize);
+      for (let t = 0; t < n; t++) { pickDist[t][result.picks[t]]++; totalCosts[t] += result.costs[t]; }
+    }
+    completed = end;
+    statusText.innerHTML = `<span class="running">Running...</span> ${completed.toLocaleString()} / ${numSims.toLocaleString()}`;
+    progressInner.style.width = (completed / numSims * 100).toFixed(0) + '%';
+    await new Promise(r => setTimeout(r, 0));
+  }
+
+  isRunning = false;
+  document.getElementById('runBtn').disabled = false;
+  document.getElementById('stopBtn').style.display = 'none';
+  statusText.innerHTML = shouldStop
+    ? `<span class="done">Stopped</span> at ${completed.toLocaleString()} simulations`
+    : `<span class="done">Done</span> \u2014 ${completed.toLocaleString()} simulations`;
+
+  simResults = { pickDist, totalCosts, numSims: completed, teamBids, windowSize };
+  renderResults();
+}
+
+function stopSimulations() { shouldStop = true; }
+
+function renderResults() {
+  if (!simResults) return;
+  const { pickDist, totalCosts, numSims, teamBids } = simResults;
+  const n = 30;
+
+  document.getElementById('emptyState').style.display = 'none';
+  document.getElementById('heatmapArea').style.display = '';
+  document.getElementById('summaryArea').style.display = '';
+  document.getElementById('simCount').textContent = `(n = ${numSims.toLocaleString()})`;
+
+  const sortedTeams = Array.from({ length: n }, (_, i) => i);
+  sortedTeams.sort((a, b) => teamBids[b] - teamBids[a]);
+  heatmapSortedTeams = sortedTeams;
+
+  renderHeatmap(sortedTeams, pickDist, teamBids, numSims);
+  renderSummary(sortedTeams, pickDist, totalCosts, teamBids, numSims);
+}
+
+function renderHeatmap(sortedTeams, pickDist, teamBids, numSims) {
+  const canvas = document.getElementById('heatmapCanvas');
+  const ctx = canvas.getContext('2d');
+  const n = 30;
+  const { cellW, cellH, labelW, labelH, bidColW } = HEATMAP;
+
+  const width = labelW + bidColW + n * cellW + 12;
+  const height = labelH + n * cellH + 12;
+
+  const dpr = window.devicePixelRatio || 1;
+  canvas.width = width * dpr;
+  canvas.height = height * dpr;
+  canvas.style.width = width + 'px';
+  canvas.style.height = height + 'px';
+  ctx.scale(dpr, dpr);
+  ctx.clearRect(0, 0, width, height);
+
+  let maxProb = 0;
+  for (let t = 0; t < n; t++) for (let p = 0; p < n; p++) {
+    const prob = pickDist[t][p] / numSims;
+    if (prob > maxProb) maxProb = prob;
+  }
+
+  ctx.font = `600 14px 'JetBrains Mono', monospace`;
+  ctx.fillStyle = '#8892a8'; ctx.textAlign = 'center';
+  for (let p = 0; p < n; p++) ctx.fillText(String(p + 1), labelW + bidColW + p * cellW + cellW / 2, labelH - 14);
+
+  ctx.font = `700 13px 'JetBrains Mono', monospace`;
+  ctx.fillText('Pick \u2192', labelW + bidColW + (n * cellW) / 2, labelH - 42);
+
+  ctx.textAlign = 'right';
+  ctx.font = `700 13px 'JetBrains Mono', monospace`;
+  ctx.fillText('BID', labelW + bidColW - 10, labelH - 14);
+
+  for (let row = 0; row < n; row++) {
+    const teamIdx = sortedTeams[row];
+    const y = labelH + row * cellH;
+
+    ctx.textAlign = 'left';
+    ctx.font = `700 14px 'JetBrains Mono', monospace`;
+    ctx.fillStyle = '#e2e8f0';
+    ctx.fillText(TEAMS[teamIdx].abbr, 8, y + cellH / 2 + 5);
+
+    ctx.textAlign = 'right';
+    ctx.font = `500 13px 'JetBrains Mono', monospace`;
+    ctx.fillStyle = '#8892a8';
+    ctx.fillText(String(teamBids[teamIdx]), labelW + bidColW - 10, y + cellH / 2 + 5);
+
+    for (let p = 0; p < n; p++) {
+      const prob = pickDist[teamIdx][p] / numSims;
+      const x = labelW + bidColW + p * cellW;
+      const rawIntensity = maxProb > 0 ? prob / maxProb : 0;
+      const intensity = Math.sqrt(rawIntensity);
+      const cr = Math.round(10 + (59 - 10) * intensity);
+      const cg = Math.round(14 + (130 - 14) * intensity);
+      const cb = Math.round(23 + (246 - 23) * intensity);
+      ctx.fillStyle = `rgba(${cr}, ${cg}, ${cb}, ${0.06 + 0.94 * intensity})`;
+      ctx.fillRect(x + 0.5, y + 0.5, cellW - 1, cellH - 1);
+
+      if (prob >= 0.005) {
+        const pctVal = Math.round(prob * 100);
+        if (pctVal > 0) {
+          ctx.textAlign = 'center';
+          ctx.font = `600 11px 'JetBrains Mono', monospace`;
+          ctx.fillStyle = intensity > 0.3 ? '#ffffff' : '#5a6a84';
+          ctx.fillText(String(pctVal), x + cellW / 2, y + cellH / 2 + 4);
+        }
+      }
+    }
+  }
+}
+
+// --- Hover tooltip ---
+(function setupHover() {
+  const canvas = document.getElementById('heatmapCanvas');
+  const tooltip = document.getElementById('heatmapTooltip');
+  const container = canvas.parentElement;
+
+  canvas.addEventListener('mousemove', function(e) {
+    if (!simResults) { tooltip.style.display = 'none'; return; }
+    const rect = canvas.getBoundingClientRect();
+    const scaleX = parseFloat(canvas.style.width) / rect.width;
+    const scaleY = parseFloat(canvas.style.height) / rect.height;
+    const mx = (e.clientX - rect.left) * scaleX;
+    const my = (e.clientY - rect.top) * scaleY;
+    const { cellW, cellH, labelW, labelH, bidColW } = HEATMAP;
+    const col = Math.floor((mx - labelW - bidColW) / cellW);
+    const row = Math.floor((my - labelH) / cellH);
+    if (col < 0 || col >= 30 || row < 0 || row >= 30) { tooltip.style.display = 'none'; return; }
+    const teamIdx = heatmapSortedTeams[row];
+    const count = simResults.pickDist[teamIdx][col];
+    const prob = count / simResults.numSims;
+    tooltip.innerHTML =
+      `<span class="tt-team">${TEAMS[teamIdx].abbr}</span> ${TEAMS[teamIdx].name}<br>` +
+      `<span class="tt-label">Pick</span> #${col + 1} &nbsp;&middot;&nbsp; <span class="tt-label">Bid</span> ${simResults.teamBids[teamIdx]}<br>` +
+      `<span class="tt-prob">${(prob * 100).toFixed(2)}%</span> <span class="tt-label">(${count.toLocaleString()} / ${simResults.numSims.toLocaleString()})</span>`;
+    tooltip.style.display = 'block';
+    const cr = container.getBoundingClientRect();
+    let tx = e.clientX - cr.left + 16, ty = e.clientY - cr.top - 10;
+    if (tx + tooltip.offsetWidth + 4 > container.clientWidth) tx = e.clientX - cr.left - tooltip.offsetWidth - 12;
+    if (ty + tooltip.offsetHeight + 4 > container.clientHeight) ty = e.clientY - cr.top - tooltip.offsetHeight - 12;
+    if (ty < 0) ty = 4;
+    tooltip.style.left = tx + 'px'; tooltip.style.top = ty + 'px';
+  });
+
+  canvas.addEventListener('mouseleave', () => { tooltip.style.display = 'none'; });
+})();
+
+// --- Summary table ---
+function renderSummary(sortedTeams, pickDist, totalCosts, teamBids, numSims) {
+  const n = 30;
+  const tbody = document.getElementById('summaryBody');
+  tbody.innerHTML = '';
+  for (const teamIdx of sortedTeams) {
+    const dist = pickDist[teamIdx]; const bid = teamBids[teamIdx];
+    let avgPick = 0;
+    for (let p = 0; p < n; p++) avgPick += (p + 1) * dist[p];
+    avgPick /= numSims;
+    let cumul = 0, median = 30;
+    for (let p = 0; p < n; p++) { cumul += dist[p]; if (cumul >= numSims / 2) { median = p + 1; break; } }
+    let best = 30, worst = 1;
+    for (let p = 0; p < n; p++) { if (dist[p] > 0) { best = p + 1; break; } }
+    for (let p = n - 1; p >= 0; p--) { if (dist[p] > 0) { worst = p + 1; break; } }
+    let pTop3 = 0, pTop10 = 0;
+    for (let p = 0; p < 3; p++) pTop3 += dist[p];
+    for (let p = 0; p < 10; p++) pTop10 += dist[p];
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${TEAMS[teamIdx].abbr}</td><td>${bid}</td>
+      <td>${avgPick.toFixed(1)}</td><td>${median}</td>
+      <td>${best}</td><td>${worst}</td>
+      <td>${(pTop3 / numSims * 100).toFixed(1)}%</td>
+      <td>${(pTop10 / numSims * 100).toFixed(1)}%</td>
+      <td>${(totalCosts[teamIdx] / numSims).toFixed(1)}</td>
+      <td>${(bid - totalCosts[teamIdx] / numSims).toFixed(1)}</td>`;
+    tbody.appendChild(tr);
+  }
+}
+
+// =============================================
+// STEP-THROUGH MODE
+// =============================================
+
+let stepState = null; // full pre-computed lottery state
+
+function toggleStepthrough() {
+  const body = document.getElementById('stepBody');
+  const arrow = document.getElementById('stepToggleArrow');
+  body.classList.toggle('open');
+  arrow.classList.toggle('open');
+}
+
+function stepNew() {
+  const windowSize = Math.min(30, Math.max(1, parseInt(document.getElementById('windowSize').value) || 4));
+  const teamBids = [...bids];
+  const n = 30;
+
+  // Sort by bid desc with random tiebreaker
+  const indices = Array.from({ length: n }, (_, i) => i);
+  const tiebreakers = indices.map(() => Math.random());
+  indices.sort((a, b) => {
+    if (teamBids[b] !== teamBids[a]) return teamBids[b] - teamBids[a];
+    return tiebreakers[a] - tiebreakers[b];
+  });
+  const sortedBids = indices.map(i => teamBids[i]);
+
+  const zeroBidders = [];
+  const nonZeroBidders = [];
+  for (let j = 0; j < n; j++) {
+    if (sortedBids[j] === 0) zeroBidders.push(j);
+    else nonZeroBidders.push(j);
+  }
+
+  // Pre-compute all picks
+  const steps = []; // each: { pickNum, window (array of {sortIdx, teamIdx, bid, prob}), winnerTeamIdx, minBid, cost, refund }
+  const allocated = []; // grows as we go: { pickNum, teamIdx, bid, cost, refund }
+
+  let pickNum = 0;
+  let windowStart = 0;
+  let win = [];
+  for (let j = 0; j < Math.min(windowSize, nonZeroBidders.length); j++) {
+    win.push(nonZeroBidders[j]); windowStart = j + 1;
+  }
+
+  while (win.length > 0 && pickNum < n) {
+    const totalInWindow = win.reduce((s, j) => s + sortedBids[j], 0);
+    if (totalInWindow === 0) break;
+
+    const windowInfo = win.map(j => ({
+      sortIdx: j, teamIdx: indices[j], bid: sortedBids[j],
+      prob: sortedBids[j] / totalInWindow
+    }));
+
+    let r = Math.random() * totalInWindow;
+    let winnerSortIdx = win[0];
+    for (const j of win) { r -= sortedBids[j]; if (r <= 0) { winnerSortIdx = j; break; } }
+
+    const minBid = Math.min(...win.map(j => sortedBids[j]));
+    const winnerTeamIdx = indices[winnerSortIdx];
+    const winnerBid = teamBids[winnerTeamIdx];
+
+    steps.push({
+      pickNum,
+      window: windowInfo,
+      winnerTeamIdx,
+      winnerBid,
+      minBid,
+      cost: minBid,
+      refund: winnerBid - minBid,
+    });
+
+    pickNum++;
+    win = win.filter(j => j !== winnerSortIdx);
+    if (windowStart < nonZeroBidders.length) { win.push(nonZeroBidders[windowStart]); windowStart++; }
+    if (win.length === 0 && windowStart < nonZeroBidders.length) { win.push(nonZeroBidders[windowStart]); windowStart++; }
+  }
+
+  // Tail
+  while (win.length > 0 && pickNum < n) {
+    const totalInWindow = win.reduce((s, j) => s + sortedBids[j], 0);
+    if (totalInWindow === 0) break;
+    const windowInfo = win.map(j => ({
+      sortIdx: j, teamIdx: indices[j], bid: sortedBids[j],
+      prob: sortedBids[j] / totalInWindow
+    }));
+    let r = Math.random() * totalInWindow;
+    let winnerSortIdx = win[0];
+    for (const j of win) { r -= sortedBids[j]; if (r <= 0) { winnerSortIdx = j; break; } }
+    const minBid = Math.min(...win.map(j => sortedBids[j]));
+    const winnerTeamIdx = indices[winnerSortIdx];
+    steps.push({
+      pickNum, window: windowInfo, winnerTeamIdx,
+      winnerBid: teamBids[winnerTeamIdx], minBid, cost: minBid,
+      refund: teamBids[winnerTeamIdx] - minBid,
+    });
+    pickNum++;
+    win = win.filter(j => j !== winnerSortIdx);
+  }
+
+  // Zero bidders
+  const shuffledZero = [...zeroBidders].sort(() => Math.random() - 0.5);
+  for (const j of shuffledZero) {
+    steps.push({
+      pickNum,
+      window: [{ sortIdx: j, teamIdx: indices[j], bid: 0, prob: 1 }],
+      winnerTeamIdx: indices[j],
+      winnerBid: 0, minBid: 0, cost: 0, refund: 0,
+      isZeroBid: true,
+    });
+    pickNum++;
+  }
+
+  stepState = {
+    steps,
+    teamBids,
+    windowSize,
+    currentStep: -1, // -1 means "before first pick"
+    indices,
+    sortedBids,
+  };
+
+  document.getElementById('stepNextBtn').disabled = false;
+  document.getElementById('stepAllBtn').disabled = false;
+  document.getElementById('stepPrevBtn').disabled = true;
+  document.getElementById('stepInfo').textContent = `Lottery ready \u2014 ${steps.length} picks to assign`;
+  renderStep();
+}
+
+function stepNext() {
+  if (!stepState || stepState.currentStep >= stepState.steps.length - 1) return;
+  stepState.currentStep++;
+  updateStepButtons();
+  renderStep();
+}
+
+function stepPrev() {
+  if (!stepState || stepState.currentStep < 0) return;
+  stepState.currentStep--;
+  updateStepButtons();
+  renderStep();
+}
+
+function stepAll() {
+  if (!stepState) return;
+  stepState.currentStep = stepState.steps.length - 1;
+  updateStepButtons();
+  renderStep();
+}
+
+function updateStepButtons() {
+  const s = stepState;
+  document.getElementById('stepPrevBtn').disabled = s.currentStep < 0;
+  document.getElementById('stepNextBtn').disabled = s.currentStep >= s.steps.length - 1;
+  document.getElementById('stepAllBtn').disabled = s.currentStep >= s.steps.length - 1;
+  const shown = s.currentStep + 1;
+  document.getElementById('stepInfo').textContent = shown === 0
+    ? `Lottery ready \u2014 ${s.steps.length} picks`
+    : `Pick ${shown} of ${s.steps.length}`;
+}
+
+function renderStep() {
+  const container = document.getElementById('stepContent');
+  const s = stepState;
+  if (!s) { container.innerHTML = ''; return; }
+
+  if (s.currentStep < 0) {
+    // Show initial bid order
+    container.innerHTML = renderInitialBidOrder();
+    return;
+  }
+
+  const step = s.steps[s.currentStep];
+  const allocated = s.steps.slice(0, s.currentStep + 1);
+
+  let html = '';
+
+  // Pick label
+  html += `<div class="step-pick-label">Pick #${step.pickNum + 1}${step.isZeroBid ? ' (zero-bid)' : ''}</div>`;
+
+  // Winner banner
+  const w = TEAMS[step.winnerTeamIdx];
+  html += `<div class="step-winner-banner">`;
+  html += `<span class="winner-team">${w.abbr}</span> ${w.name} wins pick #${step.pickNum + 1}`;
+  html += `<br><span class="winner-detail">Bid: ${step.winnerBid} &nbsp;\u2022&nbsp; Charged: ${step.cost} &nbsp;\u2022&nbsp; Refund: ${step.refund}</span>`;
+  html += `</div>`;
+
+  // Window table
+  if (!step.isZeroBid) {
+    html += `<div class="step-table-scroll"><table class="step-table">`;
+    html += `<thead><tr><th>Team</th><th>Bid</th><th class="r">Probability</th><th class="r">Result</th></tr></thead><tbody>`;
+    for (const entry of step.window) {
+      const t = TEAMS[entry.teamIdx];
+      const isWinner = entry.teamIdx === step.winnerTeamIdx;
+      const cls = isWinner ? 'winner' : '';
+      html += `<tr class="${cls}">`;
+      html += `<td class="team-cell">${t.abbr}</td>`;
+      html += `<td>${entry.bid}</td>`;
+      html += `<td class="r">${(entry.prob * 100).toFixed(1)}%</td>`;
+      html += `<td class="r">${isWinner ? '\u2705 Winner' : ''}</td>`;
+      html += `</tr>`;
+    }
+    html += `</tbody></table></div>`;
+  }
+
+  // Allocated picks so far
+  html += `<div class="step-allocated">`;
+  html += `<div class="step-allocated-title">Picks allocated (${allocated.length} / ${s.steps.length})</div>`;
+  html += `<div class="step-allocated-list">`;
+  for (const a of allocated) {
+    const t = TEAMS[a.winnerTeamIdx];
+    html += `<span class="step-pick-chip"><span class="chip-pick">#${a.pickNum + 1}</span> <span class="chip-team">${t.abbr}</span></span>`;
+  }
+  html += `</div></div>`;
+
+  container.innerHTML = html;
+}
+
+function renderInitialBidOrder() {
+  const s = stepState;
+  let html = `<div class="step-pick-label">Initial Bid Order</div>`;
+  html += `<div class="step-table-scroll"><table class="step-table">`;
+  html += `<thead><tr><th>#</th><th>Team</th><th class="r">Bid</th></tr></thead><tbody>`;
+  for (let i = 0; i < s.indices.length; i++) {
+    const teamIdx = s.indices[i];
+    const t = TEAMS[teamIdx];
+    const bid = s.teamBids[teamIdx];
+    const inFirstWindow = i < s.windowSize && bid > 0;
+    html += `<tr class="${inFirstWindow ? 'in-window' : ''} ${bid === 0 ? 'already-picked' : ''}">`;
+    html += `<td>${i + 1}</td><td class="team-cell">${t.abbr}</td><td class="r">${bid}</td>`;
+    html += `</tr>`;
+  }
+  html += `</tbody></table></div>`;
+  html += `<div style="font-family:var(--mono);font-size:0.7rem;color:var(--text-dim);margin-top:0.5rem;">`;
+  html += `Highlighted rows = initial window (top ${s.windowSize} bidders). Click Next to draw pick #1.</div>`;
+  return html;
+}
+
+// =============================================
+// INIT
+// =============================================
+
+loadFromUrl();
+renderBidsList();
+if (bids.every(b => b === 100)) loadPreset('linear'); // only apply default if no URL params loaded
+
+</script>
+</body>
+</html>
