@@ -14,8 +14,8 @@
   --text-tertiary: #888;
   --rule: #d4d0c8;
   --rule-light: #e8e4dc;
-  --accent: #8b2500;
-  --accent-light: #a63a1a;
+  --accent: #007A33;
+  --accent-light: #009940;
   --surface: #f2efe8;
   --white: #fff;
   --highlight: #e8f0e0;
@@ -173,8 +173,8 @@ body {
 .btn-primary:hover { background: #333; }
 .btn-primary:disabled { opacity: 0.4; cursor: not-allowed; }
 
-.btn-green { background: #2d5016; color: var(--bg); border-color: #2d5016; }
-.btn-green:hover { background: #3a6a1d; }
+.btn-green { background: #007A33; color: var(--bg); border-color: #007A33; }
+.btn-green:hover { background: #009940; }
 
 .btn-xs { font-size: 0.65rem; padding: 0.3rem 0.55rem; }
 
@@ -202,7 +202,7 @@ body {
 .copied-flash {
   font-family: var(--mono);
   font-size: 0.65rem;
-  color: #2d5016;
+  color: #007A33;
   opacity: 0;
   transition: opacity 0.3s;
 }
@@ -219,7 +219,7 @@ body {
 }
 
 .status-bar .running { color: var(--accent); }
-.status-bar .done { color: #2d5016; }
+.status-bar .done { color: #007A33; }
 
 .progress-bar-outer {
   width: 160px;
@@ -569,7 +569,7 @@ canvas { width: 100% !important; height: auto !important; }
   font-size: 0.72rem;
   padding: 0.5rem 0.7rem;
   background: var(--highlight);
-  border: 1px solid #b5c9a0;
+  border: 1px solid #80c4a0;
   margin-bottom: 0.75rem;
 }
 
@@ -957,12 +957,12 @@ function renderHeatmap(sortedTeams, pickDist, teamBids, numSims) {
       const raw = maxProb > 0 ? prob / maxProb : 0;
       const intensity = Math.sqrt(raw);
 
-      // Warm amber tint for heatmap
+      // Green tint for heatmap
       if (intensity > 0.02) {
         const alpha = 0.05 + 0.75 * intensity;
-        const r = Math.round(139 + (220 - 139) * (1 - intensity));
-        const g = Math.round(37 + (180 - 37) * (1 - intensity));
-        const b = Math.round(0 + (80 - 0) * (1 - intensity));
+        const r = Math.round(0 + (180 - 0) * (1 - intensity));
+        const g = Math.round(122 + (210 - 122) * (1 - intensity));
+        const b = Math.round(51 + (160 - 51) * (1 - intensity));
         ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${alpha})`;
         ctx.fillRect(x + 0.5, y + 0.5, cellW - 1, cellH - 1);
       }
@@ -971,7 +971,7 @@ function renderHeatmap(sortedTeams, pickDist, teamBids, numSims) {
         const pctVal = Math.round(prob * 100);
         if (pctVal > 0) {
           ctx.textAlign = 'center'; ctx.font = `500 10px 'IBM Plex Mono', monospace`;
-          ctx.fillStyle = intensity > 0.55 ? '#fff' : intensity > 0.25 ? '#5a3a1a' : '#aaa';
+          ctx.fillStyle = intensity > 0.55 ? '#fff' : intensity > 0.25 ? '#1a4a2a' : '#aaa';
           ctx.fillText(String(pctVal), x + cellW / 2, y + cellH / 2 + 4);
         }
       }
