@@ -3,23 +3,22 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Rolling Window Lottery Simulator</title>
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<title>Team-Building Credits — A Proposal for NBA Draft Reform</title>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,300;1,8..60,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg: #0a0e17;
-  --surface: #111827;
-  --surface2: #1a2235;
-  --border: #2a3550;
-  --text: #e2e8f0;
-  --text-dim: #8892a8;
-  --accent: #3b82f6;
-  --green: #10b981;
-  --orange: #f59e0b;
-  --red: #ef4444;
-  --yellow: #fbbf24;
-  --mono: 'JetBrains Mono', monospace;
-  --sans: 'DM Sans', sans-serif;
+  --bg: #faf8f4;
+  --text: #1a1a1a;
+  --text-secondary: #555;
+  --text-tertiary: #888;
+  --rule: #d4d0c8;
+  --rule-light: #e8e4dc;
+  --accent: #8b2500;
+  --accent-light: #a63a1a;
+  --surface: #f2efe8;
+  --white: #fff;
+  --serif: 'Source Serif 4', Georgia, serif;
+  --mono: 'IBM Plex Mono', 'Menlo', monospace;
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -27,1255 +26,489 @@
 body {
   background: var(--bg);
   color: var(--text);
-  font-family: var(--sans);
-  min-height: 100vh;
-  overflow-x: hidden;
+  font-family: var(--serif);
+  font-size: 17px;
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
 }
 
-.app {
-  max-width: 1440px;
+/* --- Nav --- */
+.site-nav {
+  border-bottom: 1px solid var(--rule);
+  position: sticky;
+  top: 0;
+  z-index: 200;
+  background: var(--bg);
+}
+
+.site-nav-inner {
+  max-width: 720px;
   margin: 0 auto;
-  padding: 2rem 2rem 4rem;
-}
-
-header {
-  margin-bottom: 2.5rem;
-  padding-bottom: 1.5rem;
-  border-bottom: 1px solid var(--border);
-}
-
-header h1 {
-  font-family: var(--mono);
-  font-size: 1.5rem;
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  margin-bottom: 0.35rem;
-}
-
-header p {
-  color: var(--text-dim);
-  font-size: 0.875rem;
-  line-height: 1.5;
-}
-
-.controls-bar {
+  padding: 0 1.5rem;
   display: flex;
-  gap: 1.5rem;
-  align-items: flex-end;
-  margin-bottom: 2rem;
-  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0;
 }
 
-.control-group {
-  display: flex;
-  flex-direction: column;
-  gap: 0.35rem;
-}
-
-.control-group label {
+.site-nav-title {
   font-family: var(--mono);
   font-size: 0.7rem;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--text-dim);
-}
-
-.control-group input {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  color: var(--text);
-  font-family: var(--mono);
-  font-size: 0.85rem;
-  padding: 0.5rem 0.75rem;
-  border-radius: 6px;
-  outline: none;
-  transition: border-color 0.2s;
-  width: 140px;
-}
-
-.control-group input:focus { border-color: var(--accent); }
-
-.btn {
-  font-family: var(--mono);
-  font-size: 0.8rem;
   font-weight: 600;
-  padding: 0.55rem 1.25rem;
-  border-radius: 6px;
-  border: none;
-  cursor: pointer;
-  transition: all 0.15s;
+  color: var(--text);
+  padding: 0.7rem 0;
+  margin-right: 2rem;
+  text-decoration: none;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.site-nav-title:hover { color: var(--accent); }
+
+.nav-tab {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  font-weight: 500;
+  color: var(--text-tertiary);
+  text-decoration: none;
+  padding: 0.7rem 0.85rem;
+  position: relative;
   letter-spacing: 0.02em;
 }
 
-.btn-primary { background: var(--accent); color: white; }
-.btn-primary:hover { background: #2563eb; transform: translateY(-1px); }
-.btn-primary:active { transform: translateY(0); }
-.btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+.nav-tab:hover { color: var(--text); }
 
-.btn-secondary {
-  background: var(--surface2);
+.nav-tab.active {
   color: var(--text);
-  border: 1px solid var(--border);
-}
-.btn-secondary:hover { background: var(--border); }
-
-.btn-green { background: var(--green); color: white; }
-.btn-green:hover { background: #059669; transform: translateY(-1px); }
-
-.btn-group { display: flex; gap: 0.5rem; align-items: flex-end; }
-
-.main-grid {
-  display: grid;
-  grid-template-columns: 340px 1fr;
-  gap: 2rem;
-  align-items: start;
+  font-weight: 600;
 }
 
-.bids-panel {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  overflow: hidden;
+.nav-tab.active::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0.85rem;
+  right: 0.85rem;
+  height: 1.5px;
+  background: var(--text);
 }
 
-.bids-panel-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0.85rem 1rem;
-  border-bottom: 1px solid var(--border);
-  background: var(--surface2);
+/* --- Page --- */
+.page {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 3rem 1.5rem 6rem;
 }
 
-.bids-panel-header h2 {
+/* --- Hero --- */
+.hero {
+  margin-bottom: 3rem;
+}
+
+.hero h1 {
+  font-family: var(--serif);
+  font-size: 2.4rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  margin-bottom: 0.75rem;
+  color: var(--text);
+}
+
+.hero .subtitle {
+  font-size: 1.15rem;
+  font-weight: 300;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  max-width: 560px;
+}
+
+.hero .byline {
+  margin-top: 1.25rem;
   font-family: var(--mono);
   font-size: 0.75rem;
+  color: var(--text-tertiary);
+  letter-spacing: 0.01em;
+}
+
+.hero .byline strong {
+  color: var(--text-secondary);
+  font-weight: 600;
+}
+
+/* --- Section --- */
+.section {
+  margin-bottom: 2.5rem;
+}
+
+.section-label {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--text-dim);
+  letter-spacing: 0.12em;
+  color: var(--text-tertiary);
+  margin-bottom: 0.3rem;
 }
 
-.total-credits {
+.section h2 {
+  font-family: var(--serif);
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  margin-bottom: 0.9rem;
+  line-height: 1.25;
+}
+
+.section h3 {
+  font-family: var(--serif);
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-top: 1.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.section p {
+  margin-bottom: 0.9rem;
+}
+
+/* --- Epigraph --- */
+.epigraph {
+  margin: 1.25rem 0 1.5rem 0;
+  padding-left: 1.25rem;
+  border-left: 2px solid var(--rule);
+  font-style: italic;
+  font-size: 1.05rem;
+  color: var(--text-secondary);
+  line-height: 1.65;
+}
+
+/* --- Mechanism box --- */
+.mechanism-box {
+  background: var(--white);
+  border: 1px solid var(--rule);
+  padding: 1.5rem 1.75rem;
+  margin: 1.5rem 0 1.75rem;
+}
+
+.mechanism-box .mech-title {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-tertiary);
+  margin-bottom: 0.65rem;
+}
+
+.mechanism-box p {
+  font-size: 0.92rem;
+  line-height: 1.7;
+  margin-bottom: 0.65rem;
+}
+
+.mechanism-box p:last-child { margin-bottom: 0; }
+
+/* --- Alternatives --- */
+.alt-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  margin: 1.25rem 0 1.5rem;
+  border: 1px solid var(--rule);
+}
+
+.alt-card {
+  padding: 1rem 1.15rem;
+  border-bottom: 1px solid var(--rule-light);
+  border-right: 1px solid var(--rule-light);
+}
+
+.alt-card:nth-child(2n) { border-right: none; }
+.alt-card:nth-last-child(-n+2) { border-bottom: none; }
+.alt-grid:has(.alt-card:nth-child(3)) .alt-card:nth-last-child(-n+2) { border-bottom: none; }
+
+.alt-card .alt-name {
   font-family: var(--mono);
   font-size: 0.75rem;
+  font-weight: 600;
+  margin-bottom: 0.35rem;
+  color: var(--text);
+}
+
+.alt-card .alt-name.recommended {
   color: var(--accent);
 }
 
-.bids-sort-bar {
-  display: grid;
-  grid-template-columns: 52px 1fr 80px;
-  align-items: center;
-  padding: 0.3rem 1rem;
-  border-bottom: 1px solid var(--border);
-  background: var(--surface2);
+.alt-card .alt-name.recommended::after {
+  content: ' — proposed';
+  font-weight: 400;
+  font-size: 0.65rem;
+  color: var(--text-tertiary);
 }
 
-.sort-btn {
-  background: none; border: none; color: var(--text-dim);
-  font-family: var(--mono); font-size: 0.65rem; font-weight: 600;
-  text-transform: uppercase; letter-spacing: 0.06em; cursor: pointer;
-  padding: 0.25rem 0; text-align: left; transition: color 0.15s;
-  display: flex; align-items: center; gap: 0.25rem;
+.alt-card p {
+  font-size: 0.82rem;
+  line-height: 1.55;
+  color: var(--text-secondary);
+  margin-bottom: 0;
 }
 
-.sort-btn:last-child { text-align: right; justify-content: flex-end; }
-.sort-btn:hover { color: var(--text); }
-.sort-btn.active { color: var(--accent); }
-
-.sort-arrow { font-size: 0.6rem; opacity: 0; transition: opacity 0.15s; }
-.sort-btn.active .sort-arrow { opacity: 1; }
-
-.bids-list {
-  max-height: 640px; overflow-y: auto;
-  scrollbar-width: thin; scrollbar-color: var(--border) transparent;
+/* --- Q&A --- */
+.qa-item {
+  margin-bottom: 1.75rem;
 }
 
-.bid-row {
-  display: grid; grid-template-columns: 52px 1fr 80px;
-  align-items: center; padding: 0.4rem 1rem;
-  border-bottom: 1px solid rgba(42, 53, 80, 0.4); transition: background 0.1s;
+.qa-item .question {
+  font-family: var(--serif);
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 0.3rem;
+  line-height: 1.45;
 }
 
-.bid-row:hover { background: rgba(59, 130, 246, 0.04); }
-
-.team-abbr { font-family: var(--mono); font-size: 0.8rem; font-weight: 600; }
-
-.team-name {
-  font-size: 0.75rem; color: var(--text-dim);
-  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+.qa-item .answer {
+  font-size: 0.92rem;
+  line-height: 1.7;
+  color: var(--text-secondary);
 }
 
-.bid-input {
-  background: var(--bg); border: 1px solid var(--border); color: var(--text);
-  font-family: var(--mono); font-size: 0.8rem; padding: 0.3rem 0.5rem;
-  border-radius: 4px; width: 100%; text-align: right; outline: none;
-  transition: border-color 0.2s;
+.qa-item .answer p {
+  color: var(--text-secondary);
+  font-size: 0.92rem;
+  margin-bottom: 0.4rem;
 }
 
-.bid-input:focus { border-color: var(--accent); }
-
-.results-panel { display: flex; flex-direction: column; gap: 1.5rem; }
-
-.chart-container {
-  background: var(--surface); border: 1px solid var(--border);
-  border-radius: 10px; padding: 1.5rem; position: relative;
+/* --- CTA --- */
+.cta {
+  margin-top: 3rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--rule);
+  text-align: center;
 }
 
-.chart-title {
-  font-family: var(--mono); font-size: 0.75rem; text-transform: uppercase;
-  letter-spacing: 0.08em; color: var(--text-dim); margin-bottom: 1rem;
+.cta p {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  margin-bottom: 0.75rem;
 }
 
-canvas { width: 100% !important; height: auto !important; }
-
-.status-bar {
-  font-family: var(--mono); font-size: 0.75rem; color: var(--text-dim);
-  display: flex; gap: 2rem; align-items: center;
+.cta a {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--accent);
+  text-decoration: none;
+  border-bottom: 1px solid var(--accent);
+  padding-bottom: 1px;
 }
 
-.status-bar .running { color: var(--orange); }
-.status-bar .done { color: var(--green); }
+.cta a:hover { color: var(--accent-light); border-color: var(--accent-light); }
 
-.progress-bar-outer {
-  width: 200px; height: 4px; background: var(--surface2);
-  border-radius: 2px; overflow: hidden;
+/* --- Rule / footer --- */
+hr {
+  border: none;
+  border-top: 1px solid var(--rule);
+  margin: 2.5rem 0;
 }
 
-.progress-bar-inner {
-  height: 100%; background: var(--accent);
-  border-radius: 2px; transition: width 0.1s; width: 0%;
+.footer {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  color: var(--text-tertiary);
+  text-align: center;
+  margin-top: 3rem;
 }
 
-.summary-table-container {
-  background: var(--surface); border: 1px solid var(--border);
-  border-radius: 10px; overflow: hidden;
-}
+.dim { color: var(--text-secondary); }
 
-.summary-table-header {
-  padding: 0.85rem 1rem; border-bottom: 1px solid var(--border);
-  background: var(--surface2); font-family: var(--mono); font-size: 0.75rem;
-  text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-dim);
-}
-
-.summary-table {
-  width: 100%; border-collapse: collapse;
-  font-family: var(--mono); font-size: 0.75rem;
-}
-
-.summary-table th {
-  background: var(--surface2); color: var(--text-dim); font-weight: 600;
-  text-transform: uppercase; letter-spacing: 0.05em; font-size: 0.65rem;
-  padding: 0.5rem 0.6rem; text-align: right;
-  border-bottom: 1px solid var(--border); position: sticky; top: 0;
-}
-
-.summary-table th:first-child,
-.summary-table th:nth-child(2) { text-align: left; }
-
-.summary-table td {
-  padding: 0.4rem 0.6rem; text-align: right;
-  border-bottom: 1px solid rgba(42, 53, 80, 0.3);
-}
-
-.summary-table td:first-child,
-.summary-table td:nth-child(2) { text-align: left; }
-.summary-table td:first-child { font-weight: 600; }
-.summary-table td:nth-child(2) { color: var(--text-dim); }
-.summary-table tbody tr:hover { background: rgba(59, 130, 246, 0.04); }
-
-.summary-table-scroll {
-  max-height: 500px; overflow-y: auto;
-  scrollbar-width: thin; scrollbar-color: var(--border) transparent;
-}
-
-.preset-btns { display: flex; gap: 0.35rem; flex-wrap: wrap; }
-.btn-xs { font-size: 0.65rem; padding: 0.3rem 0.6rem; }
-
-.empty-state {
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
-  min-height: 400px; color: var(--text-dim); font-family: var(--mono);
-  font-size: 0.85rem; text-align: center; gap: 0.5rem;
-}
-
-.empty-state .arrow { font-size: 2rem; opacity: 0.3; margin-bottom: 0.5rem; }
-
-.heatmap-container { position: relative; overflow-x: auto; }
-.heatmap-canvas { display: block; cursor: crosshair; }
-
-.heatmap-tooltip {
-  position: absolute; pointer-events: none; background: #1a2540;
-  border: 1px solid var(--accent); border-radius: 6px; padding: 0.55rem 0.85rem;
-  font-family: var(--mono); font-size: 0.8rem; color: var(--text);
-  white-space: nowrap; z-index: 100; display: none;
-  box-shadow: 0 4px 24px rgba(0,0,0,0.6); line-height: 1.7;
-}
-
-.tt-team { font-weight: 700; color: var(--accent); }
-.tt-label { color: var(--text-dim); font-size: 0.7rem; }
-.tt-prob { font-weight: 700; font-size: 0.95rem; }
-
-/* --- Share bar --- */
-.share-bar {
-  display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap;
-}
-
-.share-url-input {
-  background: var(--bg); border: 1px solid var(--border); color: var(--text-dim);
-  font-family: var(--mono); font-size: 0.7rem; padding: 0.45rem 0.65rem;
-  border-radius: 6px; flex: 1; min-width: 200px; outline: none;
-  cursor: pointer; transition: border-color 0.2s;
-}
-
-.share-url-input:focus { border-color: var(--accent); color: var(--text); }
-
-.copied-flash {
-  font-family: var(--mono); font-size: 0.7rem; color: var(--green);
-  opacity: 0; transition: opacity 0.3s;
-}
-
-.copied-flash.show { opacity: 1; }
-
-/* --- Step-through panel --- */
-.stepthrough-panel {
-  background: var(--surface); border: 1px solid var(--border);
-  border-radius: 10px; overflow: hidden;
-}
-
-.stepthrough-header {
-  display: flex; justify-content: space-between; align-items: center;
-  padding: 0.85rem 1rem; border-bottom: 1px solid var(--border);
-  background: var(--surface2); cursor: pointer; user-select: none;
-}
-
-.stepthrough-header h2 {
-  font-family: var(--mono); font-size: 0.75rem; text-transform: uppercase;
-  letter-spacing: 0.08em; color: var(--text-dim);
-  display: flex; align-items: center; gap: 0.5rem;
-}
-
-.stepthrough-header .toggle-arrow {
-  font-size: 0.7rem; transition: transform 0.2s;
-}
-
-.stepthrough-header .toggle-arrow.open { transform: rotate(90deg); }
-
-.stepthrough-body {
-  display: none; padding: 1rem;
-}
-
-.stepthrough-body.open { display: block; }
-
-.step-controls {
-  display: flex; gap: 0.5rem; align-items: center; margin-bottom: 1rem;
-  flex-wrap: wrap;
-}
-
-.step-info {
-  font-family: var(--mono); font-size: 0.8rem; color: var(--text-dim);
-  margin-left: 0.5rem;
-}
-
-.step-table-scroll {
-  max-height: 500px; overflow-y: auto;
-  scrollbar-width: thin; scrollbar-color: var(--border) transparent;
-}
-
-.step-table {
-  width: 100%; border-collapse: collapse;
-  font-family: var(--mono); font-size: 0.75rem;
-}
-
-.step-table th {
-  background: var(--surface2); color: var(--text-dim); font-weight: 600;
-  text-transform: uppercase; letter-spacing: 0.05em; font-size: 0.65rem;
-  padding: 0.5rem 0.6rem; text-align: left;
-  border-bottom: 1px solid var(--border); position: sticky; top: 0;
-}
-
-.step-table th.r { text-align: right; }
-
-.step-table td {
-  padding: 0.45rem 0.6rem; text-align: left;
-  border-bottom: 1px solid rgba(42, 53, 80, 0.3);
-}
-
-.step-table td.r { text-align: right; }
-.step-table td.team-cell { font-weight: 600; }
-
-.step-table tr.in-window { background: rgba(59, 130, 246, 0.08); }
-.step-table tr.winner { background: rgba(16, 185, 129, 0.15); }
-.step-table tr.already-picked { opacity: 0.35; }
-
-.step-pick-label {
-  font-family: var(--mono); font-size: 0.85rem; font-weight: 700;
-  color: var(--accent); margin-bottom: 0.75rem;
-}
-
-.step-winner-banner {
-  font-family: var(--mono); font-size: 0.8rem; padding: 0.6rem 0.85rem;
-  background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3);
-  border-radius: 6px; margin-bottom: 1rem; color: var(--green);
-}
-
-.step-winner-banner .winner-team { font-weight: 700; color: var(--text); }
-.step-winner-banner .winner-detail { color: var(--text-dim); font-size: 0.7rem; }
-
-.step-allocated {
-  margin-top: 1rem; padding-top: 0.75rem;
-  border-top: 1px solid var(--border);
-}
-
-.step-allocated-title {
-  font-family: var(--mono); font-size: 0.7rem; text-transform: uppercase;
-  letter-spacing: 0.06em; color: var(--text-dim); margin-bottom: 0.5rem;
-}
-
-.step-allocated-list {
-  display: flex; flex-wrap: wrap; gap: 0.35rem;
-}
-
-.step-pick-chip {
-  font-family: var(--mono); font-size: 0.65rem; padding: 0.2rem 0.5rem;
-  background: var(--surface2); border: 1px solid var(--border);
-  border-radius: 4px; color: var(--text-dim);
-}
-
-.step-pick-chip .chip-pick { color: var(--accent); font-weight: 600; }
-.step-pick-chip .chip-team { color: var(--text); font-weight: 600; }
-
-@media (max-width: 900px) {
-  .main-grid { grid-template-columns: 1fr; }
-  .app { padding: 1rem; }
-  .controls-bar { flex-direction: column; align-items: stretch; }
-  .control-group input { width: 100%; }
+@media (max-width: 600px) {
+  .page { padding: 2rem 1rem 4rem; }
+  .hero h1 { font-size: 1.7rem; }
+  .alt-grid { grid-template-columns: 1fr; }
+  .alt-card { border-right: none !important; }
+  .alt-card:not(:last-child) { border-bottom: 1px solid var(--rule-light) !important; }
 }
 </style>
 </head>
 <body>
-<div class="app">
-  <header>
-    <h1>Rolling Window Lottery Simulator</h1>
-    <p>Simulate the Team-Building Credits draft lottery mechanism. Set bids for each team, run simulations, and visualize pick distributions.</p>
-  </header>
 
-  <div class="controls-bar">
-    <div class="control-group">
-      <label>Simulations</label>
-      <input type="number" id="numSims" value="10000" min="100" max="1000000" step="100">
+<nav class="site-nav">
+  <div class="site-nav-inner">
+    <a class="site-nav-title" href="index.html">Team-Building Credits</a>
+    <a class="nav-tab active" href="index.html">Proposal</a>
+    <a class="nav-tab" href="simulator.html">Simulator</a>
+  </div>
+</nav>
+
+<div class="page">
+
+  <div class="hero">
+    <h1>Team-Building Credits</h1>
+    <div class="subtitle">Reforming the NBA draft lottery by realigning incentives and allocating talent to teams that need it&mdash;on their own terms.</div>
+    <div class="byline">
+      <strong>Drew Cannon</strong> &middot; <strong>David Sparks</strong> &middot; <strong>Mike Zarren</strong><br>
+      Boston Celtics
     </div>
-    <div class="control-group">
-      <label>Window Size</label>
-      <input type="number" id="windowSize" value="4" min="1" max="30">
+  </div>
+
+  <div class="section">
+    <div class="section-label">The Problem</div>
+    <h2>Goodhart&rsquo;s Law and the Draft</h2>
+
+    <div class="epigraph">
+      &ldquo;When a measure becomes a target, it ceases to be a good measure.&rdquo;
     </div>
-    <div class="btn-group">
-      <button class="btn btn-primary" id="runBtn" onclick="runSimulations()">Run Simulations</button>
-      <button class="btn btn-secondary" id="stopBtn" onclick="stopSimulations()" style="display:none;">Stop</button>
+
+    <p>For competitive balance reasons, and for fans to have hope, it is desirable to give teams in need of talent an advantage in acquiring good young prospects. Unfortunately, the way the league has historically identified teams in &ldquo;need&rdquo; of talent is to look at regular season losses, and this measure of need has become a target which teams can strategically pursue, to the detriment of the basketball product.</p>
+
+    <p>Ideally, we could find some measure of need that is not directly manipulable by teams. But nearly all proposed lottery reforms either fail to disentangle &ldquo;need&rdquo; from losing, or they fail to provide adequate relief for teams with true need. Counting wins after a certain point in the season creates an incentive for good teams to lose early, and doesn&rsquo;t help teams who simply cannot win at any point. Restricting pick protections to narrow ranges just causes teams to pool toward those breakpoints. Considering record across multiple seasons creates an incentive to keep losing once you&rsquo;ve started. Disallowing consecutive top-four picks makes it harder for talent to reach the teams that need it most.</p>
+
+    <p>Each of these proposals merely shifts the timing or breakpoint at which losing becomes the rational long-term strategy.</p>
+  </div>
+
+  <div class="section">
+    <div class="section-label">The Solution</div>
+    <h2>Team-Building Credits</h2>
+
+    <p>The Team-Building Credits system gives teams direct control over their relative advantage in acquiring talent, letting them determine need for themselves, and removing the incentive to falsely signal need by intentional losing. Credits cannot be manipulated through non-competitive strategies or lineups.</p>
+
+    <div class="mechanism-box">
+      <div class="mech-title">How It Works</div>
+      <p>Each year, the NBA allocates <strong>100 Team-Building Credits</strong> to each team, minus deductions for playoff success. Credits may be saved or traded, but their primary use is to bid for draft position.</p>
+      <p>On a pre-specified date in late April, teams simultaneously submit sealed bids to the league. Bids must be integer amounts, and teams must have enough Credits to cover the bid. After the deadline, the league reveals all bids publicly.</p>
+      <p>Picks are allocated through a <strong>Rolling Window Lottery</strong>: the top four highest-bidding teams enter a lottery for the first pick, weighted by bid size. The winner is removed, the next-highest bidder enters, and the process repeats for each subsequent pick. The winner of each window is charged only the minimum bid in that window and is refunded the difference&mdash;so a team that bids high but falls to a later pick retains Credits for the following year.</p>
+      <p>Teams that bid zero pick at the end of the first round, with a random tiebreaker. Second-round picks are awarded in order of first-round bid size, with no additional Credits spent.</p>
     </div>
-    <div class="btn-group">
-      <div class="control-group">
-        <label>Presets</label>
-        <div class="preset-btns">
-          <button class="btn btn-secondary btn-xs" onclick="loadPreset('random')">Random</button>
-          <button class="btn btn-secondary btn-xs" onclick="loadPreset('uniform')">Uniform</button>
-          <button class="btn btn-secondary btn-xs" onclick="loadPreset('linear')">Linear</button>
-          <button class="btn btn-secondary btn-xs" onclick="loadPreset('skewed')">Skewed</button>
-        </div>
+
+    <h3>Talent allocation</h3>
+    <p>The NBA has historically prioritized giving non-contending teams the opportunity to build through the draft. Team-Building Credits preserves that opportunity. Teams can save Credits for the years in which they most acutely need draft talent, then invest heavily to maximize their chances. A rebuilding team can also trade veteran talent for additional Credits, further improving their draft position.</p>
+
+    <h3>Trade market</h3>
+    <p>Credits can be used as consideration in any trade, just like player contracts, portions of draft picks, and cash. A single Credit may serve as minimum consideration, replacing the classic heavily-protected second-round pick. Teams can also trade first- or second-round draft slots (subject to a Stepien-like rule), though these carry no protections or swap options, because the Credit bidding process makes those mechanisms irrelevant.</p>
+    <p>Teams holding multiple slots in a given year bid separately for each. Between the lottery and draft night, teams can trade specific picks to move up or back, as they do today.</p>
+  </div>
+
+  <div class="section">
+    <div class="section-label">Shaping Incentives</div>
+    <h2>Offsets and Enforcement</h2>
+
+    <h3>Credit offsets for playoff success</h3>
+    <p>The system need not allocate the same number of Credits to every team. Our proposal deducts 20 Credits for each playoff series won in the immediately preceding season. The champion starts with 20 Credits; a team eliminated in the conference semifinals receives 80. This reflects the cyclical pattern of team success and gives teams outside contention better opportunities to improve&mdash;without creating an incentive to lose regular season games.</p>
+
+    <h3>Credit penalties for rules enforcement</h3>
+    <p>Because the league is the sole source of Credits, it can use this power for rules enforcement. Where monetary fines are currently used&mdash;player participation, injury reporting, tampering&mdash;replacing those fines with Credit deductions makes the penalties basketball penalties rather than financial ones. Docking a team a few future Credits is more granular and less heavy-handed than taking away future draft picks, which is one of the few recourses currently available.</p>
+  </div>
+
+  <div class="section">
+    <div class="section-label">Implementation</div>
+    <h2>The Transition Period</h2>
+
+    <p>The first Credit-bid draft would realistically take place in 2034 at the soonest. Once agreed to, all existing pick trades are honored, and teams continue trading picks under current rules through the 2033 draft.</p>
+    <p>In the first year after agreement, teams can trade 2034 picks and beyond as whole slots under the new rules. Teams can also trade their full allocation of Credits for a specific future year, up to seven years out.</p>
+    <p>Starting July 1, 2034, the league distributes Credits to all teams, and teams may no longer trade future Credits&mdash;only those they have accumulated. Optionally, the league could allocate bonus Credits based on playoff success across the final transition seasons to smooth the shift from a record-based lottery to a strategic one.</p>
+  </div>
+
+  <hr>
+
+  <div class="section">
+    <div class="section-label">Options</div>
+    <h2>Pick Order Alternatives</h2>
+    <p class="dim">The Team-Building Credits concept is the core idea; the mechanism for converting bids into picks is flexible. We propose the Rolling Window Lottery, but considered these alternatives:</p>
+
+    <div class="alt-grid">
+      <div class="alt-card">
+        <div class="alt-name recommended">Rolling Window Lottery</div>
+        <p>Picks allocated by smaller lotteries of 4 teams, sliding one team at a time. Relatively low randomness. High bidders unlikely to fall far; low bidders can&rsquo;t rise far.</p>
+      </div>
+      <div class="alt-card">
+        <div class="alt-name">Full Lottery</div>
+        <p>Each pick drawn from a lottery over all teams, weighted by bid. Highest randomness. Greatest potential for high bidders to fall and low bidders to jump.</p>
+      </div>
+      <div class="alt-card">
+        <div class="alt-name">Deterministic Bid Order</div>
+        <p>Picks allocated in order of bid, with random tiebreakers. Almost no randomness. Creates risk of team-prospect collusion.</p>
+      </div>
+      <div class="alt-card">
+        <div class="alt-name">Top-N Lottery</div>
+        <p>Top several picks by lottery weighted by bid. Remaining picks by bid size. Moderate randomness.</p>
       </div>
     </div>
-    <div class="btn-group share-bar">
-      <button class="btn btn-secondary btn-xs" onclick="shareConfig()" title="Copy shareable URL">Share Link</button>
-      <input class="share-url-input" id="shareUrl" readonly onclick="this.select()" placeholder="Click Share Link to generate URL">
-      <span class="copied-flash" id="copiedFlash">Copied!</span>
-    </div>
-    <div class="status-bar" id="statusBar">
-      <span id="statusText">Ready</span>
-      <div class="progress-bar-outer" id="progressOuter" style="display:none;">
-        <div class="progress-bar-inner" id="progressInner"></div>
+
+    <h2>Credit Offset Alternatives</h2>
+    <p class="dim">Several offset schemes could replace or supplement the playoff-success offset:</p>
+
+    <div class="alt-grid">
+      <div class="alt-card">
+        <div class="alt-name recommended">Playoff Success Offsets</div>
+        <p>20 fewer Credits per playoff series won. 2,700 total Credits awarded league-wide instead of 3,000.</p>
+      </div>
+      <div class="alt-card">
+        <div class="alt-name">Team Spending Offsets</div>
+        <p>For each increment of spending over the luxury tax line, teams receive one fewer Credit the following summer.</p>
+      </div>
+      <div class="alt-card">
+        <div class="alt-name">Recent Success Offsets</div>
+        <p>10 Credits per season since the team last made the Finals, capped at 100.</p>
+      </div>
+      <div class="alt-card">
+        <div class="alt-name">Player Contract Offsets</div>
+        <p>Teams signing max contracts receive 40 fewer Credits the following summer; MLE signings deduct 15.</p>
       </div>
     </div>
   </div>
 
-  <div class="main-grid">
-    <div class="bids-panel">
-      <div class="bids-panel-header">
-        <h2>Team Bids</h2>
-        <span class="total-credits" id="totalCredits">Total: 0</span>
-      </div>
-      <div class="bids-sort-bar">
-        <button class="sort-btn active" id="sortTeamBtn" onclick="sortBidsBy('team')">
-          Team <span class="sort-arrow" id="sortTeamArrow">&#9650;</span>
-        </button>
-        <span></span>
-        <button class="sort-btn" id="sortBidBtn" onclick="sortBidsBy('bid')">
-          Bid <span class="sort-arrow" id="sortBidArrow">&#9660;</span>
-        </button>
-      </div>
-      <div class="bids-list" id="bidsList"></div>
+  <hr>
+
+  <div class="section">
+    <div class="section-label">Questions &amp; Answers</div>
+    <h2>Q&thinsp;&amp;&thinsp;A</h2>
+
+    <div class="qa-item">
+      <div class="question">What does the annual schedule look like?</div>
+      <div class="answer"><p>July 1: the league allocates 100 Credits per team, minus playoff offsets. Early February: the trade deadline applies to Credits and draft slots. Mid-May: draft entry deadline and Credit bid submission. Late May: the Rolling Window Lottery. Late June: the draft.</p></div>
     </div>
 
-    <div class="results-panel">
-      <div class="chart-container" id="chartArea">
-        <div class="empty-state" id="emptyState">
-          <div class="arrow">&#8592;</div>
-          <div>Set team bids and click Run Simulations</div>
-          <div style="font-size:0.7rem; opacity:0.6;">Or load a preset to get started</div>
-        </div>
-        <div id="heatmapArea" style="display:none;">
-          <div class="chart-title">Pick Distribution by Bid Amount <span id="simCount"></span></div>
-          <div class="heatmap-container">
-            <canvas id="heatmapCanvas" class="heatmap-canvas"></canvas>
-            <div class="heatmap-tooltip" id="heatmapTooltip"></div>
-          </div>
-        </div>
-      </div>
+    <div class="qa-item">
+      <div class="question">Doesn&rsquo;t the playoff offset incentivize teams to lose playoff series?</div>
+      <div class="answer"><p>The chance to advance a full round of playoffs&mdash;with the associated revenue, prestige, and player development value&mdash;is not something teams will realistically forfeit for 20 additional Credits. If this remains a concern, the offset could increase nonlinearly with rounds. Several alternative offset schemes not tied to playoff success are also available.</p></div>
+    </div>
 
-      <!-- Step-through panel -->
-      <div class="stepthrough-panel">
-        <div class="stepthrough-header" onclick="toggleStepthrough()">
-          <h2><span class="toggle-arrow" id="stepToggleArrow">&#9654;</span> Single Lottery Step-Through</h2>
-        </div>
-        <div class="stepthrough-body" id="stepBody">
-          <div class="step-controls">
-            <button class="btn btn-green btn-xs" onclick="stepNew()">New Lottery</button>
-            <button class="btn btn-secondary btn-xs" id="stepPrevBtn" onclick="stepPrev()" disabled>&#9664; Prev</button>
-            <button class="btn btn-primary btn-xs" id="stepNextBtn" onclick="stepNext()" disabled>Next &#9654;</button>
-            <button class="btn btn-secondary btn-xs" id="stepAllBtn" onclick="stepAll()" disabled>Skip to End</button>
-            <span class="step-info" id="stepInfo">Click "New Lottery" to begin</span>
-          </div>
-          <div id="stepContent"></div>
-        </div>
-      </div>
+    <div class="qa-item">
+      <div class="question">What about second-round picks where another team owns the related first-round slot?</div>
+      <div class="answer"><p>Second-round picks are assigned in order of first-round bid size, with reverse-order-of-first-round-pick as a tiebreaker. If Boston owns the Lakers&rsquo; 2036 second-round slot while the Lakers retain their first-round slot, it is the Lakers&rsquo; bid that determines where Boston picks in the second round.</p></div>
+    </div>
 
-      <div class="summary-table-container" id="summaryArea" style="display:none;">
-        <div class="summary-table-header">Summary Statistics</div>
-        <div class="summary-table-scroll">
-          <table class="summary-table">
-            <thead>
-              <tr>
-                <th>Team</th>
-                <th>Bid</th>
-                <th>Avg Pick</th>
-                <th>Median</th>
-                <th>Best</th>
-                <th>Worst</th>
-                <th>P(Top 3)</th>
-                <th>P(Top 10)</th>
-                <th>Avg Cost</th>
-                <th>Avg Refund</th>
-              </tr>
-            </thead>
-            <tbody id="summaryBody"></tbody>
-          </table>
-        </div>
-      </div>
+    <div class="qa-item">
+      <div class="question">What stops a team from stockpiling Credits and dominating a single draft?</div>
+      <div class="answer"><p>Three forces work against this. First, a team saving Credits picks last every year&mdash;an enormous opportunity cost. Second, the playoff offset means good teams receive far fewer than 100 Credits annually. Third, the Rolling Window Lottery means even a team bidding 600 against three teams at 100 has only about a 67% chance of winning any given window. The system is self-balancing without needing artificial caps or decay rules.</p></div>
+    </div>
+
+    <div class="qa-item">
+      <div class="question">How does this affect tanking through roster construction?</div>
+      <div class="answer"><p>Under the current system, teams trade away good players partly to lose more games and improve draft position. Under Credits, that incentive disappears. A team might still tear down its roster to accumulate Credits via trade, but that is a legitimate team-building strategy&mdash;not a competitive-integrity problem. The incentive to field a non-competitive team on the court is eliminated.</p></div>
+    </div>
+
+    <div class="qa-item">
+      <div class="question">How do you value Credits in trades?</div>
+      <div class="answer"><p>The market will discover the price, just as it did for cash considerations and second-round picks. The structure is similar to any currency: its worth is determined by what it can buy in the draft, which depends on the competitive landscape of bids in a given year.</p></div>
+    </div>
+
+    <div class="qa-item">
+      <div class="question">What happens to existing pick protections and swap rights after the transition?</div>
+      <div class="answer"><p>All existing pick trades are honored through the 2033 draft under current rules. After that, draft slots are traded as whole slots without protections or swaps, because the Credit bidding process makes those mechanisms irrelevant&mdash;draft position is determined by bids, not by record.</p></div>
     </div>
   </div>
+
+  <div class="cta">
+    <p>Explore how the Rolling Window Lottery works with different bid configurations.</p>
+    <a href="simulator.html">Open the Simulator &rarr;</a>
+  </div>
+
+  <div class="footer">
+    Team-Building Credits &middot; Drew Cannon, David Sparks, Mike Zarren &middot; Boston Celtics
+  </div>
+
 </div>
-
-<script>
-const TEAMS = [
-  { abbr: 'ATL', name: 'Atlanta Hawks' },
-  { abbr: 'BOS', name: 'Boston Celtics' },
-  { abbr: 'BKN', name: 'Brooklyn Nets' },
-  { abbr: 'CHA', name: 'Charlotte Hornets' },
-  { abbr: 'CHI', name: 'Chicago Bulls' },
-  { abbr: 'CLE', name: 'Cleveland Cavaliers' },
-  { abbr: 'DAL', name: 'Dallas Mavericks' },
-  { abbr: 'DEN', name: 'Denver Nuggets' },
-  { abbr: 'DET', name: 'Detroit Pistons' },
-  { abbr: 'GSW', name: 'Golden State Warriors' },
-  { abbr: 'HOU', name: 'Houston Rockets' },
-  { abbr: 'IND', name: 'Indiana Pacers' },
-  { abbr: 'LAC', name: 'LA Clippers' },
-  { abbr: 'LAL', name: 'Los Angeles Lakers' },
-  { abbr: 'MEM', name: 'Memphis Grizzlies' },
-  { abbr: 'MIA', name: 'Miami Heat' },
-  { abbr: 'MIL', name: 'Milwaukee Bucks' },
-  { abbr: 'MIN', name: 'Minnesota Timberwolves' },
-  { abbr: 'NOP', name: 'New Orleans Pelicans' },
-  { abbr: 'NYK', name: 'New York Knicks' },
-  { abbr: 'OKC', name: 'Oklahoma City Thunder' },
-  { abbr: 'ORL', name: 'Orlando Magic' },
-  { abbr: 'PHI', name: 'Philadelphia 76ers' },
-  { abbr: 'PHX', name: 'Phoenix Suns' },
-  { abbr: 'POR', name: 'Portland Trail Blazers' },
-  { abbr: 'SAC', name: 'Sacramento Kings' },
-  { abbr: 'SAS', name: 'San Antonio Spurs' },
-  { abbr: 'TOR', name: 'Toronto Raptors' },
-  { abbr: 'UTA', name: 'Utah Jazz' },
-  { abbr: 'WAS', name: 'Washington Wizards' },
-];
-
-let bids = new Array(30).fill(100);
-let simResults = null;
-let isRunning = false;
-let shouldStop = false;
-
-// --- Bids panel sorting ---
-let bidsSortField = 'team';
-let bidsSortDir = 'asc';
-
-function getBidsSortOrder() {
-  const indices = Array.from({ length: 30 }, (_, i) => i);
-  if (bidsSortField === 'team') {
-    indices.sort((a, b) => {
-      const cmp = TEAMS[a].abbr.localeCompare(TEAMS[b].abbr);
-      return bidsSortDir === 'asc' ? cmp : -cmp;
-    });
-  } else {
-    indices.sort((a, b) => {
-      const cmp = bids[a] - bids[b];
-      if (cmp !== 0) return bidsSortDir === 'asc' ? cmp : -cmp;
-      return TEAMS[a].abbr.localeCompare(TEAMS[b].abbr);
-    });
-  }
-  return indices;
-}
-
-function sortBidsBy(field) {
-  if (bidsSortField === field) {
-    bidsSortDir = bidsSortDir === 'asc' ? 'desc' : 'asc';
-  } else {
-    bidsSortField = field;
-    bidsSortDir = field === 'bid' ? 'desc' : 'asc';
-  }
-  updateSortButtons();
-  renderBidsList();
-}
-
-function updateSortButtons() {
-  document.getElementById('sortTeamBtn').classList.toggle('active', bidsSortField === 'team');
-  document.getElementById('sortBidBtn').classList.toggle('active', bidsSortField === 'bid');
-  document.getElementById('sortTeamArrow').innerHTML = bidsSortDir === 'asc' ? '&#9650;' : '&#9660;';
-  document.getElementById('sortBidArrow').innerHTML = bidsSortDir === 'asc' ? '&#9650;' : '&#9660;';
-}
-
-function renderBidsList() {
-  const list = document.getElementById('bidsList');
-  list.innerHTML = '';
-  for (const i of getBidsSortOrder()) {
-    const row = document.createElement('div');
-    row.className = 'bid-row';
-    row.innerHTML = `
-      <span class="team-abbr">${TEAMS[i].abbr}</span>
-      <span class="team-name">${TEAMS[i].name}</span>
-      <input class="bid-input" type="number" min="0" max="9999" value="${bids[i]}"
-        data-idx="${i}" onchange="updateBid(this)" onfocus="this.select()">
-    `;
-    list.appendChild(row);
-  }
-  updateTotal();
-}
-
-function updateBid(el) {
-  const idx = parseInt(el.dataset.idx);
-  bids[idx] = Math.max(0, parseInt(el.value) || 0);
-  updateTotal();
-}
-
-function updateTotal() {
-  const total = bids.reduce((a, b) => a + b, 0);
-  document.getElementById('totalCredits').textContent = `Total: ${total.toLocaleString()}`;
-}
-
-function loadPreset(type) {
-  if (type === 'random') {
-    bids = TEAMS.map(() => Math.floor(Math.random() * 200) + 1);
-  } else if (type === 'uniform') {
-    bids = new Array(30).fill(100);
-  } else if (type === 'linear') {
-    const shuffled = Array.from({ length: 30 }, (_, i) => i);
-    for (let i = 29; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-    }
-    bids = new Array(30).fill(0);
-    for (let rank = 0; rank < 30; rank++) bids[shuffled[rank]] = 5 * rank;
-  } else if (type === 'skewed') {
-    bids = TEAMS.map(() => {
-      const z = (Math.random() + Math.random() + Math.random() - 1.5) / 0.5;
-      return Math.max(0, Math.min(500, Math.round(Math.exp(3.8 + 0.9 * z))));
-    });
-  }
-  renderBidsList();
-}
-
-// =============================================
-// URL SHARING
-// =============================================
-
-function shareConfig() {
-  const params = new URLSearchParams();
-  params.set('b', bids.join(','));
-  params.set('w', document.getElementById('windowSize').value);
-  params.set('n', document.getElementById('numSims').value);
-  const qs = '?' + params.toString();
-
-  // Try to build a full URL; fall back to just the query string if in an iframe
-  let url;
-  try {
-    const origin = window.location.origin;
-    const path = window.location.pathname;
-    if (origin && origin !== 'null' && !path.includes('srcdoc')) {
-      url = origin + path + qs;
-    } else {
-      url = qs;
-    }
-  } catch (e) {
-    url = qs;
-  }
-
-  const input = document.getElementById('shareUrl');
-  input.value = url;
-  input.select();
-
-  navigator.clipboard.writeText(url).then(() => {
-    const flash = document.getElementById('copiedFlash');
-    flash.classList.add('show');
-    setTimeout(() => flash.classList.remove('show'), 1500);
-  }).catch(() => {});
-}
-
-function loadFromUrl() {
-  const params = new URLSearchParams(window.location.search);
-  if (params.has('b')) {
-    const vals = params.get('b').split(',').map(Number);
-    if (vals.length === 30 && vals.every(v => !isNaN(v) && v >= 0)) {
-      bids = vals;
-    }
-  }
-  if (params.has('w')) {
-    const w = parseInt(params.get('w'));
-    if (w >= 1 && w <= 30) document.getElementById('windowSize').value = w;
-  }
-  if (params.has('n')) {
-    const n = parseInt(params.get('n'));
-    if (n >= 100 && n <= 1000000) document.getElementById('numSims').value = n;
-  }
-}
-
-// =============================================
-// HEATMAP
-// =============================================
-
-const HEATMAP = { cellW: 38, cellH: 32, labelW: 86, labelH: 68, bidColW: 60 };
-let heatmapSortedTeams = [];
-
-// =============================================
-// SIMULATION
-// =============================================
-
-function simulateOnce(teamBids, windowSize) {
-  const n = teamBids.length;
-  const indices = Array.from({ length: n }, (_, i) => i);
-  const tiebreakers = indices.map(() => Math.random());
-  indices.sort((a, b) => {
-    if (teamBids[b] !== teamBids[a]) return teamBids[b] - teamBids[a];
-    return tiebreakers[a] - tiebreakers[b];
-  });
-
-  const picks = new Array(n).fill(-1);
-  const costs = new Array(n).fill(0);
-  const sortedBids = indices.map(i => teamBids[i]);
-
-  const zeroBidders = [];
-  const nonZeroBidders = [];
-  for (let j = 0; j < n; j++) {
-    if (sortedBids[j] === 0) zeroBidders.push(j);
-    else nonZeroBidders.push(j);
-  }
-
-  let pickNum = 0;
-  let windowStart = 0;
-  let win = [];
-  for (let j = 0; j < Math.min(windowSize, nonZeroBidders.length); j++) {
-    win.push(nonZeroBidders[j]);
-    windowStart = j + 1;
-  }
-
-  while (win.length > 0 && pickNum < n) {
-    const totalInWindow = win.reduce((s, j) => s + sortedBids[j], 0);
-    if (totalInWindow === 0) break;
-    let r = Math.random() * totalInWindow;
-    let winnerIdx = win[0];
-    for (const j of win) { r -= sortedBids[j]; if (r <= 0) { winnerIdx = j; break; } }
-    const minBid = Math.min(...win.map(j => sortedBids[j]));
-    picks[indices[winnerIdx]] = pickNum;
-    costs[indices[winnerIdx]] = minBid;
-    pickNum++;
-    win = win.filter(j => j !== winnerIdx);
-    if (windowStart < nonZeroBidders.length) { win.push(nonZeroBidders[windowStart]); windowStart++; }
-    if (win.length === 0 && windowStart < nonZeroBidders.length) { win.push(nonZeroBidders[windowStart]); windowStart++; }
-  }
-
-  while (win.length > 0 && pickNum < n) {
-    const totalInWindow = win.reduce((s, j) => s + sortedBids[j], 0);
-    if (totalInWindow === 0) break;
-    let r = Math.random() * totalInWindow;
-    let winnerIdx = win[0];
-    for (const j of win) { r -= sortedBids[j]; if (r <= 0) { winnerIdx = j; break; } }
-    const minBid = Math.min(...win.map(j => sortedBids[j]));
-    picks[indices[winnerIdx]] = pickNum;
-    costs[indices[winnerIdx]] = minBid;
-    win = win.filter(j => j !== winnerIdx);
-    pickNum++;
-  }
-
-  const shuffled = zeroBidders.sort(() => Math.random() - 0.5);
-  for (const j of shuffled) { picks[indices[j]] = pickNum; costs[indices[j]] = 0; pickNum++; }
-
-  return { picks, costs };
-}
-
-async function runSimulations() {
-  const numSims = Math.min(1000000, Math.max(100, parseInt(document.getElementById('numSims').value) || 10000));
-  const windowSize = Math.min(30, Math.max(1, parseInt(document.getElementById('windowSize').value) || 4));
-  document.getElementById('numSims').value = numSims;
-  document.getElementById('windowSize').value = windowSize;
-
-  const teamBids = [...bids];
-  const n = 30;
-  const pickDist = Array.from({ length: n }, () => new Array(n).fill(0));
-  const totalCosts = new Array(n).fill(0);
-
-  isRunning = true; shouldStop = false;
-  document.getElementById('runBtn').disabled = true;
-  document.getElementById('stopBtn').style.display = '';
-  document.getElementById('progressOuter').style.display = '';
-
-  const batchSize = 500;
-  let completed = 0;
-  const statusText = document.getElementById('statusText');
-  const progressInner = document.getElementById('progressInner');
-
-  for (let batch = 0; batch < numSims && !shouldStop; batch += batchSize) {
-    const end = Math.min(batch + batchSize, numSims);
-    for (let s = batch; s < end; s++) {
-      const result = simulateOnce(teamBids, windowSize);
-      for (let t = 0; t < n; t++) { pickDist[t][result.picks[t]]++; totalCosts[t] += result.costs[t]; }
-    }
-    completed = end;
-    statusText.innerHTML = `<span class="running">Running...</span> ${completed.toLocaleString()} / ${numSims.toLocaleString()}`;
-    progressInner.style.width = (completed / numSims * 100).toFixed(0) + '%';
-    await new Promise(r => setTimeout(r, 0));
-  }
-
-  isRunning = false;
-  document.getElementById('runBtn').disabled = false;
-  document.getElementById('stopBtn').style.display = 'none';
-  statusText.innerHTML = shouldStop
-    ? `<span class="done">Stopped</span> at ${completed.toLocaleString()} simulations`
-    : `<span class="done">Done</span> \u2014 ${completed.toLocaleString()} simulations`;
-
-  simResults = { pickDist, totalCosts, numSims: completed, teamBids, windowSize };
-  renderResults();
-}
-
-function stopSimulations() { shouldStop = true; }
-
-function renderResults() {
-  if (!simResults) return;
-  const { pickDist, totalCosts, numSims, teamBids } = simResults;
-  const n = 30;
-
-  document.getElementById('emptyState').style.display = 'none';
-  document.getElementById('heatmapArea').style.display = '';
-  document.getElementById('summaryArea').style.display = '';
-  document.getElementById('simCount').textContent = `(n = ${numSims.toLocaleString()})`;
-
-  const sortedTeams = Array.from({ length: n }, (_, i) => i);
-  sortedTeams.sort((a, b) => teamBids[b] - teamBids[a]);
-  heatmapSortedTeams = sortedTeams;
-
-  renderHeatmap(sortedTeams, pickDist, teamBids, numSims);
-  renderSummary(sortedTeams, pickDist, totalCosts, teamBids, numSims);
-}
-
-function renderHeatmap(sortedTeams, pickDist, teamBids, numSims) {
-  const canvas = document.getElementById('heatmapCanvas');
-  const ctx = canvas.getContext('2d');
-  const n = 30;
-  const { cellW, cellH, labelW, labelH, bidColW } = HEATMAP;
-
-  const width = labelW + bidColW + n * cellW + 12;
-  const height = labelH + n * cellH + 12;
-
-  const dpr = window.devicePixelRatio || 1;
-  canvas.width = width * dpr;
-  canvas.height = height * dpr;
-  canvas.style.width = width + 'px';
-  canvas.style.height = height + 'px';
-  ctx.scale(dpr, dpr);
-  ctx.clearRect(0, 0, width, height);
-
-  let maxProb = 0;
-  for (let t = 0; t < n; t++) for (let p = 0; p < n; p++) {
-    const prob = pickDist[t][p] / numSims;
-    if (prob > maxProb) maxProb = prob;
-  }
-
-  ctx.font = `600 14px 'JetBrains Mono', monospace`;
-  ctx.fillStyle = '#8892a8'; ctx.textAlign = 'center';
-  for (let p = 0; p < n; p++) ctx.fillText(String(p + 1), labelW + bidColW + p * cellW + cellW / 2, labelH - 14);
-
-  ctx.font = `700 13px 'JetBrains Mono', monospace`;
-  ctx.fillText('Pick \u2192', labelW + bidColW + (n * cellW) / 2, labelH - 42);
-
-  ctx.textAlign = 'right';
-  ctx.font = `700 13px 'JetBrains Mono', monospace`;
-  ctx.fillText('BID', labelW + bidColW - 10, labelH - 14);
-
-  for (let row = 0; row < n; row++) {
-    const teamIdx = sortedTeams[row];
-    const y = labelH + row * cellH;
-
-    ctx.textAlign = 'left';
-    ctx.font = `700 14px 'JetBrains Mono', monospace`;
-    ctx.fillStyle = '#e2e8f0';
-    ctx.fillText(TEAMS[teamIdx].abbr, 8, y + cellH / 2 + 5);
-
-    ctx.textAlign = 'right';
-    ctx.font = `500 13px 'JetBrains Mono', monospace`;
-    ctx.fillStyle = '#8892a8';
-    ctx.fillText(String(teamBids[teamIdx]), labelW + bidColW - 10, y + cellH / 2 + 5);
-
-    for (let p = 0; p < n; p++) {
-      const prob = pickDist[teamIdx][p] / numSims;
-      const x = labelW + bidColW + p * cellW;
-      const rawIntensity = maxProb > 0 ? prob / maxProb : 0;
-      const intensity = Math.sqrt(rawIntensity);
-      const cr = Math.round(10 + (59 - 10) * intensity);
-      const cg = Math.round(14 + (130 - 14) * intensity);
-      const cb = Math.round(23 + (246 - 23) * intensity);
-      ctx.fillStyle = `rgba(${cr}, ${cg}, ${cb}, ${0.06 + 0.94 * intensity})`;
-      ctx.fillRect(x + 0.5, y + 0.5, cellW - 1, cellH - 1);
-
-      if (prob >= 0.005) {
-        const pctVal = Math.round(prob * 100);
-        if (pctVal > 0) {
-          ctx.textAlign = 'center';
-          ctx.font = `600 11px 'JetBrains Mono', monospace`;
-          ctx.fillStyle = intensity > 0.3 ? '#ffffff' : '#5a6a84';
-          ctx.fillText(String(pctVal), x + cellW / 2, y + cellH / 2 + 4);
-        }
-      }
-    }
-  }
-}
-
-// --- Hover tooltip ---
-(function setupHover() {
-  const canvas = document.getElementById('heatmapCanvas');
-  const tooltip = document.getElementById('heatmapTooltip');
-  const container = canvas.parentElement;
-
-  canvas.addEventListener('mousemove', function(e) {
-    if (!simResults) { tooltip.style.display = 'none'; return; }
-    const rect = canvas.getBoundingClientRect();
-    const scaleX = parseFloat(canvas.style.width) / rect.width;
-    const scaleY = parseFloat(canvas.style.height) / rect.height;
-    const mx = (e.clientX - rect.left) * scaleX;
-    const my = (e.clientY - rect.top) * scaleY;
-    const { cellW, cellH, labelW, labelH, bidColW } = HEATMAP;
-    const col = Math.floor((mx - labelW - bidColW) / cellW);
-    const row = Math.floor((my - labelH) / cellH);
-    if (col < 0 || col >= 30 || row < 0 || row >= 30) { tooltip.style.display = 'none'; return; }
-    const teamIdx = heatmapSortedTeams[row];
-    const count = simResults.pickDist[teamIdx][col];
-    const prob = count / simResults.numSims;
-    tooltip.innerHTML =
-      `<span class="tt-team">${TEAMS[teamIdx].abbr}</span> ${TEAMS[teamIdx].name}<br>` +
-      `<span class="tt-label">Pick</span> #${col + 1} &nbsp;&middot;&nbsp; <span class="tt-label">Bid</span> ${simResults.teamBids[teamIdx]}<br>` +
-      `<span class="tt-prob">${(prob * 100).toFixed(2)}%</span> <span class="tt-label">(${count.toLocaleString()} / ${simResults.numSims.toLocaleString()})</span>`;
-    tooltip.style.display = 'block';
-    const cr = container.getBoundingClientRect();
-    let tx = e.clientX - cr.left + 16, ty = e.clientY - cr.top - 10;
-    if (tx + tooltip.offsetWidth + 4 > container.clientWidth) tx = e.clientX - cr.left - tooltip.offsetWidth - 12;
-    if (ty + tooltip.offsetHeight + 4 > container.clientHeight) ty = e.clientY - cr.top - tooltip.offsetHeight - 12;
-    if (ty < 0) ty = 4;
-    tooltip.style.left = tx + 'px'; tooltip.style.top = ty + 'px';
-  });
-
-  canvas.addEventListener('mouseleave', () => { tooltip.style.display = 'none'; });
-})();
-
-// --- Summary table ---
-function renderSummary(sortedTeams, pickDist, totalCosts, teamBids, numSims) {
-  const n = 30;
-  const tbody = document.getElementById('summaryBody');
-  tbody.innerHTML = '';
-  for (const teamIdx of sortedTeams) {
-    const dist = pickDist[teamIdx]; const bid = teamBids[teamIdx];
-    let avgPick = 0;
-    for (let p = 0; p < n; p++) avgPick += (p + 1) * dist[p];
-    avgPick /= numSims;
-    let cumul = 0, median = 30;
-    for (let p = 0; p < n; p++) { cumul += dist[p]; if (cumul >= numSims / 2) { median = p + 1; break; } }
-    let best = 30, worst = 1;
-    for (let p = 0; p < n; p++) { if (dist[p] > 0) { best = p + 1; break; } }
-    for (let p = n - 1; p >= 0; p--) { if (dist[p] > 0) { worst = p + 1; break; } }
-    let pTop3 = 0, pTop10 = 0;
-    for (let p = 0; p < 3; p++) pTop3 += dist[p];
-    for (let p = 0; p < 10; p++) pTop10 += dist[p];
-    const tr = document.createElement('tr');
-    tr.innerHTML = `
-      <td>${TEAMS[teamIdx].abbr}</td><td>${bid}</td>
-      <td>${avgPick.toFixed(1)}</td><td>${median}</td>
-      <td>${best}</td><td>${worst}</td>
-      <td>${(pTop3 / numSims * 100).toFixed(1)}%</td>
-      <td>${(pTop10 / numSims * 100).toFixed(1)}%</td>
-      <td>${(totalCosts[teamIdx] / numSims).toFixed(1)}</td>
-      <td>${(bid - totalCosts[teamIdx] / numSims).toFixed(1)}</td>`;
-    tbody.appendChild(tr);
-  }
-}
-
-// =============================================
-// STEP-THROUGH MODE
-// =============================================
-
-let stepState = null; // full pre-computed lottery state
-
-function toggleStepthrough() {
-  const body = document.getElementById('stepBody');
-  const arrow = document.getElementById('stepToggleArrow');
-  body.classList.toggle('open');
-  arrow.classList.toggle('open');
-}
-
-function stepNew() {
-  const windowSize = Math.min(30, Math.max(1, parseInt(document.getElementById('windowSize').value) || 4));
-  const teamBids = [...bids];
-  const n = 30;
-
-  // Sort by bid desc with random tiebreaker
-  const indices = Array.from({ length: n }, (_, i) => i);
-  const tiebreakers = indices.map(() => Math.random());
-  indices.sort((a, b) => {
-    if (teamBids[b] !== teamBids[a]) return teamBids[b] - teamBids[a];
-    return tiebreakers[a] - tiebreakers[b];
-  });
-  const sortedBids = indices.map(i => teamBids[i]);
-
-  const zeroBidders = [];
-  const nonZeroBidders = [];
-  for (let j = 0; j < n; j++) {
-    if (sortedBids[j] === 0) zeroBidders.push(j);
-    else nonZeroBidders.push(j);
-  }
-
-  // Pre-compute all picks
-  const steps = []; // each: { pickNum, window (array of {sortIdx, teamIdx, bid, prob}), winnerTeamIdx, minBid, cost, refund }
-  const allocated = []; // grows as we go: { pickNum, teamIdx, bid, cost, refund }
-
-  let pickNum = 0;
-  let windowStart = 0;
-  let win = [];
-  for (let j = 0; j < Math.min(windowSize, nonZeroBidders.length); j++) {
-    win.push(nonZeroBidders[j]); windowStart = j + 1;
-  }
-
-  while (win.length > 0 && pickNum < n) {
-    const totalInWindow = win.reduce((s, j) => s + sortedBids[j], 0);
-    if (totalInWindow === 0) break;
-
-    const windowInfo = win.map(j => ({
-      sortIdx: j, teamIdx: indices[j], bid: sortedBids[j],
-      prob: sortedBids[j] / totalInWindow
-    }));
-
-    let r = Math.random() * totalInWindow;
-    let winnerSortIdx = win[0];
-    for (const j of win) { r -= sortedBids[j]; if (r <= 0) { winnerSortIdx = j; break; } }
-
-    const minBid = Math.min(...win.map(j => sortedBids[j]));
-    const winnerTeamIdx = indices[winnerSortIdx];
-    const winnerBid = teamBids[winnerTeamIdx];
-
-    steps.push({
-      pickNum,
-      window: windowInfo,
-      winnerTeamIdx,
-      winnerBid,
-      minBid,
-      cost: minBid,
-      refund: winnerBid - minBid,
-    });
-
-    pickNum++;
-    win = win.filter(j => j !== winnerSortIdx);
-    if (windowStart < nonZeroBidders.length) { win.push(nonZeroBidders[windowStart]); windowStart++; }
-    if (win.length === 0 && windowStart < nonZeroBidders.length) { win.push(nonZeroBidders[windowStart]); windowStart++; }
-  }
-
-  // Tail
-  while (win.length > 0 && pickNum < n) {
-    const totalInWindow = win.reduce((s, j) => s + sortedBids[j], 0);
-    if (totalInWindow === 0) break;
-    const windowInfo = win.map(j => ({
-      sortIdx: j, teamIdx: indices[j], bid: sortedBids[j],
-      prob: sortedBids[j] / totalInWindow
-    }));
-    let r = Math.random() * totalInWindow;
-    let winnerSortIdx = win[0];
-    for (const j of win) { r -= sortedBids[j]; if (r <= 0) { winnerSortIdx = j; break; } }
-    const minBid = Math.min(...win.map(j => sortedBids[j]));
-    const winnerTeamIdx = indices[winnerSortIdx];
-    steps.push({
-      pickNum, window: windowInfo, winnerTeamIdx,
-      winnerBid: teamBids[winnerTeamIdx], minBid, cost: minBid,
-      refund: teamBids[winnerTeamIdx] - minBid,
-    });
-    pickNum++;
-    win = win.filter(j => j !== winnerSortIdx);
-  }
-
-  // Zero bidders
-  const shuffledZero = [...zeroBidders].sort(() => Math.random() - 0.5);
-  for (const j of shuffledZero) {
-    steps.push({
-      pickNum,
-      window: [{ sortIdx: j, teamIdx: indices[j], bid: 0, prob: 1 }],
-      winnerTeamIdx: indices[j],
-      winnerBid: 0, minBid: 0, cost: 0, refund: 0,
-      isZeroBid: true,
-    });
-    pickNum++;
-  }
-
-  stepState = {
-    steps,
-    teamBids,
-    windowSize,
-    currentStep: -1, // -1 means "before first pick"
-    indices,
-    sortedBids,
-  };
-
-  document.getElementById('stepNextBtn').disabled = false;
-  document.getElementById('stepAllBtn').disabled = false;
-  document.getElementById('stepPrevBtn').disabled = true;
-  document.getElementById('stepInfo').textContent = `Lottery ready \u2014 ${steps.length} picks to assign`;
-  renderStep();
-}
-
-function stepNext() {
-  if (!stepState || stepState.currentStep >= stepState.steps.length - 1) return;
-  stepState.currentStep++;
-  updateStepButtons();
-  renderStep();
-}
-
-function stepPrev() {
-  if (!stepState || stepState.currentStep < 0) return;
-  stepState.currentStep--;
-  updateStepButtons();
-  renderStep();
-}
-
-function stepAll() {
-  if (!stepState) return;
-  stepState.currentStep = stepState.steps.length - 1;
-  updateStepButtons();
-  renderStep();
-}
-
-function updateStepButtons() {
-  const s = stepState;
-  document.getElementById('stepPrevBtn').disabled = s.currentStep < 0;
-  document.getElementById('stepNextBtn').disabled = s.currentStep >= s.steps.length - 1;
-  document.getElementById('stepAllBtn').disabled = s.currentStep >= s.steps.length - 1;
-  const shown = s.currentStep + 1;
-  document.getElementById('stepInfo').textContent = shown === 0
-    ? `Lottery ready \u2014 ${s.steps.length} picks`
-    : `Pick ${shown} of ${s.steps.length}`;
-}
-
-function renderStep() {
-  const container = document.getElementById('stepContent');
-  const s = stepState;
-  if (!s) { container.innerHTML = ''; return; }
-
-  if (s.currentStep < 0) {
-    // Show initial bid order
-    container.innerHTML = renderInitialBidOrder();
-    return;
-  }
-
-  const step = s.steps[s.currentStep];
-  const allocated = s.steps.slice(0, s.currentStep + 1);
-
-  let html = '';
-
-  // Pick label
-  html += `<div class="step-pick-label">Pick #${step.pickNum + 1}${step.isZeroBid ? ' (zero-bid)' : ''}</div>`;
-
-  // Winner banner
-  const w = TEAMS[step.winnerTeamIdx];
-  html += `<div class="step-winner-banner">`;
-  html += `<span class="winner-team">${w.abbr}</span> ${w.name} wins pick #${step.pickNum + 1}`;
-  html += `<br><span class="winner-detail">Bid: ${step.winnerBid} &nbsp;\u2022&nbsp; Charged: ${step.cost} &nbsp;\u2022&nbsp; Refund: ${step.refund}</span>`;
-  html += `</div>`;
-
-  // Window table
-  if (!step.isZeroBid) {
-    html += `<div class="step-table-scroll"><table class="step-table">`;
-    html += `<thead><tr><th>Team</th><th>Bid</th><th class="r">Probability</th><th class="r">Result</th></tr></thead><tbody>`;
-    for (const entry of step.window) {
-      const t = TEAMS[entry.teamIdx];
-      const isWinner = entry.teamIdx === step.winnerTeamIdx;
-      const cls = isWinner ? 'winner' : '';
-      html += `<tr class="${cls}">`;
-      html += `<td class="team-cell">${t.abbr}</td>`;
-      html += `<td>${entry.bid}</td>`;
-      html += `<td class="r">${(entry.prob * 100).toFixed(1)}%</td>`;
-      html += `<td class="r">${isWinner ? '\u2705 Winner' : ''}</td>`;
-      html += `</tr>`;
-    }
-    html += `</tbody></table></div>`;
-  }
-
-  // Allocated picks so far
-  html += `<div class="step-allocated">`;
-  html += `<div class="step-allocated-title">Picks allocated (${allocated.length} / ${s.steps.length})</div>`;
-  html += `<div class="step-allocated-list">`;
-  for (const a of allocated) {
-    const t = TEAMS[a.winnerTeamIdx];
-    html += `<span class="step-pick-chip"><span class="chip-pick">#${a.pickNum + 1}</span> <span class="chip-team">${t.abbr}</span></span>`;
-  }
-  html += `</div></div>`;
-
-  container.innerHTML = html;
-}
-
-function renderInitialBidOrder() {
-  const s = stepState;
-  let html = `<div class="step-pick-label">Initial Bid Order</div>`;
-  html += `<div class="step-table-scroll"><table class="step-table">`;
-  html += `<thead><tr><th>#</th><th>Team</th><th class="r">Bid</th></tr></thead><tbody>`;
-  for (let i = 0; i < s.indices.length; i++) {
-    const teamIdx = s.indices[i];
-    const t = TEAMS[teamIdx];
-    const bid = s.teamBids[teamIdx];
-    const inFirstWindow = i < s.windowSize && bid > 0;
-    html += `<tr class="${inFirstWindow ? 'in-window' : ''} ${bid === 0 ? 'already-picked' : ''}">`;
-    html += `<td>${i + 1}</td><td class="team-cell">${t.abbr}</td><td class="r">${bid}</td>`;
-    html += `</tr>`;
-  }
-  html += `</tbody></table></div>`;
-  html += `<div style="font-family:var(--mono);font-size:0.7rem;color:var(--text-dim);margin-top:0.5rem;">`;
-  html += `Highlighted rows = initial window (top ${s.windowSize} bidders). Click Next to draw pick #1.</div>`;
-  return html;
-}
-
-// =============================================
-// INIT
-// =============================================
-
-loadFromUrl();
-renderBidsList();
-if (bids.every(b => b === 100)) loadPreset('linear'); // only apply default if no URL params loaded
-
-</script>
 </body>
 </html>
