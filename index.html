@@ -380,6 +380,7 @@ hr {
       <p>On a pre-specified date in late April, teams simultaneously submit sealed bids to the league. Bids must be integer amounts, and teams must have enough Credits to cover the bid. After the deadline, the league reveals all bids publicly.</p>
       <p>Picks are allocated through a <strong>Rolling Window Lottery</strong>: the top four highest-bidding teams enter a lottery for the first pick, weighted by bid size. The winner is removed, the next-highest bidder enters, and the process repeats for each subsequent pick. The winner of each window is charged only the minimum bid in that window and is refunded the difference&mdash;so a team that bids high but falls to a later pick retains Credits for the following year.</p>
       <p>Teams that bid zero pick at the end of the first round, with a random tiebreaker. Second-round picks are awarded in order of first-round bid size, with no additional Credits spent.</p>
+      <p>You can see how this works with this <a href="simulator.html">Rolling Window Lottery simulator</a>.</p>
     </div>
 
     <h3>Talent allocation</h3>
@@ -467,32 +468,22 @@ hr {
 
     <div class="qa-item">
       <div class="question">What does the annual schedule look like?</div>
-      <div class="answer"><p>July 1: the league allocates 100 Credits per team, minus playoff offsets. Early February: the trade deadline applies to Credits and draft slots. Mid-May: draft entry deadline and Credit bid submission. Late May: the Rolling Window Lottery. Late June: the draft.</p></div>
+      <div class="answer"><ul>
+        <li>July 1: the league allocates 100 Credits per team, minus playoff offsets.</li>
+        <li>Early February: the trade deadline applies to Credits and draft slots.</li>
+        <li></li>Mid-May: draft entry deadline and Credit bid submission.</li>
+        <li>Late May: the Rolling Window Lottery.</li>
+        <li></li>Late June: the draft.</li></ul></div>
     </div>
 
     <div class="qa-item">
       <div class="question">Doesn&rsquo;t the playoff offset incentivize teams to lose playoff series?</div>
-      <div class="answer"><p>The chance to advance a full round of playoffs&mdash;with the associated revenue, prestige, and player development value&mdash;is not something teams will realistically forfeit for 20 additional Credits. If this remains a concern, the offset could increase nonlinearly with rounds. Several alternative offset schemes not tied to playoff success are also available.</p></div>
+      <div class="answer"><p>Maybe. But we suspect that the chance to advance a full round of playoffs is not something teams will intentionally lose, for the marginal benefit of 20 additional Credits. If this is a real concern, the Credit offset could increase nonlinearly with rounds (10 for winning a first round series, 20 more for Conference Semifinals, 30 more for Conference Finals, and 40 more for Finals, for example). Or, we have proposed several alternative offset schemes that are not tied to playoff success, and many other such options are plausible.</p></div>
     </div>
 
     <div class="qa-item">
       <div class="question">What about second-round picks where another team owns the related first-round slot?</div>
-      <div class="answer"><p>Second-round picks are assigned in order of first-round bid size, with reverse-order-of-first-round-pick as a tiebreaker. If Boston owns the Lakers&rsquo; 2036 second-round slot while the Lakers retain their first-round slot, it is the Lakers&rsquo; bid that determines where Boston picks in the second round.</p></div>
-    </div>
-
-    <div class="qa-item">
-      <div class="question">What stops a team from stockpiling Credits and dominating a single draft?</div>
-      <div class="answer"><p>Three forces work against this. First, a team saving Credits picks last every year&mdash;an enormous opportunity cost. Second, the playoff offset means good teams receive far fewer than 100 Credits annually. Third, the Rolling Window Lottery means even a team bidding 600 against three teams at 100 has only about a 67% chance of winning any given window. The system is self-balancing without needing artificial caps or decay rules.</p></div>
-    </div>
-
-    <div class="qa-item">
-      <div class="question">How does this affect tanking through roster construction?</div>
-      <div class="answer"><p>Under the current system, teams trade away good players partly to lose more games and improve draft position. Under Credits, that incentive disappears. A team might still tear down its roster to accumulate Credits via trade, but that is a legitimate team-building strategy&mdash;not a competitive-integrity problem. The incentive to field a non-competitive team on the court is eliminated.</p></div>
-    </div>
-
-    <div class="qa-item">
-      <div class="question">How do you value Credits in trades?</div>
-      <div class="answer"><p>The market will discover the price, just as it did for cash considerations and second-round picks. The structure is similar to any currency: its worth is determined by what it can buy in the draft, which depends on the competitive landscape of bids in a given year.</p></div>
+      <div class="answer"><p>In our proposal, second round picks are assigned in order of first-round bid size, with reverse-order-of-first-round-pick as a tiebreaker. (So, among two teams with identical first round bids, the one which wins an earlier first-round pick gets the later second round pick.) We imagine that, even if Boston owns the Lakers 2036 second round slot, while the Lakers retain their own 2036 first round slot, it is <i>the Lakers’ bid</i> that dictates where Boston lands in the second round. We do not expect that teams will substantially change their first round bids in order to send a worse second round pick to the current holder of their pick slot.</p></div>
     </div>
 
     <div class="qa-item">
