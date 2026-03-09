@@ -1,0 +1,1195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Presentation — Team-Building Credits</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<script defer src="https://cloud.umami.is/script.js" data-website-id="dee76a7d-1304-4c90-aec9-0fe3c653b751"></script>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,300;1,8..60,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #faf8f4;
+  --text: #1a1a1a;
+  --text-secondary: #555;
+  --text-tertiary: #888;
+  --rule: #d4d0c8;
+  --rule-light: #e8e4dc;
+  --accent: #007A33;
+  --accent-light: #009940;
+  --surface: #f2efe8;
+  --white: #fff;
+  --serif: 'Source Serif 4', Georgia, serif;
+  --mono: 'IBM Plex Mono', 'Menlo', monospace;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--serif);
+  -webkit-font-smoothing: antialiased;
+  overflow: hidden;
+  height: 100vh;
+}
+
+/* --- Nav --- */
+.site-nav {
+  border-bottom: 1px solid var(--rule);
+  background: var(--bg);
+  position: relative;
+  z-index: 200;
+}
+
+.site-nav-inner {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+  display: flex;
+  align-items: baseline;
+}
+
+.site-nav-title {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--text);
+  padding: 0.7rem 0;
+  margin-right: 2rem;
+  text-decoration: none;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.site-nav-title:hover { color: var(--accent); }
+
+.nav-tab {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  font-weight: 500;
+  color: var(--text-tertiary);
+  text-decoration: none;
+  padding: 0.7rem 0.85rem;
+  position: relative;
+  letter-spacing: 0.02em;
+}
+
+.nav-tab:hover { color: var(--text); }
+
+/* --- Slide container --- */
+.slide-viewport {
+  height: calc(100vh - 39px);
+  display: flex;
+  flex-direction: column;
+}
+
+.slide-area {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 2rem 1.5rem;
+}
+
+.slide {
+  display: none;
+  max-width: 760px;
+  width: 100%;
+}
+
+.slide.active {
+  display: block;
+}
+
+/* --- Slide typography --- */
+.slide .section-label {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--text-tertiary);
+  margin-bottom: 0.5rem;
+}
+
+.slide h1 {
+  font-family: var(--serif);
+  font-size: 2.6rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  margin-bottom: 1rem;
+  color: var(--text);
+}
+
+.slide h2 {
+  font-family: var(--serif);
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  line-height: 1.2;
+  margin-bottom: 0.75rem;
+  color: var(--text);
+}
+
+.slide .subtitle {
+  font-size: 1.2rem;
+  font-weight: 300;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  max-width: 600px;
+}
+
+.slide .byline {
+  margin-top: 2rem;
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  color: var(--text-tertiary);
+  letter-spacing: 0.01em;
+}
+
+.slide .byline strong {
+  color: var(--text-secondary);
+  font-weight: 600;
+}
+
+.slide .sub-heading {
+  font-family: var(--serif);
+  font-size: 1rem;
+  font-weight: 400;
+  color: var(--text-secondary);
+  margin-bottom: 1.25rem;
+  font-style: italic;
+}
+
+.slide p {
+  font-size: 1.05rem;
+  line-height: 1.75;
+  margin-bottom: 1rem;
+  color: var(--text);
+}
+
+.slide .body-block {
+  border-left: 3px solid var(--accent);
+  padding-left: 1.25rem;
+  margin: 1.25rem 0;
+}
+
+.slide .body-block p {
+  font-size: 0.95rem;
+  line-height: 1.7;
+  margin-bottom: 0.85rem;
+}
+
+.slide .body-block p:last-child { margin-bottom: 0; }
+
+.slide .body-block ul {
+  margin: 0.5rem 0 0.75rem 1.25rem;
+  padding: 0;
+  font-size: 0.95rem;
+  line-height: 1.7;
+}
+
+.slide .body-block li {
+  margin-bottom: 0.4rem;
+}
+
+.slide .body-block li ul {
+  margin-top: 0.3rem;
+  margin-bottom: 0.3rem;
+}
+
+.slide .epigraph {
+  font-style: italic;
+  font-size: 1.15rem;
+  color: var(--text-secondary);
+  margin-bottom: 1.25rem;
+  line-height: 1.6;
+}
+
+/* --- Full-bleed accent slide --- */
+.slide.accent-slide {
+  max-width: 100%;
+  padding: 0;
+}
+
+.accent-card {
+  background: var(--text);
+  color: var(--white);
+  padding: 4rem 3.5rem;
+  max-width: 760px;
+  margin: 0 auto;
+}
+
+.accent-card h2 {
+  color: var(--white);
+  font-size: 2.4rem;
+  margin-bottom: 0.75rem;
+}
+
+.accent-card p {
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 1.1rem;
+  line-height: 1.7;
+}
+
+/* --- Outline list --- */
+.outline-list {
+  border-left: 3px solid var(--accent);
+  padding-left: 1.25rem;
+  margin: 1rem 0;
+}
+
+.outline-list ol {
+  margin: 0;
+  padding: 0 0 0 1.25rem;
+  font-size: 1.05rem;
+  line-height: 2;
+}
+
+.outline-list ol ol {
+  margin: 0;
+  padding: 0 0 0 1.5rem;
+  list-style-type: lower-alpha;
+  line-height: 1.8;
+}
+
+/* --- Alt grid for comparison slides --- */
+.alt-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  margin: 1.25rem 0;
+  border: 1px solid var(--rule);
+}
+
+.alt-card {
+  padding: 1.1rem 1.25rem;
+  border-bottom: 1px solid var(--rule-light);
+  border-right: 1px solid var(--rule-light);
+}
+
+.alt-card:nth-child(2n) { border-right: none; }
+.alt-card:nth-last-child(-n+2) { border-bottom: none; }
+
+.alt-card .alt-name {
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  font-weight: 600;
+  margin-bottom: 0.4rem;
+  color: var(--text);
+}
+
+.alt-card .alt-name.recommended {
+  color: var(--accent);
+}
+
+.alt-card p {
+  font-size: 0.85rem;
+  line-height: 1.55;
+  color: var(--text-secondary);
+  margin-bottom: 0;
+}
+
+/* --- Example tables --- */
+.example-tables {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1.3fr;
+  gap: 1rem;
+  margin-top: 0.75rem;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+}
+
+.example-table-section h4 {
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-tertiary);
+  margin-bottom: 0.4rem;
+}
+
+.example-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.68rem;
+}
+
+.example-table th {
+  font-weight: 600;
+  text-align: left;
+  padding: 0.2rem 0.4rem;
+  border-bottom: 1px solid var(--rule);
+  font-size: 0.6rem;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.example-table th.r { text-align: right; }
+
+.example-table td {
+  padding: 0.15rem 0.4rem;
+  border-bottom: 1px solid var(--rule-light);
+}
+
+.example-table td.r { text-align: right; }
+.example-table td.team { font-weight: 600; }
+
+.example-table tr.in-window { background: #e4edf8; }
+.example-table tr.winner { background: #fef3cd; }
+.example-table tr.struck td.team,
+.example-table tr.struck td.r { text-decoration: line-through; opacity: 0.4; }
+.example-table tr.new-entry { background: #e4edf8; }
+
+.bids-scroll {
+  max-height: 420px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--rule) transparent;
+}
+
+/* --- Controls bar --- */
+.slide-controls {
+  border-top: 1px solid var(--rule);
+  padding: 0.6rem 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--bg);
+  user-select: none;
+}
+
+.slide-counter {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  color: var(--text-tertiary);
+  min-width: 80px;
+  text-align: center;
+}
+
+.slide-btn {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 0.35rem 1rem;
+  border: 1px solid var(--rule);
+  background: var(--white);
+  color: var(--text);
+  cursor: pointer;
+  transition: background 0.1s;
+}
+
+.slide-btn:hover { background: var(--surface); }
+.slide-btn:disabled { opacity: 0.3; cursor: default; }
+.slide-btn:disabled:hover { background: var(--white); }
+
+.slide-progress {
+  height: 2px;
+  background: var(--rule-light);
+  position: relative;
+}
+
+.slide-progress-bar {
+  height: 100%;
+  background: var(--accent);
+  transition: width 0.2s ease;
+}
+
+.slide-hint {
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  color: var(--text-tertiary);
+  letter-spacing: 0.02em;
+}
+
+@media (max-width: 700px) {
+  .slide h1 { font-size: 1.8rem; }
+  .slide h2 { font-size: 1.5rem; }
+  .slide p { font-size: 0.95rem; }
+  .alt-grid { grid-template-columns: 1fr; }
+  .alt-card { border-right: none !important; }
+  .alt-card:not(:last-child) { border-bottom: 1px solid var(--rule-light) !important; }
+  .example-tables { grid-template-columns: 1fr; }
+  .accent-card { padding: 2.5rem 1.5rem; }
+  .accent-card h2 { font-size: 1.8rem; }
+}
+</style>
+</head>
+<body>
+
+<nav class="site-nav">
+  <div class="site-nav-inner">
+    <a class="site-nav-title" href="index.html">Team-Building Credits</a>
+    <a class="nav-tab" href="index.html">Proposal</a>
+    <a class="nav-tab" href="simulator.html">Simulator</a>
+  </div>
+</nav>
+
+<div class="slide-viewport">
+  <div class="slide-progress">
+    <div class="slide-progress-bar" id="progressBar"></div>
+  </div>
+
+  <div class="slide-area" id="slideArea">
+
+    <!-- Slide 1: Title -->
+    <div class="slide" data-section="">
+      <h1>Team-Building Credits</h1>
+      <div class="subtitle">Reforming the lottery by realigning incentives and allocating talent to teams that need it</div>
+      <div class="byline">
+        <strong>Drew Cannon</strong> &middot; <strong>David Sparks</strong> &middot; <strong>Mike Zarren</strong><br>
+        Boston Celtics
+      </div>
+    </div>
+
+    <!-- Slide 2: The problem -->
+    <div class="slide accent-slide">
+      <div class="accent-card">
+        <h2>The problem</h2>
+        <p>We want to allocate young talent to the teams that need it most, but our measure of &ldquo;need&rdquo; &ndash; regular season losses &ndash; is susceptible to manipulation.</p>
+      </div>
+    </div>
+
+    <!-- Slide 3: The solution -->
+    <div class="slide accent-slide">
+      <div class="accent-card" style="background: var(--accent);">
+        <h2>The solution</h2>
+        <ul style="margin: 1rem 0 0 1.25rem; font-size: 1.05rem; line-height: 2; color: rgba(255,255,255,0.9);">
+          <li>Give teams fine-grained control over their investment in the draft.</li>
+          <li>Remove any connection between losing games and draft positioning.</li>
+          <li>Further lubricate the trade market.</li>
+          <li>Give the league a flexible &ldquo;carrot&rdquo; or &ldquo;stick&rdquo; for enforcing cap constraints or other rules.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Slide 4: The method -->
+    <div class="slide accent-slide">
+      <div class="accent-card" style="background: var(--accent);">
+        <h2>The method</h2>
+        <p>Each year, the NBA allocates 100 &ldquo;Team-Building Credits&rdquo; to each team.</p>
+        <p>Prior to the draft lottery, teams simultaneously bid some of their Credits as entries to the lottery, then the lottery assigns all 30 first-round picks.</p>
+        <p>Unspent Credits roll over, season-to-season, so teams can accumulate them over time.</p>
+        <p>Credits can be traded between teams, just as player contracts, cash, and (portions of) picks are currently.</p>
+        <p>In support of the league&rsquo;s goals, fewer than 100 Credits can be allocated to teams, according to agreed-upon criteria.</p>
+      </div>
+    </div>
+
+    <!-- Slide 5: Outline -->
+    <div class="slide">
+      <h2>Outline</h2>
+      <div class="sub-heading">Team-Building Credits are the main idea; the details are flexible</div>
+      <div class="outline-list">
+        <ol>
+          <li>Goodhart&rsquo;s Law</li>
+          <li>Team-Building Credits as a solution
+            <ol>
+              <li>Solving the incentive problem</li>
+              <li>Allocating talent to teams, by need</li>
+            </ol>
+          </li>
+          <li>Our proposal</li>
+          <li>The transition period</li>
+          <li>Options and alternatives</li>
+          <li>Q &amp; A</li>
+        </ol>
+      </div>
+    </div>
+
+    <!-- Slide 6: Goodhart's Law -->
+    <div class="slide">
+      <div class="section-label">The problem</div>
+      <h2>Goodhart&rsquo;s Law</h2>
+      <div class="epigraph">&ldquo;When a measure becomes a target, it ceases to be a good measure.&rdquo;</div>
+      <div class="body-block">
+        <p>For competitive balance reasons, and for fans to have hope for their favored team, it is desirable to give teams in need of talent an advantage in acquiring good young prospects.</p>
+        <p>Unfortunately, the way we have historically identified teams in &ldquo;need&rdquo; of talent is to look at regular season losses, and this <em>measure</em> of need has become a <em>target</em> which teams can strategically pursue, to the detriment of the basketball product.</p>
+        <p>Ideally, we could find some measure of need that is not directly manipulable by the teams, but almost all of the proposed lottery reforms either fail to disentangle &ldquo;need&rdquo; from losing, or they don&rsquo;t provide adequate paths to relief for teams with true need.</p>
+        <p>The Team-Building Credits system offers teams a resource that gives them direct control over their relative advantage in acquiring talent, letting teams determine need for themselves, and removing the incentive to falsely signal need by intentional losing.</p>
+      </div>
+    </div>
+
+    <!-- Slide 7: Solving the incentive problem -->
+    <div class="slide">
+      <div class="section-label">The solution</div>
+      <h2>Team-Building Credits</h2>
+      <div class="sub-heading">Solving the incentive problem</div>
+      <div class="body-block">
+        <p>Many draft/lottery reform proposals merely shift the timing or breakpoint at which losing becomes preferable for long-term rational teams.</p>
+        <ul>
+          <li>Counting wins after a certain point in the season creates an incentive for teams with good rosters to lose early, and it doesn&rsquo;t help teams who simply cannot win games at any point in the season, who are the ones who most need the help.</li>
+          <li>Restricting the range of pick protections (to, e.g. &ldquo;top 4&rdquo; or &ldquo;lottery&rdquo;) will just cause teams to pool toward those breakpoints.</li>
+          <li>Considering record across multiple seasons creates an incentive for teams to lose if their previous season&rsquo;s losses put them in a favorable draft position. Or creates an incentive for a team that was good in a previous year to lose <em>even more</em>.</li>
+          <li>Disallowing teams from picking Top 4 in back-to-back years, or awarding good picks to tournament winners, just makes it harder for talent to get to the teams that need it most.</li>
+        </ul>
+        <p>Team-Building Credits don&rsquo;t rely on teams winning or losing specific regular season games; they can&rsquo;t be directly manipulated through non-competitive strategies or lineups.</p>
+      </div>
+    </div>
+
+    <!-- Slide 8: Talent allocation -->
+    <div class="slide">
+      <div class="section-label">The solution</div>
+      <h2>Team-Building Credits</h2>
+      <div class="sub-heading">Talent allocation</div>
+      <div class="body-block">
+        <p>The NBA has historically prioritized giving non-contending teams the opportunity to build through the draft. Team-Building Credits preserves that opportunity.</p>
+        <p>Specifically, this plan allows teams to &ldquo;save&rdquo; Credits for the years in which they most acutely need an infusion of talent through the draft, at which time they can invest their Credits heavily into the draft lottery, to maximize their chances of drafting the best prospects.</p>
+        <p>Additionally, this plan allows Team-Building Credits to be traded, meaning that a rebuilding team can trade some of their veteran talent for additional Credits, further improving their chances in the draft lottery.</p>
+        <p>There are many other ways the Team-Building Credit system could be modified to confer advantages in the draft to any set of teams determined by the league to &ldquo;need&rdquo; more help in the draft. See the section below on Offset system options.</p>
+      </div>
+    </div>
+
+    <!-- Slide 9: TBC basics -->
+    <div class="slide">
+      <div class="section-label">Our proposal</div>
+      <h2>Team-Building Credit basics</h2>
+      <div class="sub-heading">A league-controlled special-purpose currency for team building</div>
+      <div class="body-block">
+        <ul>
+          <li>At the start of each league-year, each team receives an allocation of 100 Team-Building Credits from the league, minus deductions for playoff success. These Credits may be saved or traded, but their primary use is to bid for draft position.
+            <ul>
+              <li>Teams also get the rights to their own first- and second-round draft picks seven years out, on the night of the draft, as they currently do.</li>
+            </ul>
+          </li>
+          <li>On some pre-specified date in late April, teams will secretly send bids to the league. Those bids involve &ldquo;spending&rdquo; their Credits toward a partially randomized allocation of draft positions. The bids must be integer amounts of Credit, and the bidding team must have enough Credits in their account to cover the bid.</li>
+          <li>After the bid deadline, the league would reveal each team&rsquo;s bids, which would generate a lot of conversation among fans and the media.</li>
+          <li>Picks are allocated through a <strong>Rolling Window Lottery</strong>.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Slide 10: Rolling Window Lottery -->
+    <div class="slide">
+      <div class="section-label">Our proposal</div>
+      <h2>The Rolling Window Lottery</h2>
+      <div class="sub-heading">The mechanism by which teams bid Credits for picks</div>
+      <div class="body-block">
+        <ul>
+          <li>The first round has 30 picks (or one pick for each team), although just like today, teams can own multiple picks in a single round if they acquire additional picks from other teams via trade.</li>
+          <li>It is desirable to have the magnitude of each team&rsquo;s bid largely determine draft order, but with some randomness, so we propose a <strong>Rolling Window Lottery</strong>:
+            <ul>
+              <li>For the first pick, the top 4 (or 3) highest-bidding slot owners are put into a lottery amongst themselves, with probability proportional to the number of Credits each put into the draft.</li>
+              <li>The winner of this lottery gets the first pick, and is removed from the pool.</li>
+              <li>For the second pick, the next-highest-bidding slot owner is added to the three non-winners of the first pick, and another lottery is held.</li>
+              <li>The winner of this lottery gets the second pick, and so on, until all picks have been assigned.</li>
+              <li>The winner in each window is debited only the minimum bid of any bidder in that window, and is thus refunded the difference between their own bid and that minimum. This way, a team that bids highly but randomly falls to a lower pick retains plenty of Credits for the following year.</li>
+            </ul>
+          </li>
+          <li>Any team that bids 0 Credits will pick at the end of the first round, with a random tiebreaker.</li>
+          <li>Second round picks are awarded in order of first round bid size, with reverse-order-of-first-round-pick as a tiebreaker. No additional Credits are spent toward this.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Slide 11: Rolling Window Example - Pick 1 setup -->
+    <div class="slide">
+      <div class="section-label">Rolling Window Example</div>
+      <h2>Lottery for pick 1</h2>
+      <div class="example-tables">
+        <div class="example-table-section">
+          <h4>All bids</h4>
+          <div class="bids-scroll">
+          <table class="example-table">
+            <thead><tr><th>Team</th><th class="r">Bid</th></tr></thead>
+            <tbody>
+              <tr class="in-window"><td class="team">BRK</td><td class="r">151</td></tr>
+              <tr class="in-window"><td class="team">WAS</td><td class="r">150</td></tr>
+              <tr class="in-window"><td class="team">SAC</td><td class="r">125</td></tr>
+              <tr class="in-window"><td class="team">IND</td><td class="r">110</td></tr>
+              <tr><td class="team">NOP</td><td class="r">101</td></tr>
+              <tr><td class="team">UTA</td><td class="r">100</td></tr>
+              <tr><td class="team">DAL</td><td class="r">100</td></tr>
+              <tr><td class="team">CHI</td><td class="r">100</td></tr>
+              <tr><td class="team">MEM</td><td class="r">99</td></tr>
+              <tr><td class="team">MIL</td><td class="r">80</td></tr>
+              <tr><td class="team">POR</td><td class="r">75</td></tr>
+              <tr><td class="team">ATL</td><td class="r">75</td></tr>
+              <tr><td class="team">LAC</td><td class="r">66</td></tr>
+              <tr><td class="team">PHX</td><td class="r">51</td></tr>
+              <tr><td class="team">CHA</td><td class="r">51</td></tr>
+              <tr><td class="team">ORL</td><td class="r">50</td></tr>
+              <tr><td class="team">PHI</td><td class="r">50</td></tr>
+              <tr><td class="team">GSW</td><td class="r">50</td></tr>
+              <tr><td class="team">MIA</td><td class="r">50</td></tr>
+              <tr><td class="team">TOR</td><td class="r">50</td></tr>
+              <tr><td class="team">LAL</td><td class="r">12</td></tr>
+              <tr><td class="team">DEN</td><td class="r">11</td></tr>
+              <tr><td class="team">MIN</td><td class="r">10</td></tr>
+              <tr><td class="team">CLE</td><td class="r">10</td></tr>
+              <tr><td class="team">HOU</td><td class="r">10</td></tr>
+              <tr><td class="team">NYK</td><td class="r">5</td></tr>
+              <tr><td class="team">BOS</td><td class="r">5</td></tr>
+              <tr><td class="team">SAS</td><td class="r">1</td></tr>
+              <tr><td class="team">DET</td><td class="r">0</td></tr>
+              <tr><td class="team">OKC</td><td class="r">0</td></tr>
+            </tbody>
+          </table>
+          </div>
+        </div>
+        <div class="example-table-section">
+          <h4>Lottery for pick 1</h4>
+          <table class="example-table">
+            <thead><tr><th>Team</th><th class="r">Bid</th><th class="r">Prob.</th></tr></thead>
+            <tbody>
+              <tr><td class="team">BRK</td><td class="r">151</td><td class="r">28.2%</td></tr>
+              <tr><td class="team">WAS</td><td class="r">150</td><td class="r">28.0%</td></tr>
+              <tr><td class="team">SAC</td><td class="r">125</td><td class="r">23.3%</td></tr>
+              <tr><td class="team">IND</td><td class="r">110</td><td class="r">20.5%</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="example-table-section">
+          <h4>Allocated picks</h4>
+          <p style="font-family: var(--mono); font-size: 0.7rem; color: var(--text-tertiary); margin-top: 0.5rem;">Waiting for draw&hellip;</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 12: SAC wins pick 1 -->
+    <div class="slide">
+      <div class="section-label">Rolling Window Example</div>
+      <h2>SAC wins pick 1</h2>
+      <div class="example-tables">
+        <div class="example-table-section">
+          <h4>Lottery for pick 1</h4>
+          <table class="example-table">
+            <thead><tr><th>Team</th><th class="r">Bid</th><th class="r">Prob.</th></tr></thead>
+            <tbody>
+              <tr><td class="team">BRK</td><td class="r">151</td><td class="r">28.2%</td></tr>
+              <tr><td class="team">WAS</td><td class="r">150</td><td class="r">28.0%</td></tr>
+              <tr class="winner"><td class="team">SAC</td><td class="r">125</td><td class="r">23.3%</td></tr>
+              <tr><td class="team">IND</td><td class="r">110</td><td class="r">20.5%</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="example-table-section">
+          <h4>Allocated picks</h4>
+          <table class="example-table">
+            <thead><tr><th>Team</th><th class="r">Pick</th><th class="r">Bid</th><th class="r">Charged</th><th class="r">Refund</th></tr></thead>
+            <tbody>
+              <tr class="winner"><td class="team">SAC</td><td class="r">1</td><td class="r">125</td><td class="r">110</td><td class="r">15</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="example-table-section">
+          <h4>Next window</h4>
+          <p style="font-family: var(--mono); font-size: 0.7rem; color: var(--text-tertiary); margin-top: 0.5rem;">SAC removed. NOP (101) enters the window for pick 2.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 13: Lottery for pick 2 -->
+    <div class="slide">
+      <div class="section-label">Rolling Window Example</div>
+      <h2>Lottery for pick 2</h2>
+      <div class="example-tables">
+        <div class="example-table-section">
+          <h4>Lottery for pick 2</h4>
+          <table class="example-table">
+            <thead><tr><th>Team</th><th class="r">Bid</th><th class="r">Prob.</th></tr></thead>
+            <tbody>
+              <tr><td class="team">BRK</td><td class="r">151</td><td class="r">29.5%</td></tr>
+              <tr><td class="team">WAS</td><td class="r">150</td><td class="r">29.3%</td></tr>
+              <tr><td class="team">IND</td><td class="r">110</td><td class="r">21.5%</td></tr>
+              <tr class="new-entry"><td class="team">NOP</td><td class="r">101</td><td class="r">19.7%</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="example-table-section">
+          <h4>Allocated picks</h4>
+          <table class="example-table">
+            <thead><tr><th>Team</th><th class="r">Pick</th><th class="r">Bid</th><th class="r">Charged</th><th class="r">Refund</th></tr></thead>
+            <tbody>
+              <tr><td class="team">SAC</td><td class="r">1</td><td class="r">125</td><td class="r">110</td><td class="r">15</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div></div>
+      </div>
+    </div>
+
+    <!-- Slide 14: WAS wins pick 2 -->
+    <div class="slide">
+      <div class="section-label">Rolling Window Example</div>
+      <h2>WAS wins pick 2</h2>
+      <div class="example-tables">
+        <div class="example-table-section">
+          <h4>Lottery for pick 2</h4>
+          <table class="example-table">
+            <thead><tr><th>Team</th><th class="r">Bid</th><th class="r">Prob.</th></tr></thead>
+            <tbody>
+              <tr><td class="team">BRK</td><td class="r">151</td><td class="r">29.5%</td></tr>
+              <tr class="winner"><td class="team">WAS</td><td class="r">150</td><td class="r">29.3%</td></tr>
+              <tr><td class="team">IND</td><td class="r">110</td><td class="r">21.5%</td></tr>
+              <tr><td class="team">NOP</td><td class="r">101</td><td class="r">19.7%</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="example-table-section">
+          <h4>Allocated picks</h4>
+          <table class="example-table">
+            <thead><tr><th>Team</th><th class="r">Pick</th><th class="r">Bid</th><th class="r">Charged</th><th class="r">Refund</th></tr></thead>
+            <tbody>
+              <tr><td class="team">SAC</td><td class="r">1</td><td class="r">125</td><td class="r">110</td><td class="r">15</td></tr>
+              <tr class="winner"><td class="team">WAS</td><td class="r">2</td><td class="r">150</td><td class="r">101</td><td class="r">49</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div></div>
+      </div>
+    </div>
+
+    <!-- Slide 15: Lottery for pick 3 -->
+    <div class="slide">
+      <div class="section-label">Rolling Window Example</div>
+      <h2>Lottery for pick 3</h2>
+      <div class="example-tables">
+        <div class="example-table-section">
+          <h4>Lottery for pick 3</h4>
+          <table class="example-table">
+            <thead><tr><th>Team</th><th class="r">Bid</th><th class="r">Prob.</th></tr></thead>
+            <tbody>
+              <tr><td class="team">BRK</td><td class="r">151</td><td class="r">32.7%</td></tr>
+              <tr><td class="team">IND</td><td class="r">110</td><td class="r">23.8%</td></tr>
+              <tr><td class="team">NOP</td><td class="r">101</td><td class="r">21.9%</td></tr>
+              <tr class="new-entry"><td class="team">UTA</td><td class="r">100</td><td class="r">21.6%</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="example-table-section">
+          <h4>Allocated picks</h4>
+          <table class="example-table">
+            <thead><tr><th>Team</th><th class="r">Pick</th><th class="r">Bid</th><th class="r">Charged</th><th class="r">Refund</th></tr></thead>
+            <tbody>
+              <tr><td class="team">SAC</td><td class="r">1</td><td class="r">125</td><td class="r">110</td><td class="r">15</td></tr>
+              <tr><td class="team">WAS</td><td class="r">2</td><td class="r">150</td><td class="r">101</td><td class="r">49</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div></div>
+      </div>
+    </div>
+
+    <!-- Slide 16: IND wins pick 3 -->
+    <div class="slide">
+      <div class="section-label">Rolling Window Example</div>
+      <h2>IND wins pick 3</h2>
+      <div class="example-tables">
+        <div class="example-table-section">
+          <h4>Lottery for pick 3</h4>
+          <table class="example-table">
+            <thead><tr><th>Team</th><th class="r">Bid</th><th class="r">Prob.</th></tr></thead>
+            <tbody>
+              <tr><td class="team">BRK</td><td class="r">151</td><td class="r">32.7%</td></tr>
+              <tr class="winner"><td class="team">IND</td><td class="r">110</td><td class="r">23.8%</td></tr>
+              <tr><td class="team">NOP</td><td class="r">101</td><td class="r">21.9%</td></tr>
+              <tr><td class="team">UTA</td><td class="r">100</td><td class="r">21.6%</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="example-table-section">
+          <h4>Allocated picks</h4>
+          <table class="example-table">
+            <thead><tr><th>Team</th><th class="r">Pick</th><th class="r">Bid</th><th class="r">Charged</th><th class="r">Refund</th></tr></thead>
+            <tbody>
+              <tr><td class="team">SAC</td><td class="r">1</td><td class="r">125</td><td class="r">110</td><td class="r">15</td></tr>
+              <tr><td class="team">WAS</td><td class="r">2</td><td class="r">150</td><td class="r">101</td><td class="r">49</td></tr>
+              <tr class="winner"><td class="team">IND</td><td class="r">3</td><td class="r">110</td><td class="r">100</td><td class="r">10</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div></div>
+      </div>
+    </div>
+
+    <!-- Slide 17: Lottery for pick 4 -->
+    <div class="slide">
+      <div class="section-label">Rolling Window Example</div>
+      <h2>Lottery for pick 4</h2>
+      <div class="example-tables">
+        <div class="example-table-section">
+          <h4>Lottery for pick 4</h4>
+          <table class="example-table">
+            <thead><tr><th>Team</th><th class="r">Bid</th><th class="r">Prob.</th></tr></thead>
+            <tbody>
+              <tr><td class="team">BRK</td><td class="r">151</td><td class="r">33.4%</td></tr>
+              <tr><td class="team">NOP</td><td class="r">101</td><td class="r">22.3%</td></tr>
+              <tr><td class="team">UTA</td><td class="r">100</td><td class="r">22.1%</td></tr>
+              <tr class="new-entry"><td class="team">DAL</td><td class="r">100</td><td class="r">22.1%</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="example-table-section">
+          <h4>Allocated picks</h4>
+          <table class="example-table">
+            <thead><tr><th>Team</th><th class="r">Pick</th><th class="r">Bid</th><th class="r">Charged</th><th class="r">Refund</th></tr></thead>
+            <tbody>
+              <tr><td class="team">SAC</td><td class="r">1</td><td class="r">125</td><td class="r">110</td><td class="r">15</td></tr>
+              <tr><td class="team">WAS</td><td class="r">2</td><td class="r">150</td><td class="r">101</td><td class="r">49</td></tr>
+              <tr><td class="team">IND</td><td class="r">3</td><td class="r">110</td><td class="r">100</td><td class="r">10</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div></div>
+      </div>
+    </div>
+
+    <!-- Slide 18: BRK wins pick 4 -->
+    <div class="slide">
+      <div class="section-label">Rolling Window Example</div>
+      <h2>BRK wins pick 4</h2>
+      <div class="example-tables">
+        <div class="example-table-section">
+          <h4>Lottery for pick 4</h4>
+          <table class="example-table">
+            <thead><tr><th>Team</th><th class="r">Bid</th><th class="r">Prob.</th></tr></thead>
+            <tbody>
+              <tr class="winner"><td class="team">BRK</td><td class="r">151</td><td class="r">33.4%</td></tr>
+              <tr><td class="team">NOP</td><td class="r">101</td><td class="r">22.3%</td></tr>
+              <tr><td class="team">UTA</td><td class="r">100</td><td class="r">22.1%</td></tr>
+              <tr><td class="team">DAL</td><td class="r">100</td><td class="r">22.1%</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="example-table-section">
+          <h4>Allocated picks</h4>
+          <table class="example-table">
+            <thead><tr><th>Team</th><th class="r">Pick</th><th class="r">Bid</th><th class="r">Charged</th><th class="r">Refund</th></tr></thead>
+            <tbody>
+              <tr><td class="team">SAC</td><td class="r">1</td><td class="r">125</td><td class="r">110</td><td class="r">15</td></tr>
+              <tr><td class="team">WAS</td><td class="r">2</td><td class="r">150</td><td class="r">101</td><td class="r">49</td></tr>
+              <tr><td class="team">IND</td><td class="r">3</td><td class="r">110</td><td class="r">100</td><td class="r">10</td></tr>
+              <tr class="winner"><td class="team">BRK</td><td class="r">4</td><td class="r">151</td><td class="r">100</td><td class="r">51</td></tr>
+            </tbody>
+          </table>
+          <p style="font-family: var(--mono); font-size: 0.68rem; color: var(--text-secondary); margin-top: 0.75rem;">Note: BRK bid the most (151) but drew pick 4. They&rsquo;re charged only 100 (the window minimum) and refunded 51.</p>
+        </div>
+        <div></div>
+      </div>
+    </div>
+
+    <!-- Slide 19: Lottery for pick 5 -->
+    <div class="slide">
+      <div class="section-label">Rolling Window Example</div>
+      <h2>Lottery for pick 5</h2>
+      <div class="example-tables">
+        <div class="example-table-section">
+          <h4>Lottery for pick 5</h4>
+          <table class="example-table">
+            <thead><tr><th>Team</th><th class="r">Bid</th><th class="r">Prob.</th></tr></thead>
+            <tbody>
+              <tr><td class="team">NOP</td><td class="r">101</td><td class="r">25.2%</td></tr>
+              <tr><td class="team">UTA</td><td class="r">100</td><td class="r">24.9%</td></tr>
+              <tr><td class="team">DAL</td><td class="r">100</td><td class="r">24.9%</td></tr>
+              <tr class="new-entry"><td class="team">CHI</td><td class="r">100</td><td class="r">24.9%</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="example-table-section">
+          <h4>Allocated picks</h4>
+          <table class="example-table">
+            <thead><tr><th>Team</th><th class="r">Pick</th><th class="r">Bid</th><th class="r">Charged</th><th class="r">Refund</th></tr></thead>
+            <tbody>
+              <tr><td class="team">SAC</td><td class="r">1</td><td class="r">125</td><td class="r">110</td><td class="r">15</td></tr>
+              <tr><td class="team">WAS</td><td class="r">2</td><td class="r">150</td><td class="r">101</td><td class="r">49</td></tr>
+              <tr><td class="team">IND</td><td class="r">3</td><td class="r">110</td><td class="r">100</td><td class="r">10</td></tr>
+              <tr><td class="team">BRK</td><td class="r">4</td><td class="r">151</td><td class="r">100</td><td class="r">51</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div></div>
+      </div>
+    </div>
+
+    <!-- Slide 20: CHI wins pick 5 -->
+    <div class="slide">
+      <div class="section-label">Rolling Window Example</div>
+      <h2>CHI wins pick 5</h2>
+      <div class="example-tables">
+        <div class="example-table-section">
+          <h4>Lottery for pick 5</h4>
+          <table class="example-table">
+            <thead><tr><th>Team</th><th class="r">Bid</th><th class="r">Prob.</th></tr></thead>
+            <tbody>
+              <tr><td class="team">NOP</td><td class="r">101</td><td class="r">25.2%</td></tr>
+              <tr><td class="team">UTA</td><td class="r">100</td><td class="r">24.9%</td></tr>
+              <tr><td class="team">DAL</td><td class="r">100</td><td class="r">24.9%</td></tr>
+              <tr class="winner"><td class="team">CHI</td><td class="r">100</td><td class="r">24.9%</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="example-table-section">
+          <h4>Allocated picks</h4>
+          <table class="example-table">
+            <thead><tr><th>Team</th><th class="r">Pick</th><th class="r">Bid</th><th class="r">Charged</th><th class="r">Refund</th></tr></thead>
+            <tbody>
+              <tr><td class="team">SAC</td><td class="r">1</td><td class="r">125</td><td class="r">110</td><td class="r">15</td></tr>
+              <tr><td class="team">WAS</td><td class="r">2</td><td class="r">150</td><td class="r">101</td><td class="r">49</td></tr>
+              <tr><td class="team">IND</td><td class="r">3</td><td class="r">110</td><td class="r">100</td><td class="r">10</td></tr>
+              <tr><td class="team">BRK</td><td class="r">4</td><td class="r">151</td><td class="r">100</td><td class="r">51</td></tr>
+              <tr class="winner"><td class="team">CHI</td><td class="r">5</td><td class="r">100</td><td class="r">100</td><td class="r">0</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div></div>
+      </div>
+    </div>
+
+    <!-- Slide 21: Lottery for pick 6 -->
+    <div class="slide">
+      <div class="section-label">Rolling Window Example</div>
+      <h2>Lottery for pick 6</h2>
+      <div class="example-tables">
+        <div class="example-table-section">
+          <h4>Lottery for pick 6</h4>
+          <table class="example-table">
+            <thead><tr><th>Team</th><th class="r">Bid</th><th class="r">Prob.</th></tr></thead>
+            <tbody>
+              <tr><td class="team">NOP</td><td class="r">101</td><td class="r">25.3%</td></tr>
+              <tr><td class="team">UTA</td><td class="r">100</td><td class="r">25.0%</td></tr>
+              <tr><td class="team">DAL</td><td class="r">100</td><td class="r">25.0%</td></tr>
+              <tr class="new-entry"><td class="team">MEM</td><td class="r">99</td><td class="r">24.8%</td></tr>
+            </tbody>
+          </table>
+          <p style="font-family: var(--mono); font-size: 0.68rem; color: var(--text-secondary); margin-top: 0.75rem;">The process continues, sliding the window down one team at a time, until all 30 picks are assigned&hellip;</p>
+        </div>
+        <div class="example-table-section">
+          <h4>Allocated picks</h4>
+          <table class="example-table">
+            <thead><tr><th>Team</th><th class="r">Pick</th><th class="r">Bid</th><th class="r">Charged</th><th class="r">Refund</th></tr></thead>
+            <tbody>
+              <tr><td class="team">SAC</td><td class="r">1</td><td class="r">125</td><td class="r">110</td><td class="r">15</td></tr>
+              <tr><td class="team">WAS</td><td class="r">2</td><td class="r">150</td><td class="r">101</td><td class="r">49</td></tr>
+              <tr><td class="team">IND</td><td class="r">3</td><td class="r">110</td><td class="r">100</td><td class="r">10</td></tr>
+              <tr><td class="team">BRK</td><td class="r">4</td><td class="r">151</td><td class="r">100</td><td class="r">51</td></tr>
+              <tr><td class="team">CHI</td><td class="r">5</td><td class="r">100</td><td class="r">100</td><td class="r">0</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div></div>
+      </div>
+    </div>
+
+    <!-- Slide 22: Simulator link -->
+    <div class="slide">
+      <div class="section-label">Our proposal</div>
+      <h2>The Rolling Window Lottery</h2>
+      <div class="sub-heading">The mechanism by which teams bid Credits for picks</div>
+      <div class="body-block">
+        <p><strong>An interactive simulator:</strong></p>
+        <p><a href="simulator.html" style="color: var(--accent); font-family: var(--mono); font-size: 1rem;">Open the Simulator &rarr;</a></p>
+      </div>
+    </div>
+
+    <!-- Slide 23: Trading Credits -->
+    <div class="slide">
+      <div class="section-label">Our proposal</div>
+      <h2>Trading Team-Building Credits</h2>
+      <div class="sub-heading">And how draft picks can still be traded</div>
+      <div class="body-block">
+        <ul>
+          <li>Team-Building Credits could be used as consideration in any trade, just like player contracts, portions of draft picks, and cash are now.</li>
+          <li>One Credit might be useful as &ldquo;minimum consideration&rdquo; in a trade, replacing the classic top-55 protected second-round pick.</li>
+          <li>Teams would also have the option to trade their own first- or second-round draft &ldquo;slots&rdquo;, subject to a Stepien-like rule. These picks would not be protected or have swap options, because the Credit bidding process for draft position makes those irrelevant.</li>
+          <li>So, for example, a team who believes it has a good chance to contend for a championship might trade a developing young player, a future first-round draft slot, and 35 Credits to another team, in exchange for a playoff-caliber starter.</li>
+          <li>Teams with more than one draft slot in a given draft would bid Credits toward the draft position of each slot separately. E.g. if OKC holds their own first round draft slot in 2034 <em>and</em> DEN&rsquo;s first round draft slot in the same year, OKC would specify the number of Credits (subject to their budget) they wish to allocate toward <em>each</em> of those draft slots.</li>
+          <li>Between the lottery and when a pick is used in the draft, teams can trade those specific picks. So, teams can still &ldquo;move up&rdquo; or &ldquo;back&rdquo; in the draft on draft night.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Slide 24: Credit offsets -->
+    <div class="slide">
+      <div class="section-label">Our proposal</div>
+      <h2>Credit offsets for playoff success</h2>
+      <div class="sub-heading">A flexible tool for shaping team-building and ensuring rules adherence</div>
+      <div class="body-block">
+        <ul>
+          <li>Thus far we have described a system in which each team receives the same number of Team-Building Credits at the beginning of each season, but this does not have to be the case.</li>
+          <li>The system could be set up in such a way that makes it easier for some teams to build through the draft &ndash; by reducing the Credit allocation toward other teams &ndash; while not providing the same incentives to lose as does the current system.</li>
+          <li>Specifically, our proposal would be to deduct 20 Credits for each playoff series won in the immediately preceding season.</li>
+          <li>The team that wins the title in June would thus start July with an allocation of just 20 Credits; all teams that lose in the Conference Semifinals would get 80 Credits, and so on.</li>
+          <li>This is a concession to the idea that team success follows a cyclical pattern, and that teams outside of contention should be given better opportunities to improve.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Slide 25: Credit penalties -->
+    <div class="slide">
+      <div class="section-label">Our proposal</div>
+      <h2>Credit penalties for rules enforcement</h2>
+      <div class="sub-heading">A flexible, non-monetary &ldquo;stick&rdquo; which the league can use to enforce rules</div>
+      <div class="body-block">
+        <ul>
+          <li>Because the league is the sole source of Team-Building Credits, it can leverage this power to help with rules enforcement.</li>
+          <li>In cases where monetary fines are currently used, such as enforcing the player participation and injury reporting policies, tampering, etc., teams may still be willing to pay a financial penalty to violate those rules.</li>
+          <li>Replacing those monetary fines with the deduction of future Team-Building Credits changes the calculus substantially, as the penalties are now &ldquo;basketball penalties.&rdquo;</li>
+          <li>But docking a team one or several future Credits is a <em>much</em> more granular and less heavy-handed form of discipline than taking away future draft picks, which is one of the few recourses available now.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Slide 26: Transition period -->
+    <div class="slide">
+      <div class="section-label">Our proposal</div>
+      <h2>The transition period</h2>
+      <div class="sub-heading">What to do between agreement and full implementation</div>
+      <div class="body-block">
+        <ul>
+          <li>Realistically, we anticipate the first Credit-bid draft taking place in 2034, at the soonest.</li>
+          <li>Once the Team-Building Credit system is agreed to, all existing pick trades would be honored, and teams would continue to trade picks under the current rules, up through the 2033 draft.</li>
+          <li>In the first year after the Credit system is agreed to, teams can trade their 2034 picks (and beyond, as they come available over time), but only as &ldquo;whole slots&rdquo;, in line with the rules described previously.</li>
+          <li>Teams could also trade their full allocation of Credits in a specific future year, up to seven years out.</li>
+          <li>Starting July 1, 2034, the league distributes Credits to all teams, and teams may no longer trade future Credits, only those which they have accumulated.
+            <ul>
+              <li>Optionally, to smooth the transition from a record-based lottery to a strategic lottery, the league could allocate some number of &ldquo;bonus&rdquo; Credits based on team playoff success across the final few transition seasons.</li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Slide 27: Pick order alternatives -->
+    <div class="slide">
+      <div class="section-label">Options and alternatives</div>
+      <h2>Pick order alternatives</h2>
+      <div class="alt-grid">
+        <div class="alt-card">
+          <div class="alt-name recommended">Rolling Window Lottery</div>
+          <p>Teams ordered by bid<br>Picks allocated by smaller lotteries of 4 teams<br>Winning team removed, next highest bidder added</p>
+          <p style="margin-top: 0.5rem;">Relatively low randomness<br>High bidders unlikely to fall far<br>Low bidders can&rsquo;t rise far</p>
+        </div>
+        <div class="alt-card">
+          <div class="alt-name">Deterministic bid order</div>
+          <p>Teams ordered by bid<br>Picks allocated in order of bid, with random tiebreakers</p>
+          <p style="margin-top: 0.5rem;">Almost no randomness<br>High bidders can&rsquo;t fall<br>Low bidders can&rsquo;t rise<br>Potential for team-prospect collusion</p>
+        </div>
+        <div class="alt-card">
+          <div class="alt-name">Full lottery</div>
+          <p>Each pick drawn from a lottery over all teams, weighted by bid</p>
+          <p style="margin-top: 0.5rem;">Highest randomness<br>Greatest potential for high bidders to fall<br>and for low bidders to jump</p>
+        </div>
+        <div class="alt-card">
+          <div class="alt-name">Top-N lottery</div>
+          <p>Top several picks awarded by lottery, weighted by bid<br>All other teams&rsquo; picks awarded by bid size</p>
+          <p style="margin-top: 0.5rem;">Moderate randomness<br>High bidders unlikely to fall far<br>Some small probability low bidders can jump up</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 28: Credit offset alternatives -->
+    <div class="slide">
+      <div class="section-label">Options and alternatives</div>
+      <h2>Credit offset alternatives</h2>
+      <div class="alt-grid">
+        <div class="alt-card">
+          <div class="alt-name recommended">Playoff success offsets</div>
+          <p>Teams receive 20 fewer Credits for each playoff series won<br>2700 total Credits awarded each year instead of 3000</p>
+          <p style="margin-top: 0.5rem;">Teams unlikely to prefer receiving 20 Credits over advancing in the playoffs</p>
+        </div>
+        <div class="alt-card">
+          <div class="alt-name">Recent success offsets</div>
+          <p>Teams receive 10 Credits per season since they made the Finals<br>Capped at 100 Credits</p>
+        </div>
+        <div class="alt-card">
+          <div class="alt-name">Team spending offsets</div>
+          <p>Divide difference between Second Apron and Tax lines by 100<br>For each such increment of spending over the Tax, teams receive one fewer Credit the following summer</p>
+          <p style="margin-top: 0.5rem;">Requires bargaining</p>
+        </div>
+        <div class="alt-card">
+          <div class="alt-name">Player contract offsets</div>
+          <p>Teams that sign players to a Max contract receive 40 fewer Credits the following summer<br>Teams that sign players to the MLE receive 15 fewer Credits the following summer<br>Etc. numbers and conditions are flexible</p>
+          <p style="margin-top: 0.5rem;">Requires bargaining</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 29: Q&A - Schedule -->
+    <div class="slide">
+      <div class="section-label">Questions, answered</div>
+      <h2>Q &amp; A</h2>
+      <div class="sub-heading">What does the annual schedule look like for Team-Building Credits?</div>
+      <div class="body-block">
+        <ul>
+          <li>July 1: At the beginning of the league year, the NBA allocates 100 Credits to each team, minus playoff success offsets.</li>
+          <li>Early February: Just as is the case now, teams cannot trade Credits or draft slots after the trade deadline.</li>
+          <li>Mid May: The deadline for players to commit to, or withdraw from, the NBA draft.</li>
+          <li>Mid May: Teams submit their Credit bids for the Rolling Window Lottery.</li>
+          <li>Late May: The Lottery is held.</li>
+          <li>Late June: The NBA draft.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Slide 30: Q&A - Playoff incentive -->
+    <div class="slide">
+      <div class="section-label">Questions, answered</div>
+      <h2>Q &amp; A</h2>
+      <div class="sub-heading">Doesn&rsquo;t your proposed Credit offset system incentivize teams to lose playoff series?</div>
+      <div class="body-block">
+        <p>Maybe. But we suspect that the chance to advance a full round of playoffs is not something teams will intentionally lose, for the marginal benefit of 20 additional Credits.</p>
+        <p>If this is a real concern, the Credit offset could increase nonlinearly with rounds (10 for winning a first round series, 20 more for Conference Semifinals, 30 more for Conference Finals, and 40 more for Finals, for example).</p>
+        <p>Or, we have proposed several alternative offset schemes that are not tied to playoff success, and many other such options are plausible.</p>
+      </div>
+    </div>
+
+    <!-- Slide 31: Q&A - Second round picks -->
+    <div class="slide">
+      <div class="section-label">Questions, answered</div>
+      <h2>Q &amp; A</h2>
+      <div class="sub-heading">What about second round picks where another team owns the related first round pick?</div>
+      <div class="body-block">
+        <p>In our proposal, second round picks are assigned in order of first-round bid size, with reverse-order-of-first-round-pick as a tiebreaker. (So, among two teams with identical first round bids, the one which wins an earlier first-round pick gets the later second round pick.)</p>
+        <p>We imagine that, even if Boston owns the Lakers 2036 second round slot, while the Lakers retain their own 2036 first round slot, it is <em>the Lakers&rsquo; bid</em> that dictates where Boston lands in the second round.</p>
+        <p>We do not expect that teams will substantially change their first round bids in order to send a worse second round pick to the current holder of their pick slot.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="slide-controls">
+    <button class="slide-btn" id="prevBtn" onclick="prevSlide()" disabled>&larr; Prev</button>
+    <div style="text-align: center;">
+      <div class="slide-counter" id="slideCounter">1 / 31</div>
+      <div class="slide-hint">Arrow keys or click to navigate</div>
+    </div>
+    <button class="slide-btn" id="nextBtn" onclick="nextSlide()">Next &rarr;</button>
+  </div>
+</div>
+
+<script>
+const slides = document.querySelectorAll('.slide');
+const total = slides.length;
+let current = 0;
+
+function showSlide(n) {
+  slides[current].classList.remove('active');
+  current = Math.max(0, Math.min(total - 1, n));
+  slides[current].classList.add('active');
+  document.getElementById('slideCounter').textContent = (current + 1) + ' / ' + total;
+  document.getElementById('prevBtn').disabled = current === 0;
+  document.getElementById('nextBtn').disabled = current === total - 1;
+  document.getElementById('progressBar').style.width = ((current + 1) / total * 100) + '%';
+  document.getElementById('slideArea').scrollTop = 0;
+}
+
+function nextSlide() { showSlide(current + 1); }
+function prevSlide() { showSlide(current - 1); }
+
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); nextSlide(); }
+  if (e.key === 'ArrowLeft') { e.preventDefault(); prevSlide(); }
+  if (e.key === 'Home') { e.preventDefault(); showSlide(0); }
+  if (e.key === 'End') { e.preventDefault(); showSlide(total - 1); }
+});
+
+showSlide(0);
+</script>
+
+</body>
+</html>
