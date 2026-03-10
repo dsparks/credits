@@ -353,6 +353,68 @@ body {
   scrollbar-color: var(--rule) transparent;
 }
 
+/* --- Transition slide table --- */
+.transition-table-wrap {
+  margin-top: 0.45rem;
+  display: flex;
+  justify-content: center;
+}
+
+.transition-table {
+  border-collapse: collapse;
+  background: var(--white);
+  font-size: 0.82rem;
+  font-family: var(--serif);
+  min-width: 420px;
+}
+
+.transition-table th,
+.transition-table td {
+  border: 1px solid var(--rule);
+  padding: 0.35rem 0.7rem;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.transition-table th {
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-secondary);
+  background: var(--surface);
+}
+
+.transition-table td {
+  color: var(--text);
+  line-height: 1.35;
+}
+
+.transition-table tbody tr:nth-child(even) {
+  background: rgba(0, 0, 0, 0.015);
+}
+
+/* Tighter spacing for nested bullet that contains only the table */
+.slide .body-block li.table-bullet {
+  margin-top: 0.2rem;
+  margin-bottom: 0.2rem;
+  list-style-type: square;
+}
+
+@media (max-width: 700px) {
+  .transition-table {
+    min-width: 0;
+    width: 100%;
+    font-size: 0.74rem;
+  }
+
+  .transition-table th,
+  .transition-table td {
+    padding: 0.3rem 0.45rem;
+  }
+}
+  
 /* --- Controls bar --- */
 .slide-controls {
   border-top: 1px solid var(--rule);
@@ -1458,20 +1520,62 @@ body {
       </div>
     </div>
 
-    <!-- Slide 28: Transition period -->
-    <div class="slide">
-      <div class="section-label">Our proposal</div>
-      <h2>The transition period</h2>
-      <div class="sub-heading">How to smoothly transition into the Credits system</div>
-      <div class="body-block">
+<!-- Slide 28: Transition period -->
+<div class="slide">
+  <div class="section-label">Our proposal</div>
+  <h2>The transition period</h2>
+  <div class="sub-heading">How to smoothly transition into the Credits system</div>
+  <div class="body-block">
+    <ul>
+      <li>
+        So that teams that have been super successful in the years leading up to implementation aren’t suddenly equal with teams that haven’t been as good, we suggest that the league should allocate some number Credits in advance of the system beginning, with a penalty based on team playoff success (or lack thereof) across the final few transition seasons.
+      </li>
+      <li>
+        A possible allocation could look like this:
         <ul>
-          <li>So that teams that have been super successful in the years leading up to implementation aren’t suddenly equal with teams that haven’t been as good, we suggest that the league should allocate some number Credits in advance of the system beginning, with a penalty based on team playoff success (or lack thereof) across the final few transition seasons.</li>
-          <li>A possible allocation could look like this</li>
-          <ul><li>[INSERT TABLE HERE]</li></ul>
-          <li>This would allow for an average of 225 Credits per team as the system begins. And of course these would be tradeable as soon as they’re allocated to teams.</li>
+          <li class="table-bullet">
+            <div class="transition-table-wrap">
+              <table class="transition-table">
+                <thead>
+                  <tr>
+                    <th>Year</th>
+                    <th>Credits to each team</th>
+                    <th>Playoff series penalty</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>2031</td>
+                    <td>25</td>
+                    <td>-5</td>
+                  </tr>
+                  <tr>
+                    <td>2032</td>
+                    <td>50</td>
+                    <td>-10</td>
+                  </tr>
+                  <tr>
+                    <td>2033</td>
+                    <td>75</td>
+                    <td>-15</td>
+                  </tr>
+                  <tr>
+                    <td>2034 (full implementation)</td>
+                    <td>100</td>
+                    <td>-20</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </li>
         </ul>
-      </div>
-    </div>
+      </li>
+      <li>
+        This would allow for an average of 225 Credits per team as the system begins. And of course these would be tradeable as soon as they’re allocated to teams.
+      </li>
+    </ul>
+  </div>
+</div>
     
     <!-- Slide 29: Credits for rules enforcement -->
     <div class="slide">
