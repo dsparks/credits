@@ -480,6 +480,48 @@ body {
   .accent-card { padding: 2.5rem 1.5rem; }
   .accent-card h2 { font-size: 1.8rem; }
 }
+
+/* Rolling Window demo notes */
+.rolling-window-demo {
+  position: relative;
+  min-height: 29rem;
+}
+
+.rolling-window-note {
+  position: absolute;
+  top: 13.15rem;
+  right: 0.6rem;
+  width: 11rem;
+  background: #efe3ba;
+  padding: 0.9rem 0.95rem;
+  font-family: var(--serif);
+  color: var(--text);
+  z-index: 2;
+}
+
+.rolling-window-note p {
+  margin: 0 0 0.55rem 0;
+  font-size: 0.95rem;
+  line-height: 1.35;
+}
+
+.rolling-window-note p:last-child {
+  margin-bottom: 0;
+}
+
+@media (max-width: 900px) {
+  .rolling-window-demo {
+    min-height: auto;
+  }
+
+  .rolling-window-note {
+    position: static;
+    width: auto;
+    margin-top: 1rem;
+  }
+}
+
+  
 </style>
 </head>
 <body>
@@ -724,7 +766,9 @@ body {
         </div>
         <div class="example-table-section">
           <h4>Allocated picks</h4>
-          <p style="font-family: var(--mono); font-size: 0.7rem; color: var(--text-tertiary); margin-top: 0.5rem;">All 30 teams submit bids; the four highest bids are put into a “window”, and a lottery is held among those four to award the first pick.&hellip;</p>
+    <div class="rolling-window-note">
+      <p>All 30 teams submit bids; the four highest bids are put into a “window”, and a lottery is held among those four to award the first pick.</p>
+    </div>
         </div>
       </div>
     </div>
@@ -795,6 +839,10 @@ body {
             </tbody>
           </table>
         </div>
+            <div class="rolling-window-note">
+      <p>SAC wins the drawing for the first window and is awarded the first pick.</p>
+      <p>They are only charged 110 Credits, which is the lowest bid in the window they won.</p>
+    </div>
       </div>
     </div>
 
@@ -864,6 +912,9 @@ body {
             </tbody>
           </table>
         </div>
+            <div class="rolling-window-note">
+      <p>With SAC removed, the next-highest bidder (NOP) is moved into the window for the second pick.</p>
+    </div>
       </div>
     </div>
 
@@ -934,6 +985,9 @@ body {
             </tbody>
           </table>
         </div>
+            <div class="rolling-window-note">
+      <p>WAS wins the lottery for the second pick, and are charged 101 Credits.</p>
+    </div>
       </div>
     </div>
 
@@ -1004,6 +1058,10 @@ body {
             </tbody>
           </table>
         </div>
+            <div class="rolling-window-note">
+      <p>WAS is removed; UTA is added to the next window.</p>
+      <p>Note that UTA, DAL, and CHI all bid 100; UTA’s higher rank is by virtue of random tiebreaker.</p>
+    </div>
       </div>
     </div>
 
@@ -1075,6 +1133,9 @@ body {
             </tbody>
           </table>
         </div>
+            <div class="rolling-window-note">
+      <p>IND wins the lottery for the third pick.</p>
+    </div>
       </div>
     </div>
 
@@ -1146,6 +1207,9 @@ body {
             </tbody>
           </table>
         </div>
+            <div class="rolling-window-note">
+      <p>IND is removed; DAL enters the window.</p>
+    </div>
       </div>
     </div>
 
@@ -1218,6 +1282,10 @@ body {
             </tbody>
           </table>
         </div>
+            <div class="rolling-window-note">
+      <p>BRK wins the fourth pick. They were the highest bidder overall, but “fell” to the fourth pick.</p>
+      <p>To compensate, they are only charged the lowest bid for this window (100).</p>
+    </div>
       </div>
     </div>
 
@@ -1290,6 +1358,9 @@ body {
             </tbody>
           </table>
         </div>
+            <div class="rolling-window-note">
+      <p>All four highest bidders have been allocated picks. The lottery proceeds by rolling through the rest of the bidders.</p>
+    </div>
       </div>
     </div>
 
@@ -1422,7 +1493,9 @@ body {
               <tr class="new-entry"><td class="team">MEM</td><td class="r">99</td><td class="r">24.8%</td></tr>
             </tbody>
           </table>
-          <p style="font-family: var(--mono); font-size: 0.68rem; color: var(--text-secondary); margin-top: 0.75rem;">The process continues, sliding the window down one team at a time, until all 30 picks are assigned&hellip;</p>
+    <div class="rolling-window-note">
+      <p>This process continues, until all 30 picks are assigned.</p>
+    </div>
         </div>
         <div class="example-table-section">
           <h4>Allocated picks</h4>
