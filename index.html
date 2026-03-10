@@ -440,46 +440,32 @@ hr {
     <h2>Pick Order Alternatives</h2>
     <p class="dim">The Team-Building Credits concept is the core idea; the mechanism for converting bids into picks is flexible. We propose the Rolling Window Lottery, but considered these alternatives:</p>
 
-    <div class="alt-grid">
-      <div class="alt-card">
-        <div class="alt-name recommended">Rolling Window Lottery</div>
-        <p>Picks allocated by smaller lotteries of 4 teams, sliding one team at a time. Relatively low randomness. High bidders unlikely to fall far; low bidders can&rsquo;t rise far.</p>
-      </div>
-      <div class="alt-card">
-        <div class="alt-name">Full Lottery</div>
-        <p>Each pick drawn from a lottery over all teams, weighted by bid. Highest randomness. Greatest potential for high bidders to fall and low bidders to jump.</p>
-      </div>
-      <div class="alt-card">
-        <div class="alt-name">Deterministic Bid Order</div>
-        <p>Picks allocated in order of bid, with random tiebreakers. Almost no randomness. Creates risk of team-prospect collusion.</p>
-      </div>
-      <div class="alt-card">
-        <div class="alt-name">Top-N Lottery</div>
-        <p>Top several picks by lottery weighted by bid. Remaining picks by bid size. Moderate randomness.</p>
-      </div>
-    </div>
+    <h3>Rolling Window Lottery <span style="font-weight: 400; font-size: 0.85rem; color: var(--text-tertiary);">&mdash; proposed</span></h3>
+    <p>Teams ordered by bid. Picks allocated by smaller lotteries of 4 teams; winning team removed, next highest bidder added. Relatively low randomness. High bidders unlikely to fall far; low bidders can&rsquo;t rise far.</p>
+
+    <h3>Full Lottery</h3>
+    <p>Each pick drawn from a lottery over all teams, weighted by bid. Highest randomness. Greatest potential for high bidders to fall and for low bidders to jump.</p>
+
+    <h3>Deterministic Bid Order</h3>
+    <p>Teams ordered by bid. Picks allocated in order of bid, with random tiebreakers. Almost no randomness. High bidders can&rsquo;t fall; low bidders can&rsquo;t rise. Potential for team-prospect collusion.</p>
+
+    <h3>Top-N Lottery</h3>
+    <p>Top several picks awarded by lottery, weighted by bid. All other teams&rsquo; picks awarded by bid size. Moderate randomness. High bidders unlikely to fall far; some small probability low bidders can jump up.</p>
 
     <h2>Credit Offset Alternatives</h2>
     <p class="dim">Several offset schemes could replace or supplement the playoff-success offset:</p>
 
-    <div class="alt-grid">
-      <div class="alt-card">
-        <div class="alt-name recommended">Playoff Success Offsets</div>
-        <p>20 fewer Credits per playoff series won. 2,700 total Credits awarded league-wide instead of 3,000.</p>
-      </div>
-      <div class="alt-card">
-        <div class="alt-name">Team Spending Offsets</div>
-        <p>For each increment of spending over the luxury tax line, teams receive one fewer Credit the following summer.</p>
-      </div>
-      <div class="alt-card">
-        <div class="alt-name">Recent Success Offsets</div>
-        <p>10 Credits per season since the team last made the Finals, capped at 100.</p>
-      </div>
-      <div class="alt-card">
-        <div class="alt-name">Player Contract Offsets</div>
-        <p>Teams signing max contracts receive 40 fewer Credits the following summer; MLE signings deduct 15.</p>
-      </div>
-    </div>
+    <h3>Playoff Success Offsets <span style="font-weight: 400; font-size: 0.85rem; color: var(--text-tertiary);">&mdash; proposed</span></h3>
+    <p>Teams receive 20 fewer Credits for each playoff series won. 2,700 total Credits awarded each year instead of 3,000. Teams unlikely to prefer receiving 20 Credits over advancing in the playoffs.</p>
+
+    <h3>Recent Success Offsets</h3>
+    <p>Teams receive 10 Credits per season since they made the Finals. Capped at 100 Credits.</p>
+
+    <h3>Team Spending Offsets</h3>
+    <p>Divide difference between Second Apron and Tax lines by 100. For each such increment of spending over the Tax, teams receive one fewer Credit the following summer. Requires bargaining.</p>
+
+    <h3>Player Contract Offsets</h3>
+    <p>Teams that sign players to a Max contract receive 40 fewer Credits the following summer. Teams that sign players to the MLE receive 15 fewer Credits the following summer. Etc. numbers and conditions are flexible. Requires bargaining.</p>
   </div>
 
   <hr>
