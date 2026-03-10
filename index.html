@@ -401,15 +401,16 @@ hr {
       <div class="mech-title">How It Works</div>
       <p>Each year, the NBA allocates <strong>100 Team-Building Credits</strong> to each team, minus deductions for playoff success. Credits may be saved or traded, but their primary use is to bid for draft position.</p>
       <p>On a pre-specified date in late April, teams simultaneously submit sealed bids to the league. Bids must be integer amounts, and teams must have enough Credits to cover the bid. After the deadline, the league reveals all bids publicly.</p>
-      <p>Picks are allocated through a <strong>Rolling Window Lottery</strong>: the top four highest-bidding teams enter a lottery for the first pick, weighted by bid size. The winner is removed, the next-highest bidder enters, and the process repeats for each subsequent pick. The winner of each window is charged only the minimum bid in that window and is refunded the difference&mdash;so a team that bids high but falls to a later pick retains Credits for the following year.</p>
-      <p>Teams that bid zero are assigned picks at the end of the first round, with a random tiebreaker. Second-round picks are awarded in order of first-round bid size, with no additional Credits spent.</p>
+      <p>Picks are allocated through a <strong>Rolling Window Lottery</strong>: the top four highest-bidding teams enter a lottery for the first pick, weighted by bid size. The winner is removed, the next-highest bidder enters, and the process repeats for each subsequent pick. The winner of each window is charged only the minimum bid in that window &mdash; so a team that bids high but falls to a later pick retains Credits for the following year.</p>
+      <p>Teams that bid zero are assigned picks at the end of the first round, with a random tiebreaker.</p>
+      <p>Second-round picks are allocated through a second stage of bids, which happens after the Rolling Window Lottery, in order of bid size.</p>
     </div>
 
     <h3>Talent allocation</h3>
     <p>The NBA has historically prioritized giving non-contending teams the opportunity to build through the draft. Team-Building Credits preserves that opportunity. Teams can save Credits for the years in which they most acutely need draft talent, then invest heavily to maximize their chances. A rebuilding team can also trade veteran talent for additional Credits, further improving their draft position.</p>
 
     <h3>Trade market</h3>
-    <p>Credits can be used as consideration in any trade, just like player contracts, portions of draft picks, and cash. A single Credit may serve as minimum consideration, replacing the classic heavily-protected second-round pick. Teams can also trade first- or second-round draft slots (subject to a Stepien-like rule), though these carry no protections or swap options, because the Credit bidding process makes those mechanisms irrelevant.</p>
+    <p>Credits can be used as consideration in any trade, just like player contracts, portions of draft picks, and cash. A single Credit may serve as minimum consideration, replacing the classic heavily-protected second-round pick. Teams can also trade first- or second-round draft slots, or full future Credit allocations (subject to a Stepien-like rule), though these carry no protections or swap options, because the Credit bidding process makes those mechanisms irrelevant.</p>
     <p>Teams holding multiple slots in a given year bid separately for each. Between the lottery and draft night, teams can trade specific picks to move up or back, as they do today.</p>
   </div>
 
@@ -418,10 +419,13 @@ hr {
     <h2>Offsets and Enforcement</h2>
 
     <h3>Credit offsets for playoff success</h3>
-    <p>The system need not allocate the same number of Credits to every team. Our proposal deducts 20 Credits for each playoff series won in the immediately preceding season. The champion starts with 20 Credits; a team eliminated in the conference semifinals receives 80. This reflects the cyclical pattern of team success and gives teams outside contention better opportunities to improve&mdash;without creating an incentive to lose regular season games.</p>
+    <p>The system need not allocate the same number of Credits to every team. Our proposal deducts 20 Credits for each playoff series won in the immediately preceding season. The NBA champion starts with 20 Credits; a team eliminated in the conference semifinals receives 80. This reflects the cyclical pattern of team success and gives teams outside contention better opportunities to improve, without creating an incentive to lose regular season games.</p>
 
     <h3>Credit penalties for rules enforcement</h3>
     <p>Because the league is the sole source of Credits, it can use this power for rules enforcement. Where monetary fines are currently used&mdash;player participation, injury reporting, tampering&mdash;replacing those fines with Credit deductions makes the penalties costly in basketball terms rather than financial ones. Docking a team a few future Credits is more granular and less heavy-handed than taking away future draft picks, which is one of the few recourses currently available.</p>
+
+    <h3>Credits in support of league goals</h3>
+    <p>The league could withold or award Credits to support desireable behavior. For competitive balance reasons, there could be Credit deductions for teams spending over the tax, or for signing certain kinds of player contracts (although these would have to be bargained). Similarly, the league could award Credits to In-Season Tournament finalist teams, or to the teams of the players on the winning All-Star team.</p>
   </div>
 
   <div class="section">
@@ -430,7 +434,7 @@ hr {
 
     <p>The first Credit-bid draft would realistically take place in 2034 at the soonest. Once agreed to, all existing pick trades are honored, and teams continue trading picks under current rules through the 2033 draft.</p>
     <p>In the first year after agreement, teams can trade 2034 picks and beyond as whole slots under the new rules. Teams can also trade their full allocation of Credits for a specific future year, up to seven years out.</p>
-    <p>Starting July 1, 2034, the league distributes Credits to all teams, and teams may no longer trade future Credits&mdash;only those they have accumulated. Optionally, the league could allocate bonus Credits based on playoff success across the final transition seasons to smooth the shift from a record-based lottery to a strategic one.</p>
+    <p>Starting July 1, 2034, the league distributes Credits to all teams, and teams may no longer trade future Credits&mdash;only those they have accumulated. To smooth the transition to the new system, we recommend the league begins distributing smaller allocations of Credits to teams roughly three years before full implementation. These Credits could be traded immediately, or eventually used to bid on draft position.</p>
   </div>
 
   <hr>
@@ -441,7 +445,7 @@ hr {
     <p class="dim">The Team-Building Credits concept is the core idea; the mechanism for converting bids into picks is flexible. We propose the Rolling Window Lottery, but considered these alternatives:</p>
 
     <h3>Rolling Window Lottery <span style="font-weight: 400; font-size: 0.85rem; color: var(--text-tertiary);">&mdash; proposed</span></h3>
-    <p>Teams ordered by bid. Picks allocated by smaller lotteries of 4 teams; winning team removed, next highest bidder added. Relatively low randomness. High bidders unlikely to fall far; low bidders can&rsquo;t rise far.</p>
+    <p>Teams ordered by bid. Picks allocated by smaller lotteries of 4 teams; winning team removed, next highest bidder added. Relatively low randomness. High bidders unlikely to fall far; low bidders can&rsquo;t rise far. We do not believe a team would feel any significant incentive to lose a playoff series in order to receive 20 Credits.</p>
 
     <h3>Full Lottery</h3>
     <p>Each pick drawn from a lottery over all teams, weighted by bid. Highest randomness. Greatest potential for high bidders to fall and for low bidders to jump.</p>
@@ -451,21 +455,6 @@ hr {
 
     <h3>Top-N Lottery</h3>
     <p>Top several picks awarded by lottery, weighted by bid. All other teams&rsquo; picks awarded by bid size. Moderate randomness. High bidders unlikely to fall far; some small probability low bidders can jump up.</p>
-
-    <h2>Credit Offset Alternatives</h2>
-    <p class="dim">Several offset schemes could replace or supplement the playoff-success offset:</p>
-
-    <h3>Playoff Success Offsets <span style="font-weight: 400; font-size: 0.85rem; color: var(--text-tertiary);">&mdash; proposed</span></h3>
-    <p>Teams receive 20 fewer Credits for each playoff series won. 2,700 total Credits awarded each year instead of 3,000. Teams unlikely to prefer receiving 20 Credits over advancing in the playoffs.</p>
-
-    <h3>Recent Success Offsets</h3>
-    <p>Teams receive 10 Credits per season since they made the Finals. Capped at 100 Credits.</p>
-
-    <h3>Team Spending Offsets</h3>
-    <p>Divide difference between Second Apron and Tax lines by 100. For each such increment of spending over the Tax, teams receive one fewer Credit the following summer. Requires bargaining.</p>
-
-    <h3>Player Contract Offsets</h3>
-    <p>Teams that sign players to a Max contract receive 40 fewer Credits the following summer. Teams that sign players to the MLE receive 15 fewer Credits the following summer. Etc. numbers and conditions are flexible. Requires bargaining.</p>
   </div>
 
   <hr>
@@ -483,25 +472,34 @@ hr {
         <li>Late June: the draft.</li></ul></div>
     </div>
     <div class="qa-item">
-      <div class="question">Doesn&rsquo;t the playoff offset incentivize teams to lose playoff series?</div>
-      <div class="answer"><p>Maybe. But we suspect that the chance to advance a full round of playoffs is not something teams will intentionally lose, for the marginal benefit of 20 additional Credits. If this is a real concern, the Credit offset could increase nonlinearly with rounds (10 for winning a first round series, 20 more for Conference Semifinals, 30 more for Conference Finals, and 40 more for Finals, for example). Or, we have proposed several alternative offset schemes that are not tied to playoff success, and many other such options are plausible.</p></div>
+      <div class="question">How will the draft-pick penalty for teams in the Second Apron be implemented?</div>
+      <div class="answer"><p>The first step of the penalty is easily carried over: we can simply “freeze” that team’s first round draft slot in the seventh following season, preventing them from trading it.</p>
+        <p>If a team is in the Second Apron for at least 2 of the next 4 cap-years, that team would then be prevented from bidding Credits toward that frozen pick, ensuring that it lands at the end of the first round.</p>
+        <p>This would be slightly less harsh than the current penalty since other teams could also bid 0 and thus this pick could be randomly drawn to be higher than 30 if there are other teams bidding zero. More importantly, the penalized team could still carry that year’s Credits over to a future year, so the penalty is less harsh than it is now, where all your “pick quality equity” for that year is taken away.</p>
+</p></div>
     </div>
     <div class="qa-item">
-      <div class="question">What about second-round picks where another team owns the related first-round slot?</div>
-      <div class="answer"><p>In our proposal, second round picks are assigned in order of first-round bid size, with reverse-order-of-first-round-pick as a tiebreaker. (So, among two teams with identical first round bids, the one which wins an earlier first-round pick gets the later second round pick.) Under this system, even if Boston owns the Lakers 2036 second round slot, while the Lakers retain their own 2036 first round slot, it is <i>the Lakers' bid</i> that dictates where Boston lands in the second round. We do not expect that teams will substantially change their first round bids in order to send a worse second round pick to the current holder of their pick slot.</p></div>
+      <div class="question">Isn’t this Team-Building Credits plan too complicated for fans to follow?</div>
+      <div class="answer"><p>Complicated? You mean, like this?</p>
+        <code>Minnesota conveys to Detroit the right to swap Detroit’s own 2026 first round draft pick (the “Detroit Pick”) for the “Minnesota/Utah Pick” (defined below), provided that Minnesota’s own 2026 first round draft pick (the “Minnesota Pick”) is not among the first 19 picks in the 2026 NBA Draft. If the Minnesota Pick is not among the first 19 picks in the 2026 NBA Draft, the foregoing swap right shall be deemed exercised by Detroit if the Minnesota/Utah Pick is more favorable than the Detroit Pick and shall be deemed extinguished if the Minnesota/Utah Pick is less favorable than the Detroit Pick (for clarity, the determination of whether the Minnesota/Utah Pick is more or less favorable than the Detroit Pick shall be made once it is determined which team’s first round draft pick is the Minnesota/Utah Pick). If the Minnesota Pick is among the first 19 picks in the 2026 NBA Draft, then Minnesota’s obligation to convey the foregoing swap right shall be extinguished. (Conley - Ivey - Huerter - Saric - CHI - DET - MIN, 2/3/2026)
+
+The Minnesota/Utah Pick shall be the Minnesota Pick; provided that, if Utah exercises its right to swap Utah’s own 2026 first round draft pick (the “Utah Pick”) for the Minnesota Pick pursuant to the July 6, 2022 trade involving Rudy Gobert et al. (see endnote 61), then the Minnesota/Utah Pick shall instead be the Utah Pick.
+</code>
+      <p></p></div>
     </div>
     <div class="qa-item">
       <div class="question">What happens to existing pick protections and swap rights after the transition?</div>
       <div class="answer"><p>All existing pick trades are honored through the 2033 draft under current rules. After that, draft slots are traded as whole slots without protections or swaps, because the Credit bidding process makes those mechanisms irrelevant&mdash;draft position is determined by bids, not by record.</p></div>
     </div>
     <div class="qa-item">
-  <div class="question">I have some questions about this proposal, or ideas to strengthen it; how can I get in touch with the authors?</div>
-  <div class="answer">
-    <p>Please feel free to email me at 
+    <div class="qa-item">
+      <div class="question">I have some questions about this proposal, or ideas to strengthen it; how can I get in touch with the authors?</div>
+      <div class="answer"><p>Please feel free to email me at 
       <span id="contact-link">
         <a href="javascript:void(0);" onclick="revealEmail()" style="cursor: pointer; text-decoration: underline;">[click to reveal]</a>
       </span>.
     </p>
+  </div>
   </div>
 </div>
   </div>
