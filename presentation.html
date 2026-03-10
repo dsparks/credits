@@ -485,17 +485,15 @@ body {
 .rolling-window-demo {
   position: relative;
   min-height: 29rem;
-  padding-bottom: 6.25rem; /* reserve space for note below middle/right tables */
 }
 
 .rolling-window-note {
   position: absolute;
-  left: calc(33.333% + 1rem); /* start just to the right of the left-hand table */
-  right: 0;
-  bottom: 0.5rem;
-  width: auto;
+  top: 13.15rem;
+  right: 0.6rem;
+  width: 11rem;
   background: rgba(0, 122, 51, 0.08); /* very light green based on accent hue */
-  padding: 0.9rem 1rem;
+  padding: 0.9rem 0.95rem;
   font-family: var(--serif);
   color: var(--text);
   z-index: 2;
@@ -514,7 +512,6 @@ body {
 @media (max-width: 900px) {
   .rolling-window-demo {
     min-height: auto;
-    padding-bottom: 0;
   }
 
   .rolling-window-note {
@@ -523,7 +520,7 @@ body {
     margin-top: 1rem;
   }
 }
-  
+ 
   
 </style>
 </head>
