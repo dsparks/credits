@@ -538,14 +538,14 @@ body {
         <p>Prior to the draft lottery, teams simultaneously bid some of their Credits as entries to the lottery, then the lottery assigns all 30 first-round picks.</p>
         <p>Unspent Credits roll over, season-to-season, so teams can accumulate them over time.</p>
         <p>Credits can be traded between teams, just as player contracts, cash, and (portions of) picks are currently.</p>
-        <p>In support of the league&rsquo;s goals, fewer than 100 Credits can be allocated to teams, according to agreed-upon criteria.</p>
+        <p>In support of the league&rsquo;s goals, fewer than 100 Credits can be allocated to teams, according to agreed-upon criteria, such as decrements for playoff success.</p>
       </div>
     </div>
 
     <!-- Slide 5: Outline -->
     <div class="slide">
       <h2>Outline</h2>
-      <div class="sub-heading">Team-Building Credits are the main idea; the details are flexible</div>
+      <div class="sub-heading">Team-Building Credits are the main idea; the details are extremely flexible</div>
       <div class="outline-list">
         <ol>
           <li>Goodhart&rsquo;s Law</li>
@@ -603,7 +603,9 @@ body {
         <p>The NBA has historically prioritized giving non-contending teams the opportunity to build through the draft. Team-Building Credits preserves that opportunity.</p>
         <p>Specifically, this plan allows teams to &ldquo;save&rdquo; Credits for the years in which they most acutely need an infusion of talent through the draft, at which time they can invest their Credits heavily into the draft lottery, to maximize their chances of drafting the best prospects.</p>
         <p>Additionally, this plan allows Team-Building Credits to be traded, meaning that a rebuilding team can trade some of their veteran talent for additional Credits, further improving their chances in the draft lottery. And good teams can trade Credits away in exchange for talent to improve their current roster.</p>
-        <p>There are many other ways the Team-Building Credit system could be modified to confer advantages in the draft to any set of teams determined by the league to &ldquo;need&rdquo; more help in the draft. See the section below on Offset system options.</p>
+        <p>Ultimately the marketplace should efficiently allocate these Credits, allowing for more competitive balance.</p>
+        <p>There are many other ways the Team-Building Credit system could be modified to confer advantages in the draft to any set of teams determined by the league to “need” more help in the draft. See the section below on Options &amp; Alternatives.</p>
+        <p>One general benefit of this system is that it is extremely easy to modify - it can be altered in the future to address nearly any league priority.</p>
       </div>
     </div>
 
@@ -617,9 +619,10 @@ body {
           <li>At the start of each league-year, each team receives an allocation of 100 Team-Building Credits from the league, minus deductions for playoff success. These Credits may be saved or traded, but their primary use is to bid for draft position.
             <ul>
               <li>Teams also get the rights to their own first- and second-round draft picks seven years out, on the night of the draft, as they currently do.</li>
+              <li>In order to enhance competitive balance, teams that win playoff series could receive fewer than 100 Credits; see a later slide for how this would work.</li>
             </ul>
           </li>
-          <li>On some pre-specified date in late April, teams will secretly send bids to the league. Those bids involve &ldquo;spending&rdquo; their Credits toward a partially randomized allocation of draft positions. The bids must be integer amounts of Credit, and the bidding team must have enough Credits in their account to cover the bid.</li>
+          <li>On some pre-specified date in early May, teams will secretly send bids to the league. Those bids involve &ldquo;spending&rdquo; their Credits toward a new type of draft lottery. The bids must be integer amounts of Credit, and the bidding team must have enough Credits in their account to cover the bid.</li>
           <li>After the bid deadline, the league would reveal each team&rsquo;s bids, which would generate a lot of conversation among fans and the media.</li>
           <li>Picks are allocated through a <strong>Rolling Window Lottery</strong>. &#x1F447;</li>
         </ul>
@@ -1437,24 +1440,17 @@ body {
       </div>
     </div>
 
-    <!-- Slide 23: Simulator link -->
-    <div class="slide">
-      <div class="section-label">Our proposal</div>
-      <h2>The Rolling Window Lottery</h2>
-      <div class="sub-heading">The mechanism by which teams bid Credits for picks</div>
-      <div class="body-block">
-        <p><strong>An interactive simulator:</strong></p>
-        <p><a href="simulator.html" style="color: var(--accent); font-family: var(--mono); font-size: 1rem;">https://dsparks.github.io/credits/</a></p>
-
-       <p>While we prefer the Rolling Window Lottery, many other pick allocation mechanisms are feasible, including:</p>
-       <ul>
-          <li><b>Deterministic bid order</b> &mdash; picks allocated in order of bid, with random tiebreakers. Almost no randomness; high bidders can’t fall, low bidders can’t rise.</li>
-          <li><b>Full lottery</b> &mdash; each pick is drawn from a lottery over all bidders, weighted by bid. Highest randomness; greatest potential for high bidders to fall and low bidders to jump.</li>
-          <li><b>Top-N lottery</b> &mdash; top several picks awarded by lottery, all other picks allocated in order of bid. Moderate randomness; high bidders unlikely to fall far, some small probability low bidders jump.</li>
-        </ul>
-      </div>
-    </div>
-
+<!-- Slide 23: Simulator link -->
+<div class="slide">
+  <div class="section-label">Our proposal</div>
+  <h2>The Rolling Window Lottery</h2>
+  <div class="sub-heading">The mechanism by which teams bid Credits for picks</div>
+  <div class="body-block">
+    <p><strong>An interactive simulator, so you can play with this lottery:</strong></p>
+    <p><a href="https://dsparks.github.io/credits/" style="color: var(--accent); font-family: var(--mono); font-size: 1rem;">https://dsparks.github.io/credits/</a></p>
+  </div>
+</div>
+    
     <!-- Slide 24: Trading Credits -->
     <div class="slide">
       <div class="section-label">Our proposal</div>
@@ -1464,7 +1460,7 @@ body {
         <ul>
           <li>Team-Building Credits could be used as consideration in any trade, just like player contracts, portions of draft picks, and cash are under the current system.</li>
           <li>One Credit might be useful as &ldquo;minimum consideration&rdquo; in a trade, replacing the classic top-55 protected second-round pick. Consideration rules for three-way trades would need to be evaluated &mdash; some higher number of Credits would suffice.</li>
-          <li>Teams would also have the option to trade their own first- or second-round draft &ldquo;slots&rdquo;, subject to a Stepien-like rule. These picks would not be protected or have swap options, because the Credit bidding process for draft position makes those irrelevant.</li>
+          <li>Teams would also have the option to trade their own first- or second-round draft &ldquo;slots&rdquo;. These picks would not be protected or have swap options, because the Credit bidding process for draft position makes those irrelevant.</li>
           <ul>
             <li>So, for example, a team that believes it has a good chance to contend for a championship might trade a developing young player, a future first-round draft slot, and 35 Credits to another team, in exchange for a playoff-caliber starter.</li>
           </ul>
@@ -1491,7 +1487,7 @@ body {
     <!-- Slide 26: Credit offsets -->
     <div class="slide">
       <div class="section-label">Our proposal</div>
-      <h2>Credit offsets for playoff success</h2>
+      <h2>Varying Credit distribution for playoff success</h2>
       <div class="sub-heading">A flexible tool for shaping team-building and ensuring rules adherence</div>
       <div class="body-block">
         <ul>
@@ -1516,6 +1512,7 @@ body {
           <li>In the first year after the Credit system is agreed to, teams can trade their 2034 picks (and beyond, as they come available over time), but only as &ldquo;whole slots&rdquo;, in line with the rules described previously.</li>
           <li>Teams could also begin trading their full allocation of Credits in a specific future year, up to seven years out. These credits would have to be traded in “all or nothing” deals, since no one knows in advance how many credits they’ll be getting in a future year.</li>
           <li>Starting July 1, 2034, the league distributes Credits to all teams, as the transition to the new system is complete.</li>
+          <li>In the interim period, the league could implement other reforms to the existing lottery system to alter the current incentive structure.</li>
         </ul>
       </div>
     </div>
@@ -1602,31 +1599,46 @@ body {
             <li>These would have to be negotiated with the players.</li>
           </ul>
           <li>On the other side, the league could incentivize competition, by rewarding the In-Season Tournament winning team (and runner-up) with future Credits, and/or awarding future Credits to the teams of each player on the winning All-Star team.</li>
-          <li>These are all just several of many possibilities.</li>
+          <li>These are all just several of many possibilities &mdash; really the system is flexible to adjustment for nearly any league goal.</li>
         </ul>
       </div>
     </div>
 
     
-    <!-- Slide 31: Q&A - Schedule -->
-    <div class="slide">
-      <div class="section-label">Questions, answered</div>
-      <h2>Q &amp; A</h2>
-      <div class="sub-heading">What does the annual schedule look like for Team-Building Credits?</div>
-      <div class="body-block">
-        <ul>
-          <li>July 1: At the beginning of the league year, the NBA allocates 100 Credits to each team, minus playoff success offsets.</li>
-          <li>Early February: Just as is the case now, teams cannot trade Credits or draft slots after the trade deadline.</li>
-          <li>Mid May: The deadline for players to commit to, or withdraw from, the NBA draft.</li>
-          <li>Mid May: Teams submit their Credit bids for the Rolling Window Lottery.</li>
-          <li>Late May: The Lottery is held.</li>
-          <li>Late May: Teams submit Credit bids for second round picks.</li>
-          <li>Late June: The NBA draft.</li>
-        </ul>
-      </div>
-    </div>
+<!-- Slide 31: Q&A - Schedule -->
+<div class="slide">
+  <div class="section-label">Questions, answered</div>
+  <h2>Q &amp; A</h2>
+  <div class="sub-heading">What does the annual schedule look like for Team-Building Credits?</div>
+  <div class="body-block">
+    <ul>
+      <li>July 1: At the beginning of the league year, the NBA allocates 100 Credits to each team, minus playoff success offsets.</li>
+      <li>Late April: Early entry deadline for the NBA draft - same timing as current system.</li>
+      <li>Early May (after the start of the conference semifinals): Teams submit their Credit bids for the Rolling Window Lottery.</li>
+      <li>Mid May: The Lottery is held - same timing as current lottery.</li>
+      <li>Late May: Teams submit Credit bids for second round picks, and the second round order is revealed soon thereafter.</li>
+      <li>Late June: The NBA draft.</li>
+    </ul>
+  </div>
+</div>
 
-    <!-- Slide 32: Q&A - Second apron -->
+<!-- Slide 32: Q&A - Why the Rolling-Window Lottery -->
+<div class="slide">
+  <div class="section-label">Questions, answered</div>
+  <h2>Q &amp; A</h2>
+  <div class="sub-heading">Why the Rolling-Window Lottery?</div>
+  <div class="body-block">
+    <p>The Rolling-Window Lottery gives teams significant control over where they pick, as pick allocations are largely dictated by bid size. However, a small infusion of lottery luck ensures that teams can’t perfectly aim for a particular spot in the draft. At the same time, the Vickrey-style debiting ensures that no high bidder is “robbed” of credits if they slip in the draft.</p>
+    <p>We prefer this model to several others we considered:</p>
+    <ul>
+      <li>Deterministic bid order &ndash; picks allocated in order of bid, with random tiebreakers. Almost no randomness; high bidders can’t fall, low bidders can’t rise.</li>
+      <li>Full lottery &ndash; each pick is drawn from a lottery over all bidders, weighted by bid. Highest randomness; greatest potential for high bidders to fall and low bidders to jump.</li>
+      <li>Top-N lottery &ndash; top several picks awarded by lottery, all other picks allocated in order of bid. Moderate randomness; high bidders unlikely to fall far, some small probability low bidders jump.</li>
+    </ul>
+  </div>
+</div>
+    
+    <!-- Slide 33: Q&A - Second apron -->
     <div class="slide">
       <div class="section-label">Questions, answered</div>
       <h2>Q &amp; A</h2>
@@ -1638,21 +1650,32 @@ body {
       </div>
     </div>
 
-    <!-- Slide 33: Q&A - Complicated -->
-    <div class="slide">
-      <div class="section-label">Questions, answered</div>
-      <h2>Q &amp; A</h2>
-      <div class="sub-heading">Isn’t this Team-Building Credits plan too complicated for fans to follow?</div>
-      <div class="body-block">
-        <p>Complicated? You mean, like this?</p>
-        <code>
-          Minnesota conveys to Detroit the right to swap Detroit’s own 2026 first round draft pick (the “Detroit Pick”) for the “Minnesota/Utah Pick” (defined below), provided that Minnesota’s own 2026 first round draft pick (the “Minnesota Pick”) is not among the first 19 picks in the 2026 NBA Draft. If the Minnesota Pick is not among the first 19 picks in the 2026 NBA Draft, the foregoing swap right shall be deemed exercised by Detroit if the Minnesota/Utah Pick is more favorable than the Detroit Pick and shall be deemed extinguished if the Minnesota/Utah Pick is less favorable than the Detroit Pick (for clarity, the determination of whether the Minnesota/Utah Pick is more or less favorable than the Detroit Pick shall be made once it is determined which team’s first round draft pick is the Minnesota/Utah Pick). If the Minnesota Pick is among the first 19 picks in the 2026 NBA Draft, then Minnesota’s obligation to convey the foregoing swap right shall be extinguished. (Conley - Ivey - Huerter - Saric - CHI - DET - MIN, 2/3/2026)
+<!-- Slide 34: Q&A - Expansion -->
+<div class="slide">
+  <div class="section-label">Questions, answered</div>
+  <h2>Q &amp; A</h2>
+  <div class="sub-heading">How will this system handle expansion?</div>
+  <div class="body-block">
+    <p>It sounds like current expansion discussions will be implemented prior to this system, but regardless, the Team-Building Credits system handles expansion straightforwardly.</p>
+    <p>Unlike other systems that require fixed ranges of picks, the Rolling Window Lottery works for any number of picks &ndash; the lottery simply rolls through a few additional windows.</p>
+    <p>The only thing that would need to be determined in an expansion scenario after 2034 is how many Credits the team would be allocated initially. This is not really different than how the league determined, during previous expansions, how teams were eligible for top picks. And of course, as it effectively has before, the league could limit the picks for which an expansion team is eligible &ndash; it wouldn’t be hard to say “Expansion Team X can’t be in the top 3 lottery windows, regardless of how much they bid.”</p>
+  </div>
+</div>
+    
+<!-- Slide 35: Q&A - Complicated -->
+<div class="slide">
+  <div class="section-label">Questions, answered</div>
+  <h2>Q &amp; A</h2>
+  <div class="sub-heading">Isn’t this Team-Building Credits plan too complicated for fans to follow?</div>
+  <div class="body-block">
+    <p>Complicated? You mean, like this?</p>
+    <pre style="white-space: pre-wrap; font-family: var(--mono); font-size: 0.86rem; line-height: 1.45; margin: 0;">
+Minnesota conveys to Detroit the right to swap Detroit’s own 2026 first round draft pick (the “Detroit Pick”) for the “Minnesota/Utah Pick” (defined below), provided that Minnesota’s own 2026 first round draft pick (the “Minnesota Pick”) is not among the first 19 picks in the 2026 NBA Draft. If the Minnesota Pick is not among the first 19 picks in the 2026 NBA Draft, the foregoing swap right shall be deemed exercised by Detroit if the Minnesota/Utah Pick is more favorable than the Detroit Pick and shall be deemed extinguished if the Minnesota/Utah Pick is less favorable than the Detroit Pick (for clarity, the determination of whether the Minnesota/Utah Pick is more or less favorable than the Detroit Pick shall be made once it is determined which team’s first round draft pick is the Minnesota/Utah Pick). If the Minnesota Pick is among the first 19 picks in the 2026 NBA Draft, then Minnesota’s obligation to convey the foregoing swap right shall be extinguished. (Conley - Ivey - Huerter - Saric - CHI - DET - MIN, 2/3/2026)
 
-          The Minnesota/Utah Pick shall be the Minnesota Pick; provided that, if Utah exercises its right to swap Utah’s own 2026 first round draft pick (the “Utah Pick”) for the Minnesota Pick pursuant to the July 6, 2022 trade involving Rudy Gobert et al. (see endnote 61), then the Minnesota/Utah Pick shall instead be the Utah Pick.
-        </code>
-      </div>
-    </div>
-
+The Minnesota/Utah Pick shall be the Minnesota Pick; provided that, if Utah exercises its right to swap Utah’s own 2026 first round draft pick (the “Utah Pick”) for the Minnesota Pick pursuant to the July 6, 2022 trade involving Rudy Gobert et al. (see endnote 61), then the Minnesota/Utah Pick shall instead be the Utah Pick.
+    </pre>
+  </div>
+</div>
   </div>
 
   <div class="slide-controls">
