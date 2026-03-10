@@ -434,7 +434,7 @@ hr {
 
     <p>The first Credit-bid draft would realistically take place in 2034 at the soonest. Once agreed to, all existing pick trades are honored, and teams continue trading picks under current rules through the 2033 draft.</p>
     <p>In the first year after agreement, teams can trade 2034 picks and beyond as whole slots under the new rules. Teams can also trade their full allocation of Credits for a specific future year, up to seven years out.</p>
-    <p>Starting July 1, 2034, the league distributes Credits to all teams, and teams may no longer trade future Credits&mdash;only those they have accumulated. To smooth the transition to the new system, we recommend the league begins distributing smaller allocations of Credits to teams roughly three years before full implementation. These Credits could be traded immediately, or eventually used to bid on draft position.</p>
+    <p>Starting July 1, 2034, the league distributes Credits to all teams. To smooth the transition to the new system, we recommend the league begins distributing smaller allocations of Credits to teams roughly three years before full implementation. These Credits could be traded immediately, or eventually used to bid on draft position.</p>
   </div>
 
   <hr>
@@ -465,18 +465,29 @@ hr {
     <div class="qa-item">
       <div class="question">What does the annual schedule look like?</div>
       <div class="answer"><ul>
-        <li>July 1: the league allocates 100 Credits per team, minus playoff offsets.</li>
-        <li>Early February: the trade deadline applies to Credits and draft slots.</li>
-        <li>Mid-May: draft entry deadline and Credit bid submission.</li>
-        <li>Late May: the Rolling Window Lottery.</li>
-        <li>Late June: the draft.</li></ul></div>
+        <li>July 1: The league allocates 100 Credits per team, minus playoff offsets.</li>
+        <li>Late April: Early entry deadline for the NBA draft &mdash; same timing as current system.</li>
+        <li>Early May (after the start of the conference semifinals): Teams submit their Credit bids for the Rolling Window Lottery.</li>
+        <li>Mid May: The Rolling Window Lottery is held &mdash; same timing as current lottery.</li>
+        <li>Late May: Teams submit Credit bids for second round picks, and the second round order is revealed soon thereafter.</li>
+        <li>Late June: The NBA draft.</li></ul></div>
     </div>
+    <div class="qa-item">
+      <div class="question">Why the Rolling-Window Lottery?</div>
+      <div class="answer"><p>The Rolling-Window Lottery gives teams significant control over where they pick, as pick allocations are largely dictated by bid size. However, a small infusion of lottery luck ensures that teams can’t perfectly aim for a particular spot in the draft. At the same time, the Vickrey-style debiting ensures that no high bidder is “robbed” of credits if they slip in the draft.</p>
+        <p>We prefer this model to several others we considered:</p>
+       <ul>
+          <li><b>Deterministic bid order</b> &mdash; picks allocated in order of bid, with random tiebreakers. Almost no randomness; high bidders can’t fall, low bidders can’t rise.</li>
+          <li><b>Full lottery</b> &mdash; each pick is drawn from a lottery over all bidders, weighted by bid. Highest randomness; greatest potential for high bidders to fall and low bidders to jump.</li>
+          <li><b>Top-N lottery</b> &mdash; top several picks awarded by lottery, all other picks allocated in order of bid. Moderate randomness; high bidders unlikely to fall far, some small probability low bidders jump.</li>
+        </ul>      
+    </div>    
     <div class="qa-item">
       <div class="question">How will the draft-pick penalty for teams in the Second Apron be implemented?</div>
       <div class="answer"><p>The first step of the penalty is easily carried over: we can simply “freeze” that team’s first round draft slot in the seventh following season, preventing them from trading it.</p>
         <p>If a team is in the Second Apron for at least 2 of the next 4 cap-years, that team would then be prevented from bidding Credits toward that frozen pick, ensuring that it lands at the end of the first round.</p>
         <p>This would be slightly less harsh than the current penalty since other teams could also bid 0 and thus this pick could be randomly drawn to be higher than 30 if there are other teams bidding zero. More importantly, the penalized team could still carry that year’s Credits over to a future year, so the penalty is less harsh than it is now, where all your “pick quality equity” for that year is taken away.</p>
-</p></div>
+    </div>
     </div>
     <div class="qa-item">
       <div class="question">Isn’t this Team-Building Credits plan too complicated for fans to follow?</div>
