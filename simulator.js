@@ -259,7 +259,7 @@ function renderSummary(sortedTeams, pickDist, totalCosts, teamBids, numSims) {
     for (let p = n - 1; p >= 0; p--) { if (dist[p] > 0) { worst = p + 1; break; } }
     let t3 = 0, t10 = 0; for (let p = 0; p < 3; p++) t3 += dist[p]; for (let p = 0; p < 10; p++) t10 += dist[p];
     const tr = document.createElement('tr');
-    tr.innerHTML = `<td>${TEAMS[ti].abbr}</td><td>${bid}</td><td>${avg.toFixed(1)}</td><td>${med}</td><td>${best}</td><td>${worst}</td><td>${(t3/numSims*100).toFixed(1)}%</td><td>${(t10/numSims*100).toFixed(1)}%</td><td>${(totalCosts[ti]/numSims).toFixed(1)}</td><td>${(bid-totalCosts[ti]/numSims).toFixed(1)}</td>`;
+    tr.innerHTML = `<td>${TEAMS[ti].abbr}</td><td>${bid}</td><td>${avg.toFixed(1)}</td><td>${med}</td><td>${best}</td><td>${worst}</td><td>${(t3/numSims*100).toFixed(1)}%</td><td>${(t10/numSims*100).toFixed(1)}%</td><td>${(totalCosts[ti]/numSims).toFixed(1)}</td>`;
     tbody.appendChild(tr);
   }
   document.getElementById('exportCsvBtn').style.display = '';
@@ -271,7 +271,7 @@ function exportCsv() {
   const n = 30;
   const sorted = Array.from({ length: n }, (_, i) => i);
   sorted.sort((a, b) => teamBids[b] - teamBids[a]);
-  const header = ['Team', 'Bid', 'Avg Pick', 'Median', 'Best', 'Worst', 'P(Top 3)', 'P(Top 10)', 'Avg Cost', 'Avg Refund'];
+  const header = ['Team', 'Bid', 'Avg Pick', 'Median', 'Best', 'Worst', 'P(Top 3)', 'P(Top 10)', 'Avg Cost'];
   for (let p = 1; p <= 30; p++) header.push('P(Pick ' + p + ')');
   const rows = [header.join(',')];
   for (const ti of heatmapSortedTeams) {
@@ -286,8 +286,7 @@ function exportCsv() {
       TEAMS[ti].abbr, bid, avg.toFixed(1), med, best, worst,
       (t3 / numSims * 100).toFixed(1) + '%',
       (t10 / numSims * 100).toFixed(1) + '%',
-      (totalCosts[ti] / numSims).toFixed(1),
-      (bid - totalCosts[ti] / numSims).toFixed(1)
+      (totalCosts[ti] / numSims).toFixed(1)
     ];
     for (let p = 0; p < n; p++) row.push((dist[p] / numSims * 100).toFixed(2) + '%');
     rows.push(row.join(','));
@@ -362,7 +361,7 @@ function renderStep() {
   const step = s.steps[s.currentStep], alloc = s.steps.slice(0, s.currentStep + 1);
   let h = `<div class="step-pick-label">Pick #${step.pickNum + 1}${step.isZeroBid ? ' (zero-bid)' : ''}</div>`;
   const wt = TEAMS[step.winnerTeamIdx];
-  h += `<div class="step-winner-banner"><span class="winner-team">${wt.abbr}</span> ${wt.name} wins pick #${step.pickNum + 1}<br><span class="winner-detail">Bid: ${step.winnerBid} \u2022 Charged: ${step.cost} \u2022 Refund: ${step.refund}</span></div>`;
+  h += `<div class="step-winner-banner"><span class="winner-team">${wt.abbr}</span> ${wt.name} wins pick #${step.pickNum + 1}<br><span class="winner-detail">Bid: ${step.winnerBid} \u2022 Charged: ${step.cost}</span></div>`;
   if (!step.isZeroBid) {
     h += `<div class="step-table-scroll"><table class="step-table"><thead><tr><th>Team</th><th>Bid</th><th class="r">Probability</th><th class="r">Result</th></tr></thead><tbody>`;
     for (const e of step.window) { const t = TEAMS[e.teamIdx], iw = e.teamIdx === step.winnerTeamIdx; h += `<tr class="${iw ? 'winner' : ''}"><td class="team-cell">${t.abbr}</td><td>${e.bid}</td><td class="r">${(e.prob * 100).toFixed(1)}%</td><td class="r">${iw ? '\u2713 Winner' : ''}</td></tr>`; }
