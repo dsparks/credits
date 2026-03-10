@@ -255,43 +255,101 @@ body {
   margin-bottom: 0;
 }
 
+/* --- Transition ramp table --- */
+.transition-ramp-wrap {
+  margin: 1.15rem 0 1.35rem 1.5rem;
+}
+
+.transition-ramp-intro {
+  font-size: 0.96rem;
+  color: var(--text-secondary);
+  margin-bottom: 0.65rem;
+}
+
+.transition-ramp-table {
+  border-collapse: collapse;
+  width: 100%;
+  max-width: 31rem;
+  background: var(--bg);
+  font-size: 0.95rem;
+  line-height: 1.4;
+}
+
+.transition-ramp-table th,
+.transition-ramp-table td {
+  border: 1px solid #bfb8ac;
+  padding: 0.45rem 0.7rem;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.transition-ramp-table th {
+  font-weight: 600;
+  color: var(--text);
+  background: rgba(0, 0, 0, 0.01);
+}
+
+.transition-ramp-table td:first-child,
+.transition-ramp-table th:first-child {
+  text-align: right;
+  white-space: nowrap;
+}
+
+.transition-ramp-note {
+  margin-top: 0.95rem;
+}
+
 /* --- Q&A --- */
 .qa-item {
-  margin-bottom: 1.75rem;
+  margin: 0 0 2.1rem 0;
+  padding-top: 1.15rem;
+  border-top: 1px solid var(--rule-light);
+}
+
+.qa-item:first-of-type {
+  padding-top: 0;
+  border-top: none;
 }
 
 .qa-item .question {
   font-family: var(--serif);
-  font-size: 0.95rem;
-  font-weight: 600;
+  font-size: 1.02rem;
+  font-weight: 700;
   color: var(--text);
-  margin-bottom: 0.3rem;
+  margin-bottom: 0.55rem;
   line-height: 1.45;
 }
 
 .qa-item .answer {
+  margin-left: 0.9rem;
+  padding-left: 1rem;
+  border-left: 2px solid var(--rule-light);
   font-size: 0.92rem;
-  line-height: 1.7;
+  line-height: 1.72;
   color: var(--text-secondary);
-}
-
-.qa-item .answer ul {
-  margin: 0.3rem 0 0.5rem 1.25rem;
-  padding: 0;
-  font-size: 0.92rem;
-  line-height: 1.7;
-  color: var(--text-secondary);
-}
-
-.qa-item .answer li {
-  margin-bottom: 0.15rem;
-  padding-left: 0.25rem;
 }
 
 .qa-item .answer p {
   color: var(--text-secondary);
   font-size: 0.92rem;
-  margin-bottom: 0.4rem;
+  margin-bottom: 0.7rem;
+}
+
+.qa-item .answer p:last-child {
+  margin-bottom: 0;
+}
+
+.qa-item .answer ul {
+  margin: 0.45rem 0 0.8rem 1.15rem;
+  padding: 0;
+  font-size: 0.92rem;
+  line-height: 1.72;
+  color: var(--text-secondary);
+}
+
+.qa-item .answer li {
+  margin-bottom: 0.35rem;
+  padding-left: 0.2rem;
 }
 
 .qa-item .answer a {
@@ -301,6 +359,25 @@ body {
 
 .qa-item .answer a:hover {
   color: var(--accent-light);
+}
+
+/* --- Long pick description block --- */
+.pick-code-block {
+  margin: 0.8rem 0 0.25rem;
+  padding: 0.95rem 1rem;
+  background: #f4f1ea;
+  border: 1px solid var(--rule);
+  border-radius: 2px;
+  overflow-x: auto;
+}
+
+.pick-code-block code {
+  display: block;
+  white-space: pre-wrap;
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  line-height: 1.58;
+  color: #2b2b2b;
 }
 
 /* --- CTA --- */
@@ -435,6 +512,41 @@ hr {
     <p>The first Credit-bid draft would realistically take place in 2034 at the soonest. Once agreed to, all existing pick trades are honored, and teams continue trading picks under current rules through the 2033 draft.</p>
     <p>In the first year after agreement, teams can trade 2034 picks and beyond as whole slots under the new rules. Teams can also trade their full allocation of Credits for a specific future year, up to seven years out.</p>
     <p>Starting July 1, 2034, the league distributes Credits to all teams. To smooth the transition to the new system, we recommend the league begins distributing smaller allocations of Credits to teams roughly three years before full implementation. These Credits could be traded immediately, or eventually used to bid on draft position.</p>
+    <div class="transition-ramp-wrap">
+  <div class="transition-ramp-intro">A possible transition ramp could look like this:</div>
+  <table class="transition-ramp-table">
+    <thead>
+      <tr>
+        <th>Year</th>
+        <th>Credits to each team</th>
+        <th>Playoff series penalty</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>2031</td>
+        <td>25</td>
+        <td>-5</td>
+      </tr>
+      <tr>
+        <td>2032</td>
+        <td>50</td>
+        <td>-10</td>
+      </tr>
+      <tr>
+        <td>2033</td>
+        <td>75</td>
+        <td>-15</td>
+      </tr>
+      <tr>
+        <td>2034 (full implementation)</td>
+        <td>100</td>
+        <td>-20</td>
+      </tr>
+    </tbody>
+  </table>
+  <p class="transition-ramp-note">This would allow for an average of 225 Credits per team as the system begins. And of course these would be tradeable as soon as they&rsquo;re allocated to teams.</p>
+</div>
   </div>
 
   <hr>
@@ -480,10 +592,10 @@ hr {
           <li><b>Deterministic bid order</b> &mdash; picks allocated in order of bid, with random tiebreakers. Almost no randomness; high bidders can’t fall, low bidders can’t rise.</li>
           <li><b>Full lottery</b> &mdash; each pick is drawn from a lottery over all bidders, weighted by bid. Highest randomness; greatest potential for high bidders to fall and low bidders to jump.</li>
           <li><b>Top-N lottery</b> &mdash; top several picks awarded by lottery, all other picks allocated in order of bid. Moderate randomness; high bidders unlikely to fall far, some small probability low bidders jump.</li>
-        </ul>      
-    </div>    
-    <div class="qa-item">
-      <div class="question">How will the draft-pick penalty for teams in the Second Apron be implemented?</div>
+        </ul>
+      </div>
+    </div>
+    <div class="qa-item">      <div class="question">How will the draft-pick penalty for teams in the Second Apron be implemented?</div>
       <div class="answer"><p>The first step of the penalty is easily carried over: we can simply “freeze” that team’s first round draft slot in the seventh following season, preventing them from trading it.</p>
         <p>If a team is in the Second Apron for at least 2 of the next 4 cap-years, that team would then be prevented from bidding Credits toward that frozen pick, ensuring that it lands at the end of the first round.</p>
         <p>This would be slightly less harsh than the current penalty since other teams could also bid 0 and thus this pick could be randomly drawn to be higher than 30 if there are other teams bidding zero. More importantly, the penalized team could still carry that year’s Credits over to a future year, so the penalty is less harsh than it is now, where all your “pick quality equity” for that year is taken away.</p>
@@ -499,13 +611,11 @@ hr {
     <div class="qa-item">
       <div class="question">Isn’t this Team-Building Credits plan too complicated for fans to follow?</div>
       <div class="answer"><p>Complicated? You mean, like this?</p>
-        <code>Minnesota conveys to Detroit the right to swap Detroit’s own 2026 first round draft pick (the “Detroit Pick”) for the “Minnesota/Utah Pick” (defined below), provided that Minnesota’s own 2026 first round draft pick (the “Minnesota Pick”) is not among the first 19 picks in the 2026 NBA Draft. If the Minnesota Pick is not among the first 19 picks in the 2026 NBA Draft, the foregoing swap right shall be deemed exercised by Detroit if the Minnesota/Utah Pick is more favorable than the Detroit Pick and shall be deemed extinguished if the Minnesota/Utah Pick is less favorable than the Detroit Pick (for clarity, the determination of whether the Minnesota/Utah Pick is more or less favorable than the Detroit Pick shall be made once it is determined which team’s first round draft pick is the Minnesota/Utah Pick). If the Minnesota Pick is among the first 19 picks in the 2026 NBA Draft, then Minnesota’s obligation to convey the foregoing swap right shall be extinguished. (Conley - Ivey - Huerter - Saric - CHI - DET - MIN, 2/3/2026)
+        <div class="pick-code-block"><code>Minnesota conveys to Detroit the right to swap Detroit’s own 2026 first round draft pick (the “Detroit Pick”) for the “Minnesota/Utah Pick” (defined below), provided that Minnesota’s own 2026 first round draft pick (the “Minnesota Pick”) is not among the first 19 picks in the 2026 NBA Draft. If the Minnesota Pick is not among the first 19 picks in the 2026 NBA Draft, the foregoing swap right shall be deemed exercised by Detroit if the Minnesota/Utah Pick is more favorable than the Detroit Pick and shall be deemed extinguished if the Minnesota/Utah Pick is less favorable than the Detroit Pick (for clarity, the determination of whether the Minnesota/Utah Pick is more or less favorable than the Detroit Pick shall be made once it is determined which team’s first round draft pick is the Minnesota/Utah Pick). If the Minnesota Pick is among the first 19 picks in the 2026 NBA Draft, then Minnesota’s obligation to convey the foregoing swap right shall be extinguished. (Conley - Ivey - Huerter - Saric - CHI - DET - MIN, 2/3/2026)
 
-The Minnesota/Utah Pick shall be the Minnesota Pick; provided that, if Utah exercises its right to swap Utah’s own 2026 first round draft pick (the “Utah Pick”) for the Minnesota Pick pursuant to the July 6, 2022 trade involving Rudy Gobert et al. (see endnote 61), then the Minnesota/Utah Pick shall instead be the Utah Pick.
-</code>
-      <p></p></div>
+The Minnesota/Utah Pick shall be the Minnesota Pick; provided that, if Utah exercises its right to swap Utah’s own 2026 first round draft pick (the “Utah Pick”) for the Minnesota Pick pursuant to the July 6, 2022 trade involving Rudy Gobert et al. (see endnote 61), then the Minnesota/Utah Pick shall instead be the Utah Pick.</code></div>
+      </div>
     </div>
-    <div class="qa-item">
     <div class="qa-item">
       <div class="question">I have some questions about this proposal, or ideas to strengthen it; how can I get in touch with the authors?</div>
       <div class="answer"><p>Please feel free to email me at 
