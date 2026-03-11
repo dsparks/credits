@@ -104,7 +104,7 @@ function loadFromUrl() {
   if (p.has('n')) { const n = parseInt(p.get('n')); if (n >= 100 && n <= 1000000) document.getElementById('numSims').value = n; }
 }
 
-const HEATMAP = { cellW: 42, cellH: 36, labelW: 86, labelH: 68, bidColW: 60 };
+const HEATMAP = { cellW: 68, cellH: 62, labelW: 86, labelH: 68, bidColW: 60 };
 let heatmapSortedTeams = [];
 
 function simulateOnce(teamBids, windowSize) {
