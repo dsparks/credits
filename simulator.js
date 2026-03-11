@@ -209,13 +209,13 @@ function renderHeatmap(sortedTeams, pickDist, teamBids, numSims) {
         const g = Math.round(122 + (210 - 122) * (1 - intensity));
         const b = Math.round(51 + (160 - 51) * (1 - intensity));
         ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${alpha})`;
-        ctx.fillRect(x + 0.0005, y + 0.0005, cellW - 0.0001, cellH - 0.0001);
+        ctx.fillRect(x + 0.5, y + 0.5, cellW - 1, cellH - 1);
       }
 
       if (prob >= 0.005) {
         const pctVal = Math.round(prob * 100);
         if (pctVal > 0) {
-          ctx.textAlign = 'center'; ctx.font = `500 32px 'IBM Plex Mono', monospace`;
+          ctx.textAlign = 'center'; ctx.font = `500 12px 'IBM Plex Mono', monospace`;
           ctx.fillStyle = intensity > 0.55 ? '#fff' : intensity > 0.25 ? '#1a4a2a' : '#aaa';
           ctx.fillText(String(pctVal), x + cellW / 2, y + cellH / 2 + 4);
         }
