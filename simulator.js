@@ -1,6 +1,6 @@
 const TEAMS = [
   { abbr: 'ATL', name: 'Atlanta Hawks' },
-  { abbr: 'BOS', name: 'TEST Boston Celtics' },
+  { abbr: 'BOS', name: 'Boston Celtics' },
   { abbr: 'BKN', name: 'Brooklyn Nets' },
   { abbr: 'CHA', name: 'Charlotte Hornets' },
   { abbr: 'CHI', name: 'Chicago Bulls' },
@@ -183,9 +183,9 @@ function renderHeatmap(sortedTeams, pickDist, teamBids, numSims) {
   let maxProb = 0;
   for (let t = 0; t < n; t++) for (let p = 0; p < n; p++) { const pr = pickDist[t][p] / numSims; if (pr > maxProb) maxProb = pr; }
 
-  ctx.font = `500 18px 'IBM Plex Mono', monospace`; ctx.fillStyle = '#888'; ctx.textAlign = 'center';
+  ctx.font = `500 17px 'IBM Plex Mono', monospace`; ctx.fillStyle = '#888'; ctx.textAlign = 'center';
   for (let p = 0; p < n; p++) ctx.fillText(String(p + 1), labelW + bidColW + p * cellW + cellW / 2, labelH - 14);
-  ctx.font = `600 18px 'IBM Plex Mono', monospace`;
+  ctx.font = `600 17px 'IBM Plex Mono', monospace`;
   ctx.fillText('Pick \u2192', labelW + bidColW + (n * cellW) / 2, labelH - 40);
   ctx.textAlign = 'right'; ctx.fillText('Bid', labelW + bidColW - 10, labelH - 14);
 
@@ -193,9 +193,9 @@ function renderHeatmap(sortedTeams, pickDist, teamBids, numSims) {
     const ti = sortedTeams[row], y = labelH + row * cellH;
     if (row % 2 === 0) { ctx.fillStyle = '#f7f5f0'; ctx.fillRect(0, y, width, cellH); }
 
-    ctx.textAlign = 'left'; ctx.font = `600 18px 'IBM Plex Mono', monospace`; ctx.fillStyle = '#1a1a1a';
-    ctx.fillText(TEAMS[ti].abbr, 8, y + cellH / 2 + 0.00);
-    ctx.textAlign = 'right'; ctx.font = `400 18px 'IBM Plex Mono', monospace`; ctx.fillStyle = '#888';
+    ctx.textAlign = 'left'; ctx.font = `600 17px 'IBM Plex Mono', monospace`; ctx.fillStyle = '#1a1a1a';
+    ctx.fillText(TEAMS[ti].abbr, 8, y + cellH / 2 + 6);
+    ctx.textAlign = 'right'; ctx.font = `400 17px 'IBM Plex Mono', monospace`; ctx.fillStyle = '#888';
     ctx.fillText(String(teamBids[ti]), labelW + bidColW - 10, y + cellH / 2 + 5);
 
     for (let p = 0; p < n; p++) {
@@ -217,7 +217,7 @@ function renderHeatmap(sortedTeams, pickDist, teamBids, numSims) {
         if (pctVal > 0) {
           ctx.textAlign = 'center'; ctx.font = `500 19px 'IBM Plex Mono', monospace`;
           ctx.fillStyle = intensity > 0.55 ? '#fff' : intensity > 0.25 ? '#1a4a2a' : '#aaa';
-          ctx.fillText(String(pctVal), x + cellW / 2, y + cellH / 2 + 0.00);
+          ctx.fillText(String(pctVal), x + cellW / 2, y + cellH / 2 + 7);
         }
       }
     }
