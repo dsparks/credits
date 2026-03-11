@@ -1,5 +1,5 @@
 const TEAMS = [
-  { abbr: 'ATL', name: 'Atlanta Hawks' },
+  { abbr: 'ATL', name: 'TEST Atlanta Hawks' },
   { abbr: 'BOS', name: 'Boston Celtics' },
   { abbr: 'BKN', name: 'Brooklyn Nets' },
   { abbr: 'CHA', name: 'Charlotte Hornets' },
@@ -194,7 +194,7 @@ function renderHeatmap(sortedTeams, pickDist, teamBids, numSims) {
     if (row % 2 === 0) { ctx.fillStyle = '#f7f5f0'; ctx.fillRect(0, y, width, cellH); }
 
     ctx.textAlign = 'left'; ctx.font = `600 18px 'IBM Plex Mono', monospace`; ctx.fillStyle = '#1a1a1a';
-    ctx.fillText(TEAMS[ti].abbr, 8, y + cellH / 2 + 2);
+    ctx.fillText(TEAMS[ti].abbr, 8, y + cellH / 2 + 0.00);
     ctx.textAlign = 'right'; ctx.font = `400 18px 'IBM Plex Mono', monospace`; ctx.fillStyle = '#888';
     ctx.fillText(String(teamBids[ti]), labelW + bidColW - 10, y + cellH / 2 + 5);
 
