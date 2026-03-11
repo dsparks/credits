@@ -104,7 +104,7 @@ function loadFromUrl() {
   if (p.has('n')) { const n = parseInt(p.get('n')); if (n >= 100 && n <= 1000000) document.getElementById('numSims').value = n; }
 }
 
-const HEATMAP = { cellW: 68, cellH: 62, labelW: 86, labelH: 68, bidColW: 60 };
+const HEATMAP = { cellW: 38, cellH: 32, labelW: 86, labelH: 68, bidColW: 60 };
 let heatmapSortedTeams = [];
 
 function simulateOnce(teamBids, windowSize) {
@@ -209,7 +209,7 @@ function renderHeatmap(sortedTeams, pickDist, teamBids, numSims) {
         const g = Math.round(122 + (210 - 122) * (1 - intensity));
         const b = Math.round(51 + (160 - 51) * (1 - intensity));
         ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${alpha})`;
-        ctx.fillRect(x + 0.5, y + 0.5, cellW - 1, cellH - 1);
+        ctx.fillRect(x + 0.0005, y + 0.0005, cellW - 0.0001, cellH - 0.0001);
       }
 
       if (prob >= 0.005) {
