@@ -353,6 +353,68 @@ body {
   scrollbar-color: var(--rule) transparent;
 }
 
+/* --- Transition slide table --- */
+.transition-table-wrap {
+  margin-top: 0.45rem;
+  display: flex;
+  justify-content: center;
+}
+
+.transition-table {
+  border-collapse: collapse;
+  background: var(--white);
+  font-size: 0.82rem;
+  font-family: var(--serif);
+  min-width: 420px;
+}
+
+.transition-table th,
+.transition-table td {
+  border: 1px solid var(--rule);
+  padding: 0.35rem 0.7rem;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.transition-table th {
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-secondary);
+  background: var(--surface);
+}
+
+.transition-table td {
+  color: var(--text);
+  line-height: 1.35;
+}
+
+.transition-table tbody tr:nth-child(even) {
+  background: rgba(0, 0, 0, 0.015);
+}
+
+/* Tighter spacing for nested bullet that contains only the table */
+.slide .body-block li.table-bullet {
+  margin-top: 0.2rem;
+  margin-bottom: 0.2rem;
+  list-style-type: square;
+}
+
+@media (max-width: 700px) {
+  .transition-table {
+    min-width: 0;
+    width: 100%;
+    font-size: 0.74rem;
+  }
+
+  .transition-table th,
+  .transition-table td {
+    padding: 0.3rem 0.45rem;
+  }
+}
+  
 /* --- Controls bar --- */
 .slide-controls {
   border-top: 1px solid var(--rule);
@@ -418,6 +480,48 @@ body {
   .accent-card { padding: 2.5rem 1.5rem; }
   .accent-card h2 { font-size: 1.8rem; }
 }
+
+/* Rolling Window demo notes */
+.rolling-window-demo {
+  position: relative;
+  min-height: 29rem;
+}
+
+.rolling-window-note {
+  position: absolute;
+  right: auto;
+  left: calc(50% + 2.5rem);
+  top: 17.75rem;
+  width: 11.5rem;
+  background: rgba(0, 122, 51, 0.08);
+  padding: 0.9rem 0.95rem;
+  font-family: var(--serif);
+  color: var(--text);
+  z-index: 2;
+}
+
+.rolling-window-note p {
+  margin: 0 0 0.55rem 0;
+  font-size: 0.95rem;
+  line-height: 1.35;
+}
+
+.rolling-window-note p:last-child {
+  margin-bottom: 0;
+}
+
+@media (max-width: 900px) {
+  .rolling-window-demo {
+    min-height: auto;
+  }
+
+  .rolling-window-note {
+    position: static;
+    width: auto;
+    margin-top: 1rem;
+  }
+} 
+  
 </style>
 </head>
 <body>
@@ -476,14 +580,14 @@ body {
         <p>Prior to the draft lottery, teams simultaneously bid some of their Credits as entries to the lottery, then the lottery assigns all 30 first-round picks.</p>
         <p>Unspent Credits roll over, season-to-season, so teams can accumulate them over time.</p>
         <p>Credits can be traded between teams, just as player contracts, cash, and (portions of) picks are currently.</p>
-        <p>In support of the league&rsquo;s goals, fewer than 100 Credits can be allocated to teams, according to agreed-upon criteria.</p>
+        <p>In support of the league&rsquo;s goals, fewer than 100 Credits can be allocated to teams, according to agreed-upon criteria, such as offsets for playoff success.</p>
       </div>
     </div>
 
     <!-- Slide 5: Outline -->
     <div class="slide">
       <h2>Outline</h2>
-      <div class="sub-heading">Team-Building Credits are the main idea; the details are flexible</div>
+      <div class="sub-heading">Team-Building Credits are the main idea; the details are extremely flexible</div>
       <div class="outline-list">
         <ol>
           <li>Goodhart&rsquo;s Law</li>
@@ -525,9 +629,10 @@ body {
           <li>Counting wins after a certain point in the season creates an incentive for teams with good rosters to lose early, and it doesn&rsquo;t help teams who simply cannot win games at any point in the season, who are the ones who most need the help.</li>
           <li>Restricting the range of pick protections (to, e.g. &ldquo;top 4&rdquo; or &ldquo;lottery&rdquo;) will just cause teams to pool toward those breakpoints.</li>
           <li>Considering record across multiple seasons creates an incentive for teams to lose if their previous season&rsquo;s losses put them in a favorable draft position. Or creates an incentive for a team that was good in a previous year to lose <em>even more</em>.</li>
-          <li>Disallowing teams from picking Top 4 in back-to-back years, or awarding good picks to tournament winners, just makes it harder for talent to get to the teams that need it most.</li>
+          <li>Disallowing teams from picking Top 4 in back-to-back years just incentivizes losing more for teams who aren&rsquo;t the worst teams (since a bad team&rsquo;s lottery odds have to be distributed to the remaining teams).</li>
+          <li>Awarding good picks to tournament winners just makes it harder for talent to get to the teams that need it most.</li>
         </ul>
-        <p>Team-Building Credits don&rsquo;t rely on teams winning or losing specific regular season games; they can&rsquo;t be directly manipulated through non-competitive strategies or lineups.</p>
+        <p>Team-Building Credits don&rsquo;t rely on teams winning or losing specific regular season games; in this system your draft position can&rsquo;t be directly manipulated through non-competitive strategies or lineups..</p>
       </div>
     </div>
 
@@ -539,8 +644,10 @@ body {
       <div class="body-block">
         <p>The NBA has historically prioritized giving non-contending teams the opportunity to build through the draft. Team-Building Credits preserves that opportunity.</p>
         <p>Specifically, this plan allows teams to &ldquo;save&rdquo; Credits for the years in which they most acutely need an infusion of talent through the draft, at which time they can invest their Credits heavily into the draft lottery, to maximize their chances of drafting the best prospects.</p>
-        <p>Additionally, this plan allows Team-Building Credits to be traded, meaning that a rebuilding team can trade some of their veteran talent for additional Credits, further improving their chances in the draft lottery.</p>
-        <p>There are many other ways the Team-Building Credit system could be modified to confer advantages in the draft to any set of teams determined by the league to &ldquo;need&rdquo; more help in the draft. See the section below on Offset system options.</p>
+        <p>Additionally, this plan allows Team-Building Credits to be traded, meaning that a rebuilding team can trade some of their veteran talent for additional Credits, further improving their chances in the draft lottery. And good teams can trade Credits away in exchange for talent to improve their current roster.</p>
+        <p>Ultimately the marketplace should efficiently allocate these Credits, allowing for more competitive balance.</p>
+        <p>There are many other ways the Team-Building Credit system could be modified to confer advantages in the draft to any set of teams determined by the league to “need” more help in the draft. See the section below on Options &amp; Alternatives.</p>
+        <p>One general benefit of this system is that it is extremely easy to modify - it can be altered in the future to address nearly any league priority.</p>
       </div>
     </div>
 
@@ -554,9 +661,10 @@ body {
           <li>At the start of each league-year, each team receives an allocation of 100 Team-Building Credits from the league, minus deductions for playoff success. These Credits may be saved or traded, but their primary use is to bid for draft position.
             <ul>
               <li>Teams also get the rights to their own first- and second-round draft picks seven years out, on the night of the draft, as they currently do.</li>
+              <li>In order to enhance competitive balance, teams that win playoff series could receive fewer than 100 Credits; see a later slide for how this would work.</li>
             </ul>
           </li>
-          <li>On some pre-specified date in late April, teams will secretly send bids to the league. Those bids involve &ldquo;spending&rdquo; their Credits toward a partially randomized allocation of draft positions. The bids must be integer amounts of Credit, and the bidding team must have enough Credits in their account to cover the bid.</li>
+          <li>On some pre-specified date in early May, teams will secretly send bids to the league. Those bids involve &ldquo;spending&rdquo; their Credits toward a new type of draft lottery. The bids must be integer amounts of Credit, and the bidding team must have enough Credits in their account to cover the bid.</li>
           <li>After the bid deadline, the league would reveal each team&rsquo;s bids, which would generate a lot of conversation among fans and the media.</li>
           <li>Picks are allocated through a <strong>Rolling Window Lottery</strong>. &#x1F447;</li>
         </ul>
@@ -570,23 +678,36 @@ body {
       <div class="sub-heading">The mechanism by which teams bid Credits for picks</div>
       <div class="body-block">
         <ul>
-          <li>The first round has 30 picks (or one pick for each team), although just like today, teams can own multiple picks in a single round if they acquire additional picks from other teams via trade.</li>
-          <li>It is desirable to have the magnitude of each team&rsquo;s bid largely determine draft order, but with some randomness, so we propose a <strong>Rolling Window Lottery</strong>:
+          <li>The first round has 30 picks (or one pick for each team), although just like today, teams can own multiple picks in a single round if they acquire additional slots from other teams via trade.</li>
+          <li>Each team&rsquo;s bid should largely determine draft order, but to avoid collusion and &ldquo;aiming&rdquo; issues, we need some randomness, so we propose a <strong>Rolling Window Lottery</strong>:
             <ul>
-              <li>For the first pick, the top 4 (or 3) highest-bidding slot owners are put into a lottery amongst themselves, with probability proportional to the number of Credits each put into the draft.</li>
-              <li>The winner of this lottery gets the first pick, and is removed from the pool.</li>
+              <li>For the first pick, the top 4 highest-bidding slot owners are put into a lottery amongst themselves, with probability proportional to the number of Credits each bid toward that slot.</li>
+              <li>The winner of this lottery gets the first pick, gets charged the bid of the lowest bidder among those four teams, and is removed from the pool.</li>
               <li>For the second pick, the next-highest-bidding slot owner is added to the three non-winners of the first pick, and another lottery is held.</li>
               <li>The winner of this lottery gets the second pick, and so on, until all picks have been assigned.</li>
-              <li>The winner in each window is debited only the minimum bid of any bidder in that window, and is thus refunded the difference between their own bid and that minimum. This way, a team that bids highly but randomly falls to a lower pick retains plenty of Credits for the following year.</li>
+              <li>We propose the &ldquo;Vickrey-like&rdquo; auction system described here, so that a team that bids highly but randomly falls to a lower pick retains plenty of Credits for the following year. Bad luck for a high bidder simply shouldn’t mean they’re out of lottery contention for a long time.</li>
             </ul>
           </li>
           <li>Any team that bids 0 Credits will pick at the end of the first round, with a random tiebreaker.</li>
-          <li>Second round picks are awarded in order of first round bid size, with reverse-order-of-first-round-pick as a tiebreaker. No additional Credits are spent toward this.</li>
         </ul>
       </div>
     </div>
 
-    <!-- Slide 11: Rolling Window Example - Pick 1 setup -->
+    <!-- Slide 11: The second round -->
+    <div class="slide">
+      <div class="section-label">Our proposal</div>
+      <h2>The second round</h2>
+      <div class="sub-heading">Bidding Credits for second round picks</div>
+      <div class="body-block">
+        <ul>
+          <li>After the lottery, there is another round of secret bidding, this time for second round picks. (This way you know what the first round cost you before allocating any Credits to the second round.)</li>
+          <li>Each team with one or more second round pick slots bids Credits toward those slots.</li>
+          <li>Picks are allocated in order of bid size, with no lottery. Random tiebreakers.</li>
+        </ul>
+      </div>
+    </div>
+    
+    <!-- Slide 12: Rolling Window Example - Pick 1 setup -->
     <div class="slide">
       <div class="section-label">Rolling Window Example</div>
       <h2>Lottery for pick 1</h2>
@@ -610,7 +731,7 @@ body {
               <tr><td class="team">POR</td><td class="r">75</td></tr>
               <tr><td class="team">ATL</td><td class="r">75</td></tr>
               <tr><td class="team">LAC</td><td class="r">66</td></tr>
-              <tr><td class="team">PHX</td><td class="r">51</td></tr>
+              <tr><td class="team">BRK</td><td class="r">51</td></tr>
               <tr><td class="team">CHA</td><td class="r">51</td></tr>
               <tr><td class="team">ORL</td><td class="r">50</td></tr>
               <tr><td class="team">PHI</td><td class="r">50</td></tr>
@@ -645,12 +766,14 @@ body {
         </div>
         <div class="example-table-section">
           <h4>Allocated picks</h4>
-          <p style="font-family: var(--mono); font-size: 0.7rem; color: var(--text-tertiary); margin-top: 0.5rem;">Waiting for draw&hellip;</p>
+    <div class="rolling-window-note">
+      <p>All 30 teams submit bids; the four highest bids are put into a “window”, and a lottery is held among those four to award the first pick.</p>
+    </div>
         </div>
       </div>
     </div>
 
-    <!-- Slide 12: SAC wins pick 1 -->
+    <!-- Slide 13: SAC wins pick 1 -->
     <div class="slide">
       <div class="section-label">Rolling Window Example</div>
       <h2>SAC wins pick 1</h2>
@@ -674,7 +797,7 @@ body {
               <tr><td class="team">POR</td><td class="r">75</td></tr>
               <tr><td class="team">ATL</td><td class="r">75</td></tr>
               <tr><td class="team">LAC</td><td class="r">66</td></tr>
-              <tr><td class="team">PHX</td><td class="r">51</td></tr>
+              <tr><td class="team">BRK</td><td class="r">51</td></tr>
               <tr><td class="team">CHA</td><td class="r">51</td></tr>
               <tr><td class="team">ORL</td><td class="r">50</td></tr>
               <tr><td class="team">PHI</td><td class="r">50</td></tr>
@@ -716,10 +839,14 @@ body {
             </tbody>
           </table>
         </div>
+            <div class="rolling-window-note">
+      <p>SAC wins the drawing for the first window and is awarded the first pick.</p>
+      <p>They are only charged 110 Credits, which is the lowest bid in the window they won.</p>
+    </div>
       </div>
     </div>
 
-    <!-- Slide 13: Lottery for pick 2 -->
+    <!-- Slide 14: Lottery for pick 2 -->
     <div class="slide">
       <div class="section-label">Rolling Window Example</div>
       <h2>Lottery for pick 2</h2>
@@ -743,7 +870,7 @@ body {
               <tr><td class="team">POR</td><td class="r">75</td></tr>
               <tr><td class="team">ATL</td><td class="r">75</td></tr>
               <tr><td class="team">LAC</td><td class="r">66</td></tr>
-              <tr><td class="team">PHX</td><td class="r">51</td></tr>
+              <tr><td class="team">BRK</td><td class="r">51</td></tr>
               <tr><td class="team">CHA</td><td class="r">51</td></tr>
               <tr><td class="team">ORL</td><td class="r">50</td></tr>
               <tr><td class="team">PHI</td><td class="r">50</td></tr>
@@ -785,10 +912,13 @@ body {
             </tbody>
           </table>
         </div>
+            <div class="rolling-window-note">
+      <p>With SAC removed, the next-highest bidder (NOP) is moved into the window for the second pick.</p>
+    </div>
       </div>
     </div>
 
-    <!-- Slide 14: WAS wins pick 2 -->
+    <!-- Slide 15: WAS wins pick 2 -->
     <div class="slide">
       <div class="section-label">Rolling Window Example</div>
       <h2>WAS wins pick 2</h2>
@@ -812,7 +942,7 @@ body {
               <tr><td class="team">POR</td><td class="r">75</td></tr>
               <tr><td class="team">ATL</td><td class="r">75</td></tr>
               <tr><td class="team">LAC</td><td class="r">66</td></tr>
-              <tr><td class="team">PHX</td><td class="r">51</td></tr>
+              <tr><td class="team">BRK</td><td class="r">51</td></tr>
               <tr><td class="team">CHA</td><td class="r">51</td></tr>
               <tr><td class="team">ORL</td><td class="r">50</td></tr>
               <tr><td class="team">PHI</td><td class="r">50</td></tr>
@@ -855,10 +985,13 @@ body {
             </tbody>
           </table>
         </div>
+            <div class="rolling-window-note">
+      <p>WAS wins the lottery for the second pick, and are charged 101 Credits.</p>
+    </div>
       </div>
     </div>
 
-    <!-- Slide 15: Lottery for pick 3 -->
+    <!-- Slide 16: Lottery for pick 3 -->
     <div class="slide">
       <div class="section-label">Rolling Window Example</div>
       <h2>Lottery for pick 3</h2>
@@ -882,7 +1015,7 @@ body {
               <tr><td class="team">POR</td><td class="r">75</td></tr>
               <tr><td class="team">ATL</td><td class="r">75</td></tr>
               <tr><td class="team">LAC</td><td class="r">66</td></tr>
-              <tr><td class="team">PHX</td><td class="r">51</td></tr>
+              <tr><td class="team">BRK</td><td class="r">51</td></tr>
               <tr><td class="team">CHA</td><td class="r">51</td></tr>
               <tr><td class="team">ORL</td><td class="r">50</td></tr>
               <tr><td class="team">PHI</td><td class="r">50</td></tr>
@@ -925,10 +1058,14 @@ body {
             </tbody>
           </table>
         </div>
+            <div class="rolling-window-note">
+      <p>WAS is removed; UTA is added to the next window.</p>
+      <p>Note that UTA, DAL, and CHI all bid 100; UTA’s higher rank is by virtue of random tiebreaker.</p>
+    </div>
       </div>
     </div>
 
-    <!-- Slide 16: IND wins pick 3 -->
+    <!-- Slide 17: IND wins pick 3 -->
     <div class="slide">
       <div class="section-label">Rolling Window Example</div>
       <h2>IND wins pick 3</h2>
@@ -952,7 +1089,7 @@ body {
               <tr><td class="team">POR</td><td class="r">75</td></tr>
               <tr><td class="team">ATL</td><td class="r">75</td></tr>
               <tr><td class="team">LAC</td><td class="r">66</td></tr>
-              <tr><td class="team">PHX</td><td class="r">51</td></tr>
+              <tr><td class="team">BRK</td><td class="r">51</td></tr>
               <tr><td class="team">CHA</td><td class="r">51</td></tr>
               <tr><td class="team">ORL</td><td class="r">50</td></tr>
               <tr><td class="team">PHI</td><td class="r">50</td></tr>
@@ -996,10 +1133,13 @@ body {
             </tbody>
           </table>
         </div>
+            <div class="rolling-window-note">
+      <p>IND wins the lottery for the third pick.</p>
+    </div>
       </div>
     </div>
 
-    <!-- Slide 17: Lottery for pick 4 -->
+    <!-- Slide 18: Lottery for pick 4 -->
     <div class="slide">
       <div class="section-label">Rolling Window Example</div>
       <h2>Lottery for pick 4</h2>
@@ -1023,7 +1163,7 @@ body {
               <tr><td class="team">POR</td><td class="r">75</td></tr>
               <tr><td class="team">ATL</td><td class="r">75</td></tr>
               <tr><td class="team">LAC</td><td class="r">66</td></tr>
-              <tr><td class="team">PHX</td><td class="r">51</td></tr>
+              <tr><td class="team">BRK</td><td class="r">51</td></tr>
               <tr><td class="team">CHA</td><td class="r">51</td></tr>
               <tr><td class="team">ORL</td><td class="r">50</td></tr>
               <tr><td class="team">PHI</td><td class="r">50</td></tr>
@@ -1067,10 +1207,13 @@ body {
             </tbody>
           </table>
         </div>
+            <div class="rolling-window-note">
+      <p>IND is removed; DAL enters the window.</p>
+    </div>
       </div>
     </div>
 
-    <!-- Slide 18: BRK wins pick 4 -->
+    <!-- Slide 19: BRK wins pick 4 -->
     <div class="slide">
       <div class="section-label">Rolling Window Example</div>
       <h2>BRK wins pick 4</h2>
@@ -1094,7 +1237,7 @@ body {
               <tr><td class="team">POR</td><td class="r">75</td></tr>
               <tr><td class="team">ATL</td><td class="r">75</td></tr>
               <tr><td class="team">LAC</td><td class="r">66</td></tr>
-              <tr><td class="team">PHX</td><td class="r">51</td></tr>
+              <tr><td class="team">BRK</td><td class="r">51</td></tr>
               <tr><td class="team">CHA</td><td class="r">51</td></tr>
               <tr><td class="team">ORL</td><td class="r">50</td></tr>
               <tr><td class="team">PHI</td><td class="r">50</td></tr>
@@ -1139,10 +1282,14 @@ body {
             </tbody>
           </table>
         </div>
+            <div class="rolling-window-note">
+      <p>BRK wins the fourth pick. They were the highest bidder overall, but “fell” to the fourth pick.</p>
+      <p>To compensate, they are only charged the lowest bid for this window (100).</p>
+    </div>
       </div>
     </div>
 
-    <!-- Slide 19: Lottery for pick 5 -->
+    <!-- Slide 20: Lottery for pick 5 -->
     <div class="slide">
       <div class="section-label">Rolling Window Example</div>
       <h2>Lottery for pick 5</h2>
@@ -1166,7 +1313,7 @@ body {
               <tr><td class="team">POR</td><td class="r">75</td></tr>
               <tr><td class="team">ATL</td><td class="r">75</td></tr>
               <tr><td class="team">LAC</td><td class="r">66</td></tr>
-              <tr><td class="team">PHX</td><td class="r">51</td></tr>
+              <tr><td class="team">BRK</td><td class="r">51</td></tr>
               <tr><td class="team">CHA</td><td class="r">51</td></tr>
               <tr><td class="team">ORL</td><td class="r">50</td></tr>
               <tr><td class="team">PHI</td><td class="r">50</td></tr>
@@ -1211,10 +1358,13 @@ body {
             </tbody>
           </table>
         </div>
+            <div class="rolling-window-note">
+      <p>All four highest bidders have been allocated picks. The lottery proceeds by rolling through the rest of the bidders.</p>
+    </div>
       </div>
     </div>
 
-    <!-- Slide 20: CHI wins pick 5 -->
+    <!-- Slide 21: CHI wins pick 5 -->
     <div class="slide">
       <div class="section-label">Rolling Window Example</div>
       <h2>CHI wins pick 5</h2>
@@ -1238,7 +1388,7 @@ body {
               <tr><td class="team">POR</td><td class="r">75</td></tr>
               <tr><td class="team">ATL</td><td class="r">75</td></tr>
               <tr><td class="team">LAC</td><td class="r">66</td></tr>
-              <tr><td class="team">PHX</td><td class="r">51</td></tr>
+              <tr><td class="team">BRK</td><td class="r">51</td></tr>
               <tr><td class="team">CHA</td><td class="r">51</td></tr>
               <tr><td class="team">ORL</td><td class="r">50</td></tr>
               <tr><td class="team">PHI</td><td class="r">50</td></tr>
@@ -1287,7 +1437,7 @@ body {
       </div>
     </div>
 
-    <!-- Slide 21: Lottery for pick 6 -->
+    <!-- Slide 22: Lottery for pick 6 -->
     <div class="slide">
       <div class="section-label">Rolling Window Example</div>
       <h2>Lottery for pick 6</h2>
@@ -1311,7 +1461,7 @@ body {
               <tr><td class="team">POR</td><td class="r">75</td></tr>
               <tr><td class="team">ATL</td><td class="r">75</td></tr>
               <tr><td class="team">LAC</td><td class="r">66</td></tr>
-              <tr><td class="team">PHX</td><td class="r">51</td></tr>
+              <tr><td class="team">BRK</td><td class="r">51</td></tr>
               <tr><td class="team">CHA</td><td class="r">51</td></tr>
               <tr><td class="team">ORL</td><td class="r">50</td></tr>
               <tr><td class="team">PHI</td><td class="r">50</td></tr>
@@ -1343,7 +1493,9 @@ body {
               <tr class="new-entry"><td class="team">MEM</td><td class="r">99</td><td class="r">24.8%</td></tr>
             </tbody>
           </table>
-          <p style="font-family: var(--mono); font-size: 0.68rem; color: var(--text-secondary); margin-top: 0.75rem;">The process continues, sliding the window down one team at a time, until all 30 picks are assigned&hellip;</p>
+    <div class="rolling-window-note">
+      <p>This process continues, until all 30 picks are assigned.</p>
+    </div>
         </div>
         <div class="example-table-section">
           <h4>Allocated picks</h4>
@@ -1361,66 +1513,67 @@ body {
       </div>
     </div>
 
-    <!-- Slide 22: Simulator link -->
-    <div class="slide">
-      <div class="section-label">Our proposal</div>
-      <h2>The Rolling Window Lottery</h2>
-      <div class="sub-heading">The mechanism by which teams bid Credits for picks</div>
-      <div class="body-block">
-        <p><strong>An interactive simulator:</strong></p>
-        <p><a href="simulator.html" style="color: var(--accent); font-family: var(--mono); font-size: 1rem;">https://dsparks.github.io/credits/</a></p>
-      </div>
-    </div>
-
-    <!-- Slide 23: Trading Credits -->
+<!-- Slide 23: Simulator link -->
+<div class="slide">
+  <div class="section-label">Our proposal</div>
+  <h2>The Rolling Window Lottery</h2>
+  <div class="sub-heading">The mechanism by which teams bid Credits for picks</div>
+  <div class="body-block">
+    <p><strong>An interactive simulator, so you can play with this lottery:</strong></p>
+    <p><a href="https://dsparks.github.io/credits/" style="color: var(--accent); font-family: var(--mono); font-size: 1rem;">https://dsparks.github.io/credits/</a></p>
+  </div>
+</div>
+    
+    <!-- Slide 24: Trading Credits -->
     <div class="slide">
       <div class="section-label">Our proposal</div>
       <h2>Trading Team-Building Credits</h2>
       <div class="sub-heading">And how draft picks can still be traded</div>
       <div class="body-block">
         <ul>
-          <li>Team-Building Credits could be used as consideration in any trade, just like player contracts, portions of draft picks, and cash are now.</li>
-          <li>One Credit might be useful as &ldquo;minimum consideration&rdquo; in a trade, replacing the classic top-55 protected second-round pick.</li>
-          <li>Teams would also have the option to trade their own first- or second-round draft &ldquo;slots&rdquo;, subject to a Stepien-like rule. These picks would not be protected or have swap options, because the Credit bidding process for draft position makes those irrelevant.</li>
-          <li>So, for example, a team who believes it has a good chance to contend for a championship might trade a developing young player, a future first-round draft slot, and 35 Credits to another team, in exchange for a playoff-caliber starter.</li>
-          <li>Teams with more than one draft slot in a given draft would bid Credits toward the draft position of each slot separately. E.g. if OKC holds their own first round draft slot in 2034 <em>and</em> DEN&rsquo;s first round draft slot in the same year, OKC would specify the number of Credits (subject to their budget) they wish to allocate toward <em>each</em> of those draft slots.</li>
-          <li>Between the lottery and when a pick is used in the draft, teams can trade those specific picks. So, teams can still &ldquo;move up&rdquo; or &ldquo;back&rdquo; in the draft on draft night.</li>
+          <li>Team-Building Credits could be used as consideration in any trade, just like player contracts, portions of draft picks, and cash are under the current system.</li>
+          <li>One Credit might be useful as &ldquo;minimum consideration&rdquo; in a trade, replacing the classic top-55 protected second-round pick. Consideration rules for three-way trades would need to be evaluated &mdash; some higher number of Credits would suffice.</li>
+          <li>Teams would also have the option to trade their own first- or second-round draft &ldquo;slots&rdquo;. These picks would not be protected or have swap options, because the Credit bidding process for draft position makes those irrelevant.</li>
+          <ul>
+            <li>So, for example, a team that believes it has a good chance to contend for a championship might trade a developing young player, a future first-round draft slot, and 35 Credits to another team, in exchange for a playoff-caliber starter.</li>
+          </ul>
+          <li>Teams could also trade their full allocation of Credits in a specific future year, up to seven years out. These credits would have to be traded in &ldquo;all or nothing&rdquo; deals, since no one knows in advance how many credits they’ll be getting in a future year. (Think of this sort of trade as similar to the current idea of a &ldquo;swap&rdquo; &mdash; you don’t get an additional pick but you can improve one or make it worse.)</li>
         </ul>
       </div>
     </div>
 
-    <!-- Slide 24: Credit offsets -->
+    <!-- Slide 25: Trading Credits II -->
     <div class="slide">
       <div class="section-label">Our proposal</div>
-      <h2>Credit offsets for playoff success</h2>
+      <h2>Trading Team-Building Credits</h2>
+      <div class="sub-heading">And how draft picks can still be traded</div>
+      <div class="body-block">
+        <ul>
+          <li>A Stepien-like rule for should probably be put in place for first-round pick slots as well as future Credit allocations.</li>
+          <li>Teams with more than one draft slot in a given draft would bid Credits toward the draft position of each slot separately. E.g. if OKC holds their own first round draft slot in 2034 <i>and</i> DEN’s first round draft slot in the same year, OKC would specify the number of Credits (subject to their budget) they wish to allocate toward <i>each</i> of those draft slots.</li>
+          <li>Between the lottery and when a pick is used in the draft, teams can trade those specific picks. So, teams can still “move up” or “back” in the draft on draft night.</li>
+        </ul>
+      </div>
+    </div>
+
+
+    <!-- Slide 26: Credit offsets -->
+    <div class="slide">
+      <div class="section-label">Our proposal</div>
+      <h2>Varying Credit distribution for playoff success</h2>
       <div class="sub-heading">A flexible tool for shaping team-building and ensuring rules adherence</div>
       <div class="body-block">
         <ul>
           <li>Thus far we have described a system in which each team receives the same number of Team-Building Credits at the beginning of each season, but this does not have to be the case.</li>
           <li>The system could be set up in such a way that makes it easier for some teams to build through the draft &ndash; by reducing the Credit allocation toward other teams &ndash; while not providing the same incentives to lose as does the current system.</li>
           <li>Specifically, our proposal would be to deduct 20 Credits for each playoff series won in the immediately preceding season.</li>
-          <li>The team that wins the title in June would thus start July with an allocation of just 20 Credits; all teams that lose in the Conference Semifinals would get 80 Credits, and so on.</li>
-          <li>This is a concession to the idea that team success follows a cyclical pattern, and that teams outside of contention should be given better opportunities to improve.</li>
+          <li>The team that wins the title in June would thus start July with an allocation of just 20 Credits; all teams that lose in the second round would get 80 Credits, and so on.</li>
+          <li>This is a concession to the idea that team success follows a cyclical pattern, and that teams outside of contention should be given better opportunities to improve. We do not believe a team would feel any significant incentive to lose a playoff series in order to receive 20 Credits.</li>
         </ul>
       </div>
     </div>
 
-    <!-- Slide 25: Credit penalties -->
-    <div class="slide">
-      <div class="section-label">Our proposal</div>
-      <h2>Credit penalties for rules enforcement</h2>
-      <div class="sub-heading">A flexible, non-monetary &ldquo;stick&rdquo; which the league can use to enforce rules</div>
-      <div class="body-block">
-        <ul>
-          <li>Because the league is the sole source of Team-Building Credits, it can leverage this power to help with rules enforcement.</li>
-          <li>In cases where monetary fines are currently used, such as enforcing the player participation and injury reporting policies, tampering, etc., teams may still be willing to pay a financial penalty to violate those rules.</li>
-          <li>Replacing those monetary fines with the deduction of future Team-Building Credits changes the calculus substantially, as the penalties are now &ldquo;basketball penalties.&rdquo;</li>
-          <li>But docking a team one or several future Credits is a <em>much</em> more granular and less heavy-handed form of discipline than taking away future draft picks, which is one of the few recourses available now.</li>
-        </ul>
-      </div>
-    </div>
-
-    <!-- Slide 26: Transition period -->
+    <!-- Slide 27: Transition period -->
     <div class="slide">
       <div class="section-label">Our proposal</div>
       <h2>The transition period</h2>
@@ -1430,112 +1583,172 @@ body {
           <li>Realistically, we anticipate the first Credit-bid draft taking place in 2034, at the soonest.</li>
           <li>Once the Team-Building Credit system is agreed to, all existing pick trades would be honored, and teams would continue to trade picks under the current rules, up through the 2033 draft.</li>
           <li>In the first year after the Credit system is agreed to, teams can trade their 2034 picks (and beyond, as they come available over time), but only as &ldquo;whole slots&rdquo;, in line with the rules described previously.</li>
-          <li>Teams could also trade their full allocation of Credits in a specific future year, up to seven years out.</li>
-          <li>Starting July 1, 2034, the league distributes Credits to all teams, and teams may no longer trade future Credits, only those which they have accumulated.
-            <ul>
-              <li>Optionally, to smooth the transition from a record-based lottery to a strategic lottery, the league could allocate some number of &ldquo;bonus&rdquo; Credits based on team playoff success across the final few transition seasons.</li>
-            </ul>
-          </li>
+          <li>Teams could also begin trading their full allocation of Credits in a specific future year, up to seven years out. These credits would have to be traded in “all or nothing” deals, since no one knows in advance how many credits they’ll be getting in a future year.</li>
+          <li>Starting July 1, 2034, the league distributes Credits to all teams, as the transition to the new system is complete.</li>
+          <li>In the interim period, the league could implement other reforms to the existing lottery system to alter the current incentive structure.</li>
         </ul>
       </div>
     </div>
 
-    <!-- Slide 27: Pick order alternatives -->
+<!-- Slide 28: Transition period -->
+<div class="slide">
+  <div class="section-label">Our proposal</div>
+  <h2>The transition period</h2>
+  <div class="sub-heading">How to smoothly transition into the Credits system</div>
+  <div class="body-block">
+    <ul>
+      <li>
+        So that teams that have been super successful in the years leading up to implementation aren’t suddenly equal with teams that haven’t been as good, we suggest that the league should allocate some number Credits in advance of the system beginning, with a penalty based on team playoff success (or lack thereof) across the final few transition seasons.
+      </li>
+<li>
+  A possible allocation could look like this:
+  <div class="transition-table-wrap">
+    <table class="transition-table">
+      <thead>
+        <tr>
+          <th>Year</th>
+          <th>Credits to each team</th>
+          <th>Playoff series offset</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>2031</td>
+          <td>25</td>
+          <td>-5</td>
+        </tr>
+        <tr>
+          <td>2032</td>
+          <td>50</td>
+          <td>-10</td>
+        </tr>
+        <tr>
+          <td>2033</td>
+          <td>75</td>
+          <td>-15</td>
+        </tr>
+        <tr>
+          <td>2034 (full implementation)</td>
+          <td>100</td>
+          <td>-20</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</li>
+      <li>
+        This would allow for an average of 225 Credits per team as the system begins. And of course these would be tradeable as soon as they’re allocated to teams.
+      </li>
+    </ul>
+  </div>
+</div>
+    
+    <!-- Slide 29: Credits for rules enforcement -->
     <div class="slide">
-      <div class="section-label">Options and alternatives</div>
-      <h2>Pick order alternatives</h2>
-      <div class="alt-grid">
-        <div class="alt-card">
-          <div class="alt-name recommended">Rolling Window Lottery</div>
-          <p>Teams ordered by bid<br>Picks allocated by smaller lotteries of 4 teams<br>Winning team removed, next highest bidder added</p>
-          <p style="margin-top: 0.5rem;">Relatively low randomness<br>High bidders unlikely to fall far<br>Low bidders can&rsquo;t rise far</p>
-        </div>
-        <div class="alt-card">
-          <div class="alt-name">Deterministic bid order</div>
-          <p>Teams ordered by bid<br>Picks allocated in order of bid, with random tiebreakers</p>
-          <p style="margin-top: 0.5rem;">Almost no randomness<br>High bidders can&rsquo;t fall<br>Low bidders can&rsquo;t rise<br>Potential for team-prospect collusion</p>
-        </div>
-        <div class="alt-card">
-          <div class="alt-name">Full lottery</div>
-          <p>Each pick drawn from a lottery over all teams, weighted by bid</p>
-          <p style="margin-top: 0.5rem;">Highest randomness<br>Greatest potential for high bidders to fall<br>and for low bidders to jump</p>
-        </div>
-        <div class="alt-card">
-          <div class="alt-name">Top-N lottery</div>
-          <p>Top several picks awarded by lottery, weighted by bid<br>All other teams&rsquo; picks awarded by bid size</p>
-          <p style="margin-top: 0.5rem;">Moderate randomness<br>High bidders unlikely to fall far<br>Some small probability low bidders can jump up</p>
-        </div>
-      </div>
-    </div>
-
-    <!-- Slide 28: Credit offset alternatives -->
-    <div class="slide">
-      <div class="section-label">Options and alternatives</div>
-      <h2>Credit offset alternatives</h2>
-      <div class="alt-grid">
-        <div class="alt-card">
-          <div class="alt-name recommended">Playoff success offsets</div>
-          <p>Teams receive 20 fewer Credits for each playoff series won<br>2,700 total Credits awarded each year instead of 3,000</p>
-          <p style="margin-top: 0.5rem;">Teams unlikely to prefer receiving 20 Credits over advancing in the playoffs</p>
-        </div>
-        <div class="alt-card">
-          <div class="alt-name">Recent success offsets</div>
-          <p>Teams receive 10 Credits per season since they made the Finals<br>Capped at 100 Credits</p>
-        </div>
-        <div class="alt-card">
-          <div class="alt-name">Team spending offsets</div>
-          <p>Divide difference between Second Apron and Tax lines by 100<br>For each such increment of spending over the Tax, teams receive one fewer Credit the following summer</p>
-          <p style="margin-top: 0.5rem;">Requires bargaining</p>
-        </div>
-        <div class="alt-card">
-          <div class="alt-name">Player contract offsets</div>
-          <p>Teams that sign players to a Max contract receive 40 fewer Credits the following summer<br>Teams that sign players to the MLE receive 15 fewer Credits the following summer<br>Etc. numbers and conditions are flexible</p>
-          <p style="margin-top: 0.5rem;">Requires bargaining</p>
-        </div>
-      </div>
-    </div>
-
-    <!-- Slide 29: Q&A - Schedule -->
-    <div class="slide">
-      <div class="section-label">Questions, answered</div>
-      <h2>Q &amp; A</h2>
-      <div class="sub-heading">What does the annual schedule look like for Team-Building Credits?</div>
+      <div class="section-label">Our proposal</div>
+      <h2>Optional: Credits in support of league goals</h2>
+      <div class="sub-heading">Credits could be a flexible, non-monetary “stick” or “carrot” which the league can use to further its goals</div>
       <div class="body-block">
         <ul>
-          <li>July 1: At the beginning of the league year, the NBA allocates 100 Credits to each team, minus playoff success offsets.</li>
-          <li>Early February: Just as is the case now, teams cannot trade Credits or draft slots after the trade deadline.</li>
-          <li>Mid May: The deadline for players to commit to, or withdraw from, the NBA draft.</li>
-          <li>Mid May: Teams submit their Credit bids for the Rolling Window Lottery.</li>
-          <li>Late May: The Lottery is held.</li>
-          <li>Late June: The NBA draft.</li>
+          <li>Because the league is the sole source of Team-Building Credits, it can leverage this power to help with rules enforcement.</li>
+          <li>In cases where monetary fines are currently used, such as enforcing the player participation and injury reporting policies, tampering, etc., teams may still be willing to pay a financial penalty to violate those rules.</li>
+          <li>Replacing those monetary fines with the deduction of future Team-Building Credits changes the calculus substantially, as the penalties are now “basketball penalties.”</li>
+          <li>But docking a team one or several future Credits is a <i>much</i> more granular and less heavy-handed form of discipline than taking away future draft picks, which is one of the few recourses available now.</li>
+          <li>This system works without this set of penalties but tying league enforcement to basketball (rather than money) should lead to improved compliance.</li>
         </ul>
       </div>
     </div>
 
-    <!-- Slide 30: Q&A - Playoff incentive -->
+    <!-- Slide 30: Credits as Carrot/Stick -->
     <div class="slide">
-      <div class="section-label">Questions, answered</div>
-      <h2>Q &amp; A</h2>
-      <div class="sub-heading">Doesn&rsquo;t your proposed Credit offset system incentivize teams to lose playoff series?</div>
+      <div class="section-label">Our proposal</div>
+      <h2>Optional: Credits in support of league goals</h2>
+      <div class="sub-heading">Credits could be a flexible, non-monetary “stick” or “carrot” which the league can use to further its goals</div>
       <div class="body-block">
-        <p>Maybe. But we suspect that the chance to advance a full round of playoffs is not something teams will intentionally lose, for the marginal benefit of 20 additional Credits.</p>
-        <p>If this is a real concern, the Credit offset could increase nonlinearly with rounds (10 for winning a first round series, 20 more for Conference Semifinals, 30 more for Conference Finals, and 40 more for Finals, for example).</p>
-        <p>Or, we have proposed several alternative offset schemes that are not tied to playoff success, and many other such options are plausible.</p>
+        <ul>
+          <li>Similarly, Credit deductions could be used in support of team salary cap limitations, like deductions for teams going over the cap.</li>
+          <ul>
+            <li>Or, for competitive balance reasons, teams could be deducted credits based on individual player salaries.</li>
+            <li>These would have to be negotiated with the players.</li>
+          </ul>
+          <li>On the other side, the league could incentivize competition, by rewarding the In-Season Tournament winning team (and runner-up) with future Credits, and/or awarding future Credits to the teams of each player on the winning All-Star team.</li>
+          <li>These are all just several of many possibilities &mdash; really the system is flexible to adjustment for nearly any league goal.</li>
+        </ul>
       </div>
     </div>
 
-    <!-- Slide 31: Q&A - Second round picks -->
+    
+<!-- Slide 31: Q&A - Schedule -->
+<div class="slide">
+  <div class="section-label">Questions, answered</div>
+  <h2>Q &amp; A</h2>
+  <div class="sub-heading">What does the annual schedule look like for Team-Building Credits?</div>
+  <div class="body-block">
+    <ul>
+      <li>July 1: At the beginning of the league year, the NBA allocates 100 Credits to each team, minus playoff success offsets.</li>
+      <li>Late April: Early entry deadline for the NBA draft - same timing as current system.</li>
+      <li>Early May (after the start of the conference semifinals): Teams submit their Credit bids for the Rolling Window Lottery.</li>
+      <li>Mid May: The Lottery is held - same timing as current lottery.</li>
+      <li>Late May: Teams submit Credit bids for second round picks, and the second round order is revealed soon thereafter.</li>
+      <li>Late June: The NBA draft.</li>
+    </ul>
+  </div>
+</div>
+
+<!-- Slide 32: Q&A - Why the Rolling-Window Lottery -->
+<div class="slide">
+  <div class="section-label">Questions, answered</div>
+  <h2>Q &amp; A</h2>
+  <div class="sub-heading">Why the Rolling-Window Lottery?</div>
+  <div class="body-block">
+    <p>The Rolling-Window Lottery gives teams significant control over where they pick, as pick allocations are largely dictated by bid size. However, a small infusion of lottery luck ensures that teams can’t perfectly aim for a particular spot in the draft. At the same time, the Vickrey-style debiting ensures that no high bidder is “robbed” of credits if they slip in the draft.</p>
+    <p>We prefer this model to several others we considered:</p>
+    <ul>
+      <li>Deterministic bid order &ndash; picks allocated in order of bid, with random tiebreakers. Almost no randomness; high bidders can’t fall, low bidders can’t rise.</li>
+      <li>Full lottery &ndash; each pick is drawn from a lottery over all bidders, weighted by bid. Highest randomness; greatest potential for high bidders to fall and low bidders to jump.</li>
+      <li>Top-N lottery &ndash; top several picks awarded by lottery, all other picks allocated in order of bid. Moderate randomness; high bidders unlikely to fall far, some small probability low bidders jump.</li>
+    </ul>
+  </div>
+</div>
+    
+    <!-- Slide 33: Q&A - Second apron -->
     <div class="slide">
       <div class="section-label">Questions, answered</div>
       <h2>Q &amp; A</h2>
-      <div class="sub-heading">What about second round picks where another team owns the related first round pick?</div>
+      <div class="sub-heading">How will the draft-pick penalty for teams in the Second Apron be implemented?</div>
       <div class="body-block">
-        <p>In our proposal, second round picks are assigned in order of first-round bid size, with reverse-order-of-first-round-pick as a tiebreaker. (So, among two teams with identical first round bids, the one which wins an earlier first-round pick gets the later second round pick.)</p>
-        <p>We imagine that, even if Boston owns the Lakers 2036 second round slot, while the Lakers retain their own 2036 first round slot, it is <em>the Lakers&rsquo; bid</em> that dictates where Boston lands in the second round.</p>
-        <p>We do not expect that teams will substantially change their first round bids in order to send a worse second round pick to the current holder of their pick slot.</p>
+        <p>The first step of the penalty is easily carried over: we can simply “freeze” that team’s first round draft slot in the seventh following season, preventing them from trading it.</p>
+        <p>If a team is in the Second Apron for at least 2 of the next 4 cap-years, that team would then be prevented from bidding Credits toward that frozen pick, ensuring that it lands at the end of the first round.</p>
+        <p>This would be slightly less harsh than the current penalty since other teams could also bid 0 and thus this pick could be randomly drawn to be higher than 30 if there are other teams bidding zero. More importantly, the penalized team could still carry that year’s Credits over to a future year, so the penalty is less harsh than it is now, where all your “pick quality equity” for that year is taken away.</p>
       </div>
     </div>
 
+<!-- Slide 34: Q&A - Expansion -->
+<div class="slide">
+  <div class="section-label">Questions, answered</div>
+  <h2>Q &amp; A</h2>
+  <div class="sub-heading">How will this system handle expansion?</div>
+  <div class="body-block">
+    <p>It sounds like current expansion discussions will be implemented prior to this system, but regardless, the Team-Building Credits system handles expansion straightforwardly.</p>
+    <p>Unlike other systems that require fixed ranges of picks, the Rolling Window Lottery works for any number of picks &ndash; the lottery simply rolls through a few additional windows.</p>
+    <p>The only thing that would need to be determined in an expansion scenario after 2034 is how many Credits the team would be allocated initially. This is not really different than how the league determined, during previous expansions, how teams were eligible for top picks. And of course, as it effectively has before, the league could limit the picks for which an expansion team is eligible &ndash; it wouldn’t be hard to say “Expansion Team X can’t be in the top 3 lottery windows, regardless of how much they bid.”</p>
+  </div>
+</div>
+    
+<!-- Slide 35: Q&A - Complicated -->
+<div class="slide">
+  <div class="section-label">Questions, answered</div>
+  <h2>Q &amp; A</h2>
+  <div class="sub-heading">Isn’t this Team-Building Credits plan too complicated for fans to follow?</div>
+  <div class="body-block">
+    <p>Complicated? You mean, like this?</p>
+    <pre style="white-space: pre-wrap; font-family: var(--mono); font-size: 0.86rem; line-height: 1.45; margin: 0;">
+Minnesota conveys to Detroit the right to swap Detroit’s own 2026 first round draft pick (the “Detroit Pick”) for the “Minnesota/Utah Pick” (defined below), provided that Minnesota’s own 2026 first round draft pick (the “Minnesota Pick”) is not among the first 19 picks in the 2026 NBA Draft. If the Minnesota Pick is not among the first 19 picks in the 2026 NBA Draft, the foregoing swap right shall be deemed exercised by Detroit if the Minnesota/Utah Pick is more favorable than the Detroit Pick and shall be deemed extinguished if the Minnesota/Utah Pick is less favorable than the Detroit Pick (for clarity, the determination of whether the Minnesota/Utah Pick is more or less favorable than the Detroit Pick shall be made once it is determined which team’s first round draft pick is the Minnesota/Utah Pick). If the Minnesota Pick is among the first 19 picks in the 2026 NBA Draft, then Minnesota’s obligation to convey the foregoing swap right shall be extinguished. (Conley - Ivey - Huerter - Saric - CHI - DET - MIN, 2/3/2026)
+
+The Minnesota/Utah Pick shall be the Minnesota Pick; provided that, if Utah exercises its right to swap Utah’s own 2026 first round draft pick (the “Utah Pick”) for the Minnesota Pick pursuant to the July 6, 2022 trade involving Rudy Gobert et al. (see endnote 61), then the Minnesota/Utah Pick shall instead be the Utah Pick.
+    </pre>
+  </div>
+</div>
   </div>
 
   <div class="slide-controls">
