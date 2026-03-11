@@ -194,7 +194,7 @@ function renderHeatmap(sortedTeams, pickDist, teamBids, numSims) {
     if (row % 2 === 0) { ctx.fillStyle = '#f7f5f0'; ctx.fillRect(0, y, width, cellH); }
 
     ctx.textAlign = 'left'; ctx.font = `600 18px 'IBM Plex Mono', monospace`; ctx.fillStyle = '#1a1a1a';
-    ctx.fillText(TEAMS[ti].abbr, 8, y + cellH / 2 + 3);
+    ctx.fillText(TEAMS[ti].abbr, 8, y + cellH / 2 + 2);
     ctx.textAlign = 'right'; ctx.font = `400 18px 'IBM Plex Mono', monospace`; ctx.fillStyle = '#888';
     ctx.fillText(String(teamBids[ti]), labelW + bidColW - 10, y + cellH / 2 + 5);
 
@@ -215,7 +215,7 @@ function renderHeatmap(sortedTeams, pickDist, teamBids, numSims) {
       if (prob >= 0.005) {
         const pctVal = Math.round(prob * 100);
         if (pctVal > 0) {
-          ctx.textAlign = 'center'; ctx.font = `500 21px 'IBM Plex Mono', monospace`;
+          ctx.textAlign = 'center'; ctx.font = `500 19px 'IBM Plex Mono', monospace`;
           ctx.fillStyle = intensity > 0.55 ? '#fff' : intensity > 0.25 ? '#1a4a2a' : '#aaa';
           ctx.fillText(String(pctVal), x + cellW / 2, y + cellH / 2 + 4);
         }
