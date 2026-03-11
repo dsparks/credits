@@ -183,9 +183,9 @@ function renderHeatmap(sortedTeams, pickDist, teamBids, numSims) {
   let maxProb = 0;
   for (let t = 0; t < n; t++) for (let p = 0; p < n; p++) { const pr = pickDist[t][p] / numSims; if (pr > maxProb) maxProb = pr; }
 
-  ctx.font = `500 13px 'IBM Plex Mono', monospace`; ctx.fillStyle = '#888'; ctx.textAlign = 'center';
+  ctx.font = `500 15px 'IBM Plex Mono', monospace`; ctx.fillStyle = '#888'; ctx.textAlign = 'center';
   for (let p = 0; p < n; p++) ctx.fillText(String(p + 1), labelW + bidColW + p * cellW + cellW / 2, labelH - 14);
-  ctx.font = `600 11px 'IBM Plex Mono', monospace`;
+  ctx.font = `600 15px 'IBM Plex Mono', monospace`;
   ctx.fillText('Pick \u2192', labelW + bidColW + (n * cellW) / 2, labelH - 40);
   ctx.textAlign = 'right'; ctx.fillText('Bid', labelW + bidColW - 10, labelH - 14);
 
@@ -193,9 +193,9 @@ function renderHeatmap(sortedTeams, pickDist, teamBids, numSims) {
     const ti = sortedTeams[row], y = labelH + row * cellH;
     if (row % 2 === 0) { ctx.fillStyle = '#f7f5f0'; ctx.fillRect(0, y, width, cellH); }
 
-    ctx.textAlign = 'left'; ctx.font = `600 13px 'IBM Plex Mono', monospace`; ctx.fillStyle = '#1a1a1a';
+    ctx.textAlign = 'left'; ctx.font = `600 15px 'IBM Plex Mono', monospace`; ctx.fillStyle = '#1a1a1a';
     ctx.fillText(TEAMS[ti].abbr, 8, y + cellH / 2 + 5);
-    ctx.textAlign = 'right'; ctx.font = `400 12px 'IBM Plex Mono', monospace`; ctx.fillStyle = '#888';
+    ctx.textAlign = 'right'; ctx.font = `400 15px 'IBM Plex Mono', monospace`; ctx.fillStyle = '#888';
     ctx.fillText(String(teamBids[ti]), labelW + bidColW - 10, y + cellH / 2 + 5);
 
     for (let p = 0; p < n; p++) {
@@ -215,7 +215,7 @@ function renderHeatmap(sortedTeams, pickDist, teamBids, numSims) {
       if (prob >= 0.005) {
         const pctVal = Math.round(prob * 100);
         if (pctVal > 0) {
-          ctx.textAlign = 'center'; ctx.font = `500 24px 'IBM Plex Mono', monospace`;
+          ctx.textAlign = 'center'; ctx.font = `500 18px 'IBM Plex Mono', monospace`;
           ctx.fillStyle = intensity > 0.55 ? '#fff' : intensity > 0.25 ? '#1a4a2a' : '#aaa';
           ctx.fillText(String(pctVal), x + cellW / 2, y + cellH / 2 + 4);
         }
