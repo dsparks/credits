@@ -215,7 +215,7 @@ function renderHeatmap(sortedTeams, pickDist, teamBids, numSims) {
       if (prob >= 0.005) {
         const pctVal = Math.round(prob * 100);
         if (pctVal > 0) {
-          ctx.textAlign = 'center'; ctx.font = `500 12px 'IBM Plex Mono', monospace`;
+          ctx.textAlign = 'center'; ctx.font = `500 30px 'IBM Plex Mono', monospace`;
           ctx.fillStyle = intensity > 0.55 ? '#fff' : intensity > 0.25 ? '#1a4a2a' : '#aaa';
           ctx.fillText(String(pctVal), x + cellW / 2, y + cellH / 2 + 4);
         }
