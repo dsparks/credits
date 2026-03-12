@@ -1,0 +1,166 @@
+/* === Foundation === */
+
+:root {
+  --bg: #faf8f4;
+  --text: #1a1a1a;
+  --text-secondary: #555;
+  --text-tertiary: #888;
+  --rule: #d4d0c8;
+  --rule-light: #e8e4dc;
+  --accent: #007A33;
+  --accent-light: #009940;
+  --surface: #f2efe8;
+  --white: #fff;
+  --serif: 'Source Serif 4', Georgia, serif;
+  --mono: 'IBM Plex Mono', 'Menlo', monospace;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--serif);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* === Nav === */
+
+.site-nav {
+  border-bottom: 1px solid var(--rule);
+  position: sticky;
+  top: 0;
+  z-index: 200;
+  background: var(--bg);
+}
+
+.site-nav-inner {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+  display: flex;
+  align-items: baseline;
+}
+
+.site-nav-title {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--text);
+  padding: 0.7rem 0;
+  margin-right: 2rem;
+  text-decoration: none;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.site-nav-title:hover { color: var(--accent); }
+
+.nav-tab {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  font-weight: 500;
+  color: var(--text-tertiary);
+  text-decoration: none;
+  padding: 0.7rem 0.85rem;
+  position: relative;
+  letter-spacing: 0.02em;
+}
+
+.nav-tab:hover { color: var(--text); }
+
+.nav-tab.active {
+  color: var(--text);
+  font-weight: 600;
+}
+
+.nav-tab.active::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0.85rem;
+  right: 0.85rem;
+  height: 1.5px;
+  background: var(--text);
+}
+
+/* === Alt grid (comparison cards) === */
+
+.alt-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  margin: 1.25rem 0;
+  border: 1px solid var(--rule);
+}
+
+.alt-card {
+  padding: 1.1rem 1.25rem;
+  border-bottom: 1px solid var(--rule-light);
+  border-right: 1px solid var(--rule-light);
+}
+
+.alt-card:nth-child(2n) { border-right: none; }
+.alt-card:nth-last-child(-n+2) { border-bottom: none; }
+
+.alt-card .alt-name {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  font-weight: 600;
+  margin-bottom: 0.4rem;
+  color: var(--text);
+}
+
+.alt-card .alt-name.recommended {
+  color: var(--accent);
+}
+
+.alt-card .alt-name.recommended::after {
+  content: ' — proposed';
+  font-weight: 400;
+  font-size: 0.65rem;
+  color: var(--text-tertiary);
+}
+
+.alt-card p {
+  font-size: 0.85rem;
+  line-height: 1.55;
+  color: var(--text-secondary);
+  margin-bottom: 0;
+}
+
+/* === Transition table === */
+
+.transition-table {
+  border-collapse: collapse;
+  background: var(--white);
+  font-size: 0.82rem;
+  font-family: var(--serif);
+}
+
+.transition-table th,
+.transition-table td {
+  border: 1px solid var(--rule);
+  padding: 0.35rem 0.7rem;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.transition-table th {
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-secondary);
+  background: var(--surface);
+}
+
+.transition-table td {
+  color: var(--text);
+  line-height: 1.35;
+}
+
+.transition-table tbody tr:nth-child(even) {
+  background: rgba(0, 0, 0, 0.015);
+}

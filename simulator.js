@@ -134,6 +134,7 @@ function simulateOnce(teamBids, windowSize) {
 }
 
 async function runSimulations() {
+  if (typeof umami !== 'undefined') umami.track('run-simulation');
   const numSims = Math.min(1000000, Math.max(100, parseInt(document.getElementById('numSims').value) || 10000));
   const windowSize = Math.min(30, Math.max(1, parseInt(document.getElementById('windowSize').value) || 4));
   document.getElementById('numSims').value = numSims; document.getElementById('windowSize').value = windowSize;
