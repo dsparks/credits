@@ -201,14 +201,7 @@ body { font-size: 17px; line-height: 1.7; }
   padding-left: 0.2rem;
 }
 
-.qa-item .answer a {
-  color: var(--accent);
-  text-decoration: underline;
-}
-
-.qa-item .answer a:hover {
-  color: var(--accent-light);
-}
+.qa-item .answer a { text-decoration: underline; }
 
 /* --- Long pick description block --- */
 .pick-code-block {
@@ -247,7 +240,6 @@ body { font-size: 17px; line-height: 1.7; }
   font-family: var(--mono);
   font-size: 0.8rem;
   font-weight: 600;
-  color: var(--accent);
   text-decoration: none;
   border-bottom: 1px solid var(--accent);
   padding-bottom: 1px;
@@ -327,7 +319,7 @@ hr {
       <div class="mech-title">How It Works</div>
       <p>Each year, the NBA allocates <strong>100 Team-Building Credits</strong> to each team, minus deductions for playoff success. Credits may be saved or traded, but their primary use is to bid for draft position.</p>
       <p>On a date in early May, teams simultaneously submit sealed bids to the league. Bids must be integer amounts, and teams must have enough Credits to cover the bid. After the deadline, the league reveals all bids publicly.</p>
-      <p>Picks are allocated through a <strong>Rolling Window Lottery</strong>: the top four highest-bidding teams enter a lottery for the first pick, weighted by bid size. The winner is removed, the next-highest bidder enters, and the process repeats for each subsequent pick. The winner of each window is charged only an amount equal to the lowest bid in that window &mdash; so a team that bids high but falls to a later pick retains Credits for other uses. (Try it yourself in the <a href="simulator.html" style="color: var(--accent);">Rolling Window Lottery simulator</a>.)</p>
+      <p>Picks are allocated through a <strong>Rolling Window Lottery</strong>: the top four highest-bidding teams enter a lottery for the first pick, weighted by bid size. The winner is removed, the next-highest bidder enters, and the process repeats for each subsequent pick. The winner of each window is charged only an amount equal to the lowest bid in that window &mdash; so a team that bids high but falls to a later pick retains Credits for other uses. (Try it yourself in the <a href="simulator.html">Rolling Window Lottery simulator</a>.)</p>
       <p>Teams that bid zero are assigned picks at the end of the first round, with a random tiebreaker.</p>
       <p>Second-round picks are allocated through a second stage of bids, which happens after the Rolling Window Lottery, in order of bid size.</p>
     </div>
