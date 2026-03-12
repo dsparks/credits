@@ -14,90 +14,11 @@
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <script defer src="https://cloud.umami.is/script.js" data-website-id="dee76a7d-1304-4c90-aec9-0fe3c653b751"></script>
 <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,300;1,8..60,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shared.css">
 <style>
-:root {
-  --bg: #faf8f4;
-  --text: #1a1a1a;
-  --text-secondary: #555;
-  --text-tertiary: #888;
-  --rule: #d4d0c8;
-  --rule-light: #e8e4dc;
-  --accent: #007A33;
-  --accent-light: #009940;
-  --surface: #f2efe8;
-  --white: #fff;
-  --highlight: #e8f0e0;
-  --highlight-blue: #e4edf8;
-  --serif: 'Source Serif 4', Georgia, serif;
-  --mono: 'IBM Plex Mono', 'Menlo', monospace;
-}
-
-* { margin: 0; padding: 0; box-sizing: border-box; }
-
-body {
-  background: var(--bg);
-  color: var(--text);
-  font-family: var(--serif);
-  font-size: 15px;
-  line-height: 1.6;
-  -webkit-font-smoothing: antialiased;
-}
-
-/* --- Nav --- */
-.site-nav {
-  border-bottom: 1px solid var(--rule);
-  position: sticky;
-  top: 0;
-  z-index: 200;
-  background: var(--bg);
-}
-
-.site-nav-inner {
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 0 1.5rem;
-  display: flex;
-  align-items: baseline;
-}
-
-.site-nav-title {
-  font-family: var(--mono);
-  font-size: 0.7rem;
-  font-weight: 600;
-  color: var(--text);
-  padding: 0.7rem 0;
-  margin-right: 2rem;
-  text-decoration: none;
-  letter-spacing: 0.03em;
-  text-transform: uppercase;
-}
-
-.site-nav-title:hover { color: var(--accent); }
-
-.nav-tab {
-  font-family: var(--mono);
-  font-size: 0.7rem;
-  font-weight: 500;
-  color: var(--text-tertiary);
-  text-decoration: none;
-  padding: 0.7rem 0.85rem;
-  position: relative;
-  letter-spacing: 0.02em;
-}
-
-.nav-tab:hover { color: var(--text); }
-
-.nav-tab.active { color: var(--text); font-weight: 600; }
-
-.nav-tab.active::after {
-  content: '';
-  position: absolute;
-  bottom: -1px;
-  left: 0.85rem;
-  right: 0.85rem;
-  height: 1.5px;
-  background: var(--text);
-}
+:root { --highlight: #e8f0e0; --highlight-blue: #e4edf8; }
+body { font-size: 15px; line-height: 1.6; }
+.site-nav-inner { max-width: 1400px; }
 
 /* --- App layout --- */
 .app {
