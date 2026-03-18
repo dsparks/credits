@@ -858,7 +858,7 @@ The Minnesota/Utah Pick shall be the Minnesota Pick; provided that, if Utah exer
     <button class="slide-btn" id="prevBtn" onclick="prevSlide()" disabled>&larr; Prev</button>
     <div style="text-align: center;">
       <div class="slide-counter" id="slideCounter">1 / 31</div>
-      <div class="slide-hint">Arrow keys or click to navigate</div>
+      <div class="slide-hint">Arrow keys, swipe, or click to navigate</div>
     </div>
     <button class="slide-btn" id="nextBtn" onclick="nextSlide()">Next &rarr;</button>
   </div>
@@ -893,6 +893,17 @@ document.addEventListener('keydown', function(e) {
   if (e.key === 'ArrowLeft') { e.preventDefault(); prevSlide(); }
   if (e.key === 'Home') { e.preventDefault(); showSlide(0); }
   if (e.key === 'End') { e.preventDefault(); showSlide(total - 1); }
+});
+
+let touchStartX = 0;
+document.addEventListener('touchstart', function(e) {
+  touchStartX = e.touches[0].clientX;
+}, { passive: true });
+document.addEventListener('touchend', function(e) {
+  const delta = touchStartX - e.changedTouches[0].clientX;
+  if (Math.abs(delta) > 50) {
+    delta > 0 ? nextSlide() : prevSlide();
+  }
 });
 
 fetch('rolling-window-slides.html')
