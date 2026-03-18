@@ -16,16 +16,6 @@
 <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,300;1,8..60,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="shared.css">
 <style>
-.nav-hint {
-  display: inline-block;
-  margin-top: 1.75rem;
-  background: rgba(0, 122, 51, 0.08);
-  padding: 0.65rem 1rem;
-  font-size: 0.85rem;
-  color: var(--text-secondary);
-  transition: opacity 0.4s ease;
-}
-.nav-hint.hidden { opacity: 0; pointer-events: none; }
 body { overflow: hidden; height: 100vh; height: 100dvh; }
 .site-nav { position: relative; }
 
@@ -432,7 +422,6 @@ body { overflow: hidden; height: 100vh; height: 100dvh; }
         <strong>Drew Cannon</strong> &middot; <strong>David Sparks</strong> &middot; <strong>Mike Zarren</strong><br>
         Boston Celtics
       </div>
-      <div class="nav-hint" id="navHint">Arrow keys, swipe, or click to navigate</div>
     </div>
 
     <!-- Slide 2: The problem -->
@@ -900,7 +889,6 @@ function showSlide(n) {
   document.getElementById('nextBtn').disabled = current === total - 1;
   document.getElementById('progressBar').style.width = ((current + 1) / total * 100) + '%';
   document.getElementById('slideArea').scrollTop = 0;
-  if (n !== 0) document.getElementById('navHint')?.classList.add('hidden');
 }
 
 function nextSlide() { showSlide(current + 1); }
