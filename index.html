@@ -352,6 +352,47 @@ hr {
   transition: background 0.2s;
 }
 .glider-dot.active { background: var(--text-tertiary); }
+
+/* --- Glider slide style variants ---
+   Add ONE of these classes alongside .glider-slide to apply a visual treatment.
+   Available names: gs-green  gs-dark  gs-rule  gs-two-tone  gs-warm  gs-stripe
+
+   gs-two-tone requires two <p> tags inside the slide:
+     first <p>  = the hook line  (large, accent green)
+     second <p> = the payoff line (smaller, muted dark)
+   All other styles work with a single <p>. */
+
+/* gs-green — solid forest green, warm cream text */
+.gs-green { background: #007A33; }
+.gs-green p { color: #f5f0e8; }
+
+/* gs-dark — near-black, warm cream text */
+.gs-dark { background: #1c1a17; }
+.gs-dark p { color: #f0ece3; }
+
+/* gs-rule — cream bg, thick left accent bar, left-aligned */
+.gs-rule { border-left: 5px solid #007A33; padding-left: 2.5rem; justify-content: flex-start; text-align: left; }
+.gs-rule p { text-align: left; }
+
+/* gs-two-tone — white bg; first <p> in accent green, second <p> in muted dark */
+.gs-two-tone { background: #fff; flex-direction: column; gap: 0.35rem; }
+.gs-two-tone p:first-child { font-size: 1.35rem; color: #007A33; }
+.gs-two-tone p + p { font-size: 1rem; font-weight: 600; color: var(--text-secondary); }
+
+/* gs-warm — warm ivory bg with oversized faint opening-quote mark */
+.gs-warm { background: #f5f1e8; position: relative; overflow: hidden; }
+.gs-warm::before {
+  content: '\201C';
+  position: absolute; top: -0.75rem; left: 0.6rem;
+  font-size: 9rem; line-height: 1;
+  color: #007A33; opacity: 0.12;
+  font-family: var(--serif); font-weight: 700;
+  pointer-events: none; user-select: none;
+}
+.gs-warm p { position: relative; }
+
+/* gs-stripe — cream bg with inset top green stripe */
+.gs-stripe { box-shadow: inset 0 5px 0 #007A33; }
 </style>
 </head>
 <body>
@@ -380,16 +421,16 @@ hr {
       <button class="glider-btn glider-prev" aria-label="Previous slide">&#8249;</button>
       <div class="glider-viewport">
         <div class="glider-track" id="gliderTrack">
-          <div class="glider-slide"><p>Losing on purpose isn&rsquo;t a strategy. It&rsquo;s a symptom. Team-Building Credits fix the incentive.</p></div>
-          <div class="glider-slide" aria-hidden="true"><p>What if teams could build toward a top pick without ever having to tank?</p></div>
-          <div class="glider-slide" aria-hidden="true"><p>Credits work like picks &mdash; you earn them, you spend them, you trade them.</p></div>
-          <div class="glider-slide" aria-hidden="true"><p>A team that can&rsquo;t win still competes. Their Credits accumulate all the same.</p></div>
-          <div class="glider-slide" aria-hidden="true"><p>The draft rewards need &mdash; not losing. Those aren&rsquo;t the same thing.</p></div>
-          <div class="glider-slide" aria-hidden="true"><p>Every team knows exactly how many Credits it holds. No hidden lottery odds.</p></div>
-          <div class="glider-slide" aria-hidden="true"><p>Want a top pick? Earn the Credits &mdash; or trade for them. Your choice.</p></div>
-          <div class="glider-slide" aria-hidden="true"><p>Future Credits can be traded like future picks. The trade market stays liquid.</p></div>
-          <div class="glider-slide" aria-hidden="true"><p>Fans deserve a league where their team tries to win every single night.</p></div>
-          <div class="glider-slide" aria-hidden="true"><p>Align the incentive. Improve the game.</p></div>
+          <div class="glider-slide gs-green"><p>Losing on purpose isn&rsquo;t a strategy. It&rsquo;s a symptom. Team-Building Credits fix the incentive.</p></div>
+          <div class="glider-slide gs-dark" aria-hidden="true"><p>What if teams could build toward a top pick without ever having to tank?</p></div>
+          <div class="glider-slide gs-rule" aria-hidden="true"><p>Credits work like picks &mdash; you earn them, you spend them, you trade them.</p></div>
+          <div class="glider-slide gs-two-tone" aria-hidden="true"><p>A team that can&rsquo;t win still competes.</p><p>Their Credits accumulate all the same.</p></div>
+          <div class="glider-slide gs-stripe" aria-hidden="true"><p>The draft rewards need &mdash; not losing. Those aren&rsquo;t the same thing.</p></div>
+          <div class="glider-slide gs-warm" aria-hidden="true"><p>Every team knows exactly how many Credits it holds. No hidden lottery odds.</p></div>
+          <div class="glider-slide gs-dark" aria-hidden="true"><p>Want a top pick? Earn the Credits &mdash; or trade for them. Your choice.</p></div>
+          <div class="glider-slide gs-rule" aria-hidden="true"><p>Future Credits can be traded like future picks. The trade market stays liquid.</p></div>
+          <div class="glider-slide gs-green" aria-hidden="true"><p>Fans deserve a league where their team tries to win every single night.</p></div>
+          <div class="glider-slide gs-two-tone" aria-hidden="true"><p>Align the incentive.</p><p>Improve the game.</p></div>
         </div>
       </div>
       <button class="glider-btn glider-next" aria-label="Next slide">&#8250;</button>
