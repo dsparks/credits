@@ -284,6 +284,74 @@ hr {
   .alt-card { border-right: none !important; }
   .alt-card:not(:last-child) { border-bottom: 1px solid var(--rule-light) !important; }
 }
+
+/* --- Glider Carousel --- */
+.glider-section {
+  margin: 0 0 3rem;
+}
+.glider-outer {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.glider-viewport {
+  flex: 1;
+  overflow: hidden;
+  border-radius: 6px;
+  background: var(--surface);
+}
+.glider-track {
+  display: flex;
+  transition: transform 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform;
+}
+.glider-slide {
+  min-width: 100%;
+  padding: 2.25rem 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 10rem;
+  text-align: center;
+}
+.glider-slide p {
+  font-family: var(--serif);
+  font-size: 1.25rem;
+  font-weight: 700;
+  line-height: 1.45;
+  color: var(--text);
+  max-width: 520px;
+}
+.glider-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 2rem;
+  line-height: 1;
+  color: var(--text-tertiary);
+  padding: 0.25rem 0.5rem;
+  flex-shrink: 0;
+  transition: color 0.15s;
+  user-select: none;
+}
+.glider-btn:hover { color: var(--text-secondary); }
+.glider-dots {
+  display: flex;
+  justify-content: center;
+  gap: 0.45rem;
+  margin-top: 0.85rem;
+}
+.glider-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  border: none;
+  background: var(--rule);
+  cursor: pointer;
+  padding: 0;
+  transition: background 0.2s;
+}
+.glider-dot.active { background: var(--text-tertiary); }
 </style>
 </head>
 <body>
@@ -304,6 +372,39 @@ hr {
     <div class="byline">
       <strong>Drew Cannon</strong> &middot; <strong>David Sparks</strong> &middot; <strong>Mike Zarren</strong><br>
       Boston Celtics
+    </div>
+  </div>
+
+  <div class="glider-section">
+    <div class="glider-outer">
+      <button class="glider-btn glider-prev" aria-label="Previous slide">&#8249;</button>
+      <div class="glider-viewport">
+        <div class="glider-track" id="gliderTrack">
+          <div class="glider-slide"><p>Losing on purpose isn&rsquo;t a strategy. It&rsquo;s a symptom. Team-Building Credits fix the incentive.</p></div>
+          <div class="glider-slide" aria-hidden="true"><p>What if teams could build toward a top pick without ever having to tank?</p></div>
+          <div class="glider-slide" aria-hidden="true"><p>Credits work like picks &mdash; you earn them, you spend them, you trade them.</p></div>
+          <div class="glider-slide" aria-hidden="true"><p>A team that can&rsquo;t win still competes. Their Credits accumulate all the same.</p></div>
+          <div class="glider-slide" aria-hidden="true"><p>The draft rewards need &mdash; not losing. Those aren&rsquo;t the same thing.</p></div>
+          <div class="glider-slide" aria-hidden="true"><p>Every team knows exactly how many Credits it holds. No hidden lottery odds.</p></div>
+          <div class="glider-slide" aria-hidden="true"><p>Want a top pick? Earn the Credits &mdash; or trade for them. Your choice.</p></div>
+          <div class="glider-slide" aria-hidden="true"><p>Future Credits can be traded like future picks. The trade market stays liquid.</p></div>
+          <div class="glider-slide" aria-hidden="true"><p>Fans deserve a league where their team tries to win every single night.</p></div>
+          <div class="glider-slide" aria-hidden="true"><p>Align the incentive. Improve the game.</p></div>
+        </div>
+      </div>
+      <button class="glider-btn glider-next" aria-label="Next slide">&#8250;</button>
+    </div>
+    <div class="glider-dots" id="gliderDots">
+      <button class="glider-dot active" aria-label="Slide 1"></button>
+      <button class="glider-dot" aria-label="Slide 2"></button>
+      <button class="glider-dot" aria-label="Slide 3"></button>
+      <button class="glider-dot" aria-label="Slide 4"></button>
+      <button class="glider-dot" aria-label="Slide 5"></button>
+      <button class="glider-dot" aria-label="Slide 6"></button>
+      <button class="glider-dot" aria-label="Slide 7"></button>
+      <button class="glider-dot" aria-label="Slide 8"></button>
+      <button class="glider-dot" aria-label="Slide 9"></button>
+      <button class="glider-dot" aria-label="Slide 10"></button>
     </div>
   </div>
 
@@ -530,6 +631,40 @@ The Minnesota/Utah Pick shall be the Minnesota Pick; provided that, if Utah exer
     // This replaces the "[click to reveal]" text with a live, clickable link
     container.innerHTML = '<a href="mailto:' + email + '">' + email + '</a>';
   }
+</script>
+
+<script>
+(function() {
+  const SLIDE_DURATION = 5000; // ms per slide before auto-advancing
+
+  var track = document.getElementById('gliderTrack');
+  var dotsContainer = document.getElementById('gliderDots');
+  var slides = track.querySelectorAll('.glider-slide');
+  var dots = dotsContainer.querySelectorAll('.glider-dot');
+  var current = 0;
+  var timer;
+
+  function goTo(idx) {
+    slides[current].setAttribute('aria-hidden', 'true');
+    dots[current].classList.remove('active');
+    current = (idx + slides.length) % slides.length;
+    track.style.transform = 'translateX(-' + (current * 100) + '%)';
+    slides[current].removeAttribute('aria-hidden');
+    dots[current].classList.add('active');
+    resetTimer();
+  }
+
+  function resetTimer() {
+    clearInterval(timer);
+    timer = setInterval(function() { goTo(current + 1); }, SLIDE_DURATION);
+  }
+
+  document.querySelector('.glider-prev').addEventListener('click', function() { goTo(current - 1); });
+  document.querySelector('.glider-next').addEventListener('click', function() { goTo(current + 1); });
+  dots.forEach(function(dot, i) { dot.addEventListener('click', function() { goTo(i); }); });
+
+  resetTimer();
+})();
 </script>
 
 </body>
