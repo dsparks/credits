@@ -531,7 +531,7 @@ body { overflow: hidden; height: 100vh; height: 100dvh; }
           <li>For the second pick, the #5 bidder is added to the three non-winners of the first pick, and another lottery is held.</li>
           <li>The winner of this lottery gets the second pick, and the #6 bidder is added into the pool for the third pick, and so on, until all picks have been assigned.</li>
         </ol>
-        <p>To see how it works in action, try the simulator here: <a href="https://dsparks.github.io/credits/simulator.html">https://dsparks.github.io/credits/simulator.html</a></p>
+        <p>To see how it works in action, see an example <a href="#slide-11">here</a> or try the <a href="https://dsparks.github.io/credits/simulator.html">simulator</a>.</p>
       </div>
       <div class="deck-footer">
         <span>lottery</span>
@@ -666,10 +666,15 @@ function closeSlide11Modal() {
 
 function initSlides() {
   slides = document.querySelectorAll('.slide');
+  slides.forEach((slide, index) => {
+    slide.id = 'slide-' + (index + 1);
+  });
   total = slides.length;
-  current = 0;
+  const hashMatch = window.location.hash.match(/^#slide-(\d+)$/);
+  const initialSlide = hashMatch ? Math.max(0, Math.min(slides.length - 1, parseInt(hashMatch[1], 10) - 1)) : 0;
+  current = initialSlide;
   slides.forEach(slide => slide.classList.remove('active'));
-  showSlide(0);
+  showSlide(initialSlide);
 }
 
 function showSlide(n) {
@@ -708,6 +713,15 @@ document.addEventListener('touchend', function(e) {
   if (Math.abs(delta) > 50) {
     delta > 0 ? nextSlide() : prevSlide();
   }
+});
+
+document.addEventListener('click', function(e) {
+  const link = e.target.closest('a[href^="#slide-"]');
+  if (!link) return;
+  const match = link.getAttribute('href').match(/^#slide-(\d+)$/);
+  if (!match) return;
+  e.preventDefault();
+  showSlide(parseInt(match[1], 10) - 1);
 });
 
 fetch('rolling-window-slides.html')
