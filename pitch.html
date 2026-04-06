@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Pitch Deck — Team-Building Credits</title>
+<title>Team Building Credits</title>
 <meta name="description" content="A punchier slide deck version of the Team-Building Credits proposal for NBA draft reform.">
 <meta property="og:title" content="Team-Building Credits — Pitch Deck">
 <meta property="og:description" content="A punchier slide deck version of the Team-Building Credits proposal for NBA draft reform.">
@@ -197,6 +197,88 @@ body { overflow: hidden; height: 100vh; height: 100dvh; }
   margin-bottom: 0;
 }
 
+/* --- Example tables --- */
+.example-tables {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1.3fr;
+  gap: 1rem;
+  margin-top: 0.75rem;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+}
+
+.example-table-section h4 {
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-tertiary);
+  margin-bottom: 0.4rem;
+}
+
+.example-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.68rem;
+}
+
+.example-table th {
+  font-weight: 600;
+  text-align: left;
+  padding: 0.2rem 0.4rem;
+  border-bottom: 1px solid var(--rule);
+  font-size: 0.6rem;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.example-table th.r { text-align: right; }
+
+.example-table td {
+  padding: 0.15rem 0.4rem;
+  border-bottom: 1px solid var(--rule-light);
+}
+
+.example-table td.r { text-align: right; }
+.example-table td.team { font-weight: 600; }
+
+.example-table tr.in-window { background: #e4edf8; }
+.example-table tr.winner { background: #fef3cd; }
+.example-table tr.struck td.team,
+.example-table tr.struck td.r { text-decoration: line-through; opacity: 0.4; }
+.example-table tr.new-entry { background: #e4edf8; }
+
+.bids-scroll {
+  max-height: 420px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--rule) transparent;
+}
+
+.example-quote {
+  margin: 1.1rem 0 1.35rem;
+  padding: 1rem 1.2rem;
+  background: #f3f3f1;
+  border-left: 0;
+}
+
+.example-quote-label {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #7f8aa3;
+  margin-bottom: 0.85rem;
+}
+
+.example-quote p {
+  margin: 0;
+  font-size: 1.02rem;
+  line-height: 1.7;
+  font-style: italic;
+}
+
 .deck-footer {
   margin-top: 1.5rem;
   padding-top: 0.9rem;
@@ -273,6 +355,35 @@ body { overflow: hidden; height: 100vh; height: 100dvh; }
   letter-spacing: 0.02em;
 }
 
+/* Rolling Window demo notes */
+.rolling-window-demo {
+  position: relative;
+  min-height: 29rem;
+}
+
+.rolling-window-note {
+  position: absolute;
+  right: auto;
+  left: calc(50% + 2.5rem);
+  top: 17.75rem;
+  width: 11.5rem;
+  background: rgba(0, 122, 51, 0.08);
+  padding: 0.9rem 0.95rem;
+  font-family: var(--serif);
+  color: var(--text);
+  z-index: 2;
+}
+
+.rolling-window-note p {
+  margin: 0 0 0.55rem 0;
+  font-size: 0.95rem;
+  line-height: 1.35;
+}
+
+.rolling-window-note p:last-child {
+  margin-bottom: 0;
+}
+
 @media (max-width: 700px) {
   .slide h1 { font-size: 1.95rem; }
   .slide h2 { font-size: 1.55rem; }
@@ -281,6 +392,19 @@ body { overflow: hidden; height: 100vh; height: 100dvh; }
   .accent-card h2 { font-size: 1.85rem; }
   .points-grid { grid-template-columns: 1fr; }
   .deck-footer { flex-direction: column; gap: 0.35rem; }
+  .example-tables { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 900px) {
+  .rolling-window-demo {
+    min-height: auto;
+  }
+
+  .rolling-window-note {
+    position: static;
+    width: auto;
+    margin-top: 1rem;
+  }
 }
 </style>
 </head>
@@ -291,8 +415,6 @@ body { overflow: hidden; height: 100vh; height: 100dvh; }
     <a class="site-nav-title" href="index.html">Team-Building Credits</a>
     <a class="nav-tab" href="index.html">Proposal</a>
     <a class="nav-tab" href="simulator.html">Simulator</a>
-    <a class="nav-tab" href="presentation.html">Presentation</a>
-    <a class="nav-tab active" href="pitch.html">Pitch</a>
   </div>
 </nav>
 
@@ -367,12 +489,14 @@ body { overflow: hidden; height: 100vh; height: 100dvh; }
       <h2>Rolling Window Lottery</h2>
       <div class="sub-heading">A new lottery method lets teams bid Credits to determine how good their pick(s) are, with some uncertainty.</div>
       <div class="body-block">
-        <p>In late April, each team secretly submits a Credit bid for each pick they have.</p>
-        <p>In early May, the league publishes all the bids.</p>
-        <p>On lottery night, for the first pick, the top 4 highest bidders are put into a lottery amongst themselves, with probability proportional to the number of Credits each bid toward that slot.</p>
-        <p>The winner of this mini-lottery gets the first pick, gets charged the bid of the lowest bidder among those four teams, and is removed from the pool.</p>
-        <p>For the second pick, the #5 bidder is added to the three non-winners of the first pick, and another lottery is held.</p>
-        <p>The winner of this lottery gets the second pick, and the #6 bidder is added into the pool for the third pick, and so on, until all picks have been assigned.</p>
+        <ol>
+          <li>In late April, each team secretly submits a Credit bid for each pick they have.</li>
+          <li>In early May, the league publishes all the bids.</li>
+          <li>On lottery night, for the first pick, the top 4 highest bidders are put into a lottery amongst themselves, with probability proportional to the number of Credits each bid toward that slot.</li>
+          <li>The winner of this mini-lottery gets the first pick, gets charged the bid of the lowest bidder among those four teams, and is removed from the pool.</li>
+          <li>For the second pick, the #5 bidder is added to the three non-winners of the first pick, and another lottery is held.</li>
+          <li>The winner of this lottery gets the second pick, and the #6 bidder is added into the pool for the third pick, and so on, until all picks have been assigned.</li>
+        </ol>
         <p>To see how it works in action, try the simulator here: <a href="https://dsparks.github.io/credits/simulator.html">https://dsparks.github.io/credits/simulator.html</a></p>
       </div>
       <div class="deck-footer">
@@ -386,10 +510,12 @@ body { overflow: hidden; height: 100vh; height: 100dvh; }
       <h2>Rolling Window Lottery</h2>
       <div class="sub-heading">Some other lottery rules:</div>
       <div class="body-block">
-        <p>Teams can have more than one “pick slot” in either round of the draft (since you can still trade for other teams’ pick slots). Each slot is associated with a separate bid.</p>
-        <p>Teams may bid 0; they pick at the end of the first round, with a random tiebreaker. (All ties are broken randomly.)</p>
-        <p>Bidding for the second round happens after the Rolling Window Lottery; picks are allocated in order of bid size, with ties broken randomly.</p>
-        <p>The second apron draft pick penalty is easily accommodated; a frozen pick slot can’t be traded; and a frozen pick that goes to the end of the first round simply can’t have a bid &gt;0. (For debate: whether that team still gets any Credits that year.)</p>
+        <ul>
+          <li>Teams can have more than one “pick slot” in either round of the draft (since you can still trade for other teams’ pick slots). Each slot is associated with a separate bid.</li>
+          <li>Teams may bid 0; they pick at the end of the first round, with a random tiebreaker. (All ties are broken randomly.)</li>
+          <li>Bidding for the second round happens after the Rolling Window Lottery; picks are allocated in order of bid size, with ties broken randomly.</li>
+          <li>The second apron draft pick penalty is easily accommodated; a frozen pick slot can’t be traded; and a frozen pick that goes to the end of the first round simply can’t have a bid &gt;0. (For debate: whether that team still gets any Credits that year.)</li>
+        </ul>
       </div>
       <div class="deck-footer">
         <span>lottery</span>
@@ -402,11 +528,15 @@ body { overflow: hidden; height: 100vh; height: 100dvh; }
       <h2>The trade market gets better, more liquid</h2>
       <div class="body-block">
         <p>Credits are a new tradeable asset: more flexible than picks, more meaningful than cash.</p>
-        <p><strong>For example</strong></p>
-        <p>A contending team trades a developing young player, a 2034 first-round slot, and 35 Credits to a rebuilding team, in exchange for a playoff-caliber starter.</p>
-        <p>A single Credit can replace the classic heavily-protected second-round pick as minimum trade consideration.</p>
-        <p>Future “pick slots” and Credit allocations can be traded (all-or-nothing for a given year)</p>
-        <p>Pick protections and swap options become irrelevant; the bidding process handles all of that.</p>
+        <div class="example-quote">
+          <div class="example-quote-label">For example</div>
+          <p>A contending team trades a developing young player, a 2034 first-round slot, and 35 Credits to a rebuilding team, in exchange for a playoff-caliber starter.</p>
+        </div>
+        <ul>
+          <li>A single Credit can replace the classic heavily-protected second-round pick as minimum trade consideration.</li>
+          <li>Future “pick slots” and Credit allocations can be traded (all-or-nothing for a given year)</li>
+          <li>Pick protections and swap options become irrelevant; the bidding process handles all of that.</li>
+        </ul>
       </div>
       <div class="deck-footer">
         <span>trade market</span>
@@ -438,9 +568,11 @@ body { overflow: hidden; height: 100vh; height: 100dvh; }
       <h2>The Transition</h2>
       <div class="body-block">
         <p>Due to outstanding traded picks, this system likely can’t be implemented for at least 4-6 years. The fairest transition will depend on draft rules enacted in the interim.</p>
-        <p>Prior to implementation we’d expect lots of study and playtesting of the system</p>
-        <p>Once the system is agreed to, teams should be able to trade future pick slots and Credit allocations immediately.</p>
-        <p>We could imagine a transition where teams began receiving smaller amounts of credits 3-4 years prior to full implementation, so that the weakest teams entering the system have an advantage. See link at end of presentation for more details of this proposal, but other transitions are possible too.</p>
+        <ul>
+          <li>Prior to implementation we’d expect lots of study and playtesting of the system</li>
+          <li>Once the system is agreed to, teams should be able to trade future pick slots and Credit allocations immediately.</li>
+          <li>We could imagine a transition where teams began receiving smaller amounts of credits 3-4 years prior to full implementation, so that the weakest teams entering the system have an advantage. See link at end of presentation for more details of this proposal, but other transitions are possible too.</li>
+        </ul>
       </div>
       <div class="deck-footer">
         <span>transition</span>
