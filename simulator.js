@@ -362,7 +362,7 @@ function renderStep() {
   const step = s.steps[s.currentStep], alloc = s.steps.slice(0, s.currentStep + 1);
   let h = `<div class="step-pick-label">Pick #${step.pickNum + 1}${step.isZeroBid ? ' (zero-bid)' : ''}</div>`;
   const wt = TEAMS[step.winnerTeamIdx];
-  h += `<div class="step-winner-banner"><span class="winner-team">${wt.abbr}</span> ${wt.name} wins pick #${step.pickNum + 1}<br><span class="winner-detail">Bid: ${step.winnerBid} \u2022 Charged: ${step.cost}</span></div>`;
+  h += `<div class="step-winner-banner"><span class="winner-team">${wt.abbr}</span> ${wt.name} wins pick #${step.pickNum + 1}<br><span class="winner-detail">Bid: ${step.winnerBid} \u2022 Min bid: ${step.minBid} \u2022 Charged: ${step.cost}</span></div>`;
   if (!step.isZeroBid) {
     h += `<div class="step-table-scroll"><table class="step-table"><thead><tr><th>Team</th><th>Bid</th><th class="r">Probability</th><th class="r">Result</th></tr></thead><tbody>`;
     for (const e of step.window) { const t = TEAMS[e.teamIdx], iw = e.teamIdx === step.winnerTeamIdx; h += `<tr class="${iw ? 'winner' : ''}"><td class="team-cell">${t.abbr}</td><td>${e.bid}</td><td class="r">${(e.prob * 100).toFixed(1)}%</td><td class="r">${iw ? '\u2713 Winner' : ''}</td></tr>`; }
