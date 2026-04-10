@@ -123,7 +123,7 @@ function simulateOnce(teamBids, windowSize) {
     let r = Math.random() * tot, wi = w[0];
     for (const j of w) { r -= sB[j]; if (r <= 0) { wi = j; break; } }
     const mb = Math.min(...w.map(j => sB[j]));
-    picks[indices[wi]] = pN; costs[indices[wi]] = mb; pN++;
+    picks[indices[wi]] = pN; costs[indices[wi]] = Math.floor((sB[wi] + mb) / 2); pN++;
     w = w.filter(j => j !== wi);
     if (wS < nzB.length) { w.push(nzB[wS]); wS++; }
     if (w.length === 0 && wS < nzB.length) { w.push(nzB[wS]); wS++; }
@@ -326,7 +326,7 @@ function stepNew() {
     let r = Math.random() * tot, ws = w[0];
     for (const j of w) { r -= sB[j]; if (r <= 0) { ws = j; break; } }
     const mb = Math.min(...w.map(j => sB[j])), wti = indices[ws];
-    steps.push({ pickNum: pN, window: wi, winnerTeamIdx: wti, winnerBid: teamBids[wti], minBid: mb, cost: mb, refund: teamBids[wti] - mb });
+    steps.push({ pickNum: pN, window: wi, winnerTeamIdx: wti, winnerBid: teamBids[wti], minBid: mb, cost: Math.floor((teamBids[wti] + mb) / 2), refund: teamBids[wti] - Math.floor((teamBids[wti] + mb) / 2) });
     pN++; w = w.filter(j => j !== ws);
     if (wS < nzB.length) { w.push(nzB[wS]); wS++; }
     if (w.length === 0 && wS < nzB.length) { w.push(nzB[wS]); wS++; }
