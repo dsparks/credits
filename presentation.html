@@ -480,8 +480,8 @@ body { overflow: hidden; height: 100vh; height: 100dvh; }
           <li>Each team gets 100 Credits per year &ndash; playoff-series-winning teams get fewer. Credits can be saved across seasons if unspent.</li>
           <li>Teams bid Credits to for draft position in a &ldquo;Rolling Window Lottery&rdquo;:
             <ul>
-              <li>Top 4 bidding teams are in a weighted lottery for the #1 pick; winner pays the average of their own bid and the #4 bid.</li>
-              <li>Then add fifth-highest-bid team and do the same for #2 pick, winner paying the average of own bid and #5 bid; etc.</li>
+              <li>Top 4 bidding teams are in a weighted lottery for the #1 pick; winner pays halfway between their own bid and the #4 bid.</li>
+              <li>Then add fifth-highest-bid team and do the same for #2 pick, winner pays halfway between their own bid and the #5 bid; etc.</li>
             </ul>
           </li>
           <li>You can trade both future pick slots and your future credits income, subject to &ldquo;Stepien&rdquo;-like rules.</li>
@@ -600,7 +600,7 @@ body { overflow: hidden; height: 100vh; height: 100dvh; }
           <li>Each team&rsquo;s bid should largely determine draft order, but to avoid collusion and &ldquo;aiming&rdquo; issues, we need some randomness, so we propose a <strong>Rolling Window Lottery</strong>:
             <ul>
               <li>For the first pick, the top 4 highest-bidding slot owners are put into a lottery amongst themselves, with probability proportional to the number of Credits each bid toward that slot.</li>
-              <li>The winner of this lottery gets the first pick, gets charged the average of their own bid and the lowest bid among those four teams (rounded down), and is removed from the pool.</li>
+              <li>The winner of this lottery gets the first pick, gets charged halfway between their own bid and the bid of the lowest bidder among those four teams, and is removed from the pool.</li>
               <li>For the second pick, the next-highest-bidding slot owner is added to the three non-winners of the first pick, and another lottery is held.</li>
               <li>The winner of this lottery gets the second pick, and so on, until all picks have been assigned.</li>
               <li>We propose the &ldquo;Vickrey-like&rdquo; auction system described here, so that a team that bids highly but randomly falls to a lower pick retains plenty of Credits for the following year. Bad luck for a high bidder simply shouldn’t mean they’re out of lottery contention for a long time.</li>
