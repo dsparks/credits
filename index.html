@@ -393,6 +393,152 @@ hr {
 
 /* gs-stripe — cream bg with inset top green stripe */
 .gs-stripe { box-shadow: inset 0 5px 0 #007A33; }
+
+/* --- Lottery modal --- */
+.mechanism-ctas {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+  margin: 1.25rem 0 1rem;
+}
+.mech-cta {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem 0.75rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  color: var(--text);
+  border-radius: 4px;
+  transition: background 0.15s;
+}
+.mech-cta:hover {
+  background: rgba(0,0,0,0.04);
+  color: var(--text);
+}
+.mech-cta:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 4px;
+}
+.mech-cta-label {
+  font-family: var(--serif);
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text);
+  text-align: center;
+  line-height: 1.35;
+}
+.lottery-mini-wheel-wrap {
+  position: relative;
+  flex-shrink: 0;
+  width: 120px;
+  height: 120px;
+}
+.lottery-mini-pointer {
+  position: absolute;
+  top: -5px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-top: 8px solid #2a2a2a;
+  z-index: 2;
+}
+.lottery-mini-wedges {
+  display: block;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: conic-gradient(
+    #C0392B 0 31.58%,
+    #E67E22 31.58% 57.89%,
+    #2980B9 57.89% 78.95%,
+    #8E44AD 78.95% 100%
+  );
+  box-shadow: 0 0 0 4px #ccc8c0;
+  animation: lottery-spin 0.4s linear infinite;
+  will-change: transform;
+  position: relative;
+}
+.lottery-mini-wedges::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 20%;
+  height: 20%;
+  border-radius: 50%;
+  background: #fff;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+@keyframes lottery-spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+
+.lottery-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+  z-index: 900;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+.lottery-overlay.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+.lottery-modal {
+  position: relative;
+  width: min(92vw, 1100px);
+  height: min(88vh, 720px);
+  background: var(--bg);
+  border-radius: 3px;
+  overflow: hidden;
+  box-shadow: 0 12px 48px rgba(0,0,0,0.3);
+  transform: scale(0.97);
+  transition: transform 0.2s ease;
+}
+.lottery-overlay.open .lottery-modal {
+  transform: scale(1);
+}
+.lottery-modal iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+  display: block;
+}
+.lottery-modal-close {
+  position: absolute;
+  top: 0.6rem;
+  right: 0.75rem;
+  z-index: 10;
+  background: rgba(250,248,244,0.92);
+  border: 1px solid var(--rule);
+  cursor: pointer;
+  font-size: 1rem;
+  line-height: 1;
+  color: var(--text-secondary);
+  padding: 0.3rem 0.55rem;
+  border-radius: 2px;
+  font-family: var(--mono);
+  transition: color 0.15s, background 0.15s;
+}
+.lottery-modal-close:hover {
+  color: var(--text);
+  background: var(--white);
+}
 </style>
 </head>
 <body>
@@ -473,7 +619,20 @@ hr {
       <div class="mech-title">How It Works</div>
       <p>Each year, the NBA allocates <strong>100 Team-Building Credits</strong> to each team, minus deductions for playoff success. Credits may be saved or traded, but their primary use is to bid for draft position.</p>
       <p>On a date in early May, teams simultaneously submit sealed bids to the league. Bids must be integer amounts, and teams must have enough Credits to cover the bid. After the deadline, the league reveals all bids publicly.</p>
-      <p>Picks are allocated through a <strong>Rolling Window Lottery</strong>: the top four highest-bidding teams enter a lottery for the first pick, weighted by bid size. The winner is removed, the next-highest bidder enters, and the process repeats for each subsequent pick. The winner of each window is charged an amount equal to halfway between their own bid and the lowest bid in that window &mdash; so a team that bids high but falls to a later pick retains Credits for other uses. (Try it yourself in the <a href="simulator.html">Rolling Window Lottery simulator</a>.)</p>
+      <p>Picks are allocated through a <strong>Rolling Window Lottery</strong>: the top four highest-bidding teams enter a lottery for the first pick, weighted by bid size. The winner is removed, the next-highest bidder enters, and the process repeats for each subsequent pick. The winner of each window is charged an amount equal to halfway between their own bid and the lowest bid in that window &mdash; so a team that bids high but falls to a later pick retains Credits for other uses.</p>
+      <div class="mechanism-ctas">
+        <button class="mech-cta" id="lotteryTrigger">
+          <span class="mech-cta-label">See the lottery in action</span>
+          <span class="lottery-mini-wheel-wrap">
+            <span class="lottery-mini-pointer"></span>
+            <span class="lottery-mini-wedges"></span>
+          </span>
+        </button>
+        <a class="mech-cta" href="simulator.html">
+          <span class="mech-cta-label">Simulate the full lottery process</span>
+          <canvas id="heatmapIcon"></canvas>
+        </a>
+      </div>
       <p>Teams that bid zero are assigned picks at the end of the first round, with a random tiebreaker.</p>
       <p>Second-round picks are allocated through a second stage of bids, which happens after the Rolling Window Lottery, in order of bid size.</p>
     </div>
@@ -704,6 +863,89 @@ The Minnesota/Utah Pick shall be the Minnesota Pick; provided that, if Utah exer
   dots.forEach(function(dot, i) { dot.addEventListener('click', function() { goTo(i); }); });
 
   resetTimer();
+})();
+</script>
+
+<div class="lottery-overlay" id="lotteryOverlay">
+  <div class="lottery-modal" id="lotteryModal">
+    <button class="lottery-modal-close" id="lotteryClose" aria-label="Close">✕</button>
+    <iframe title="Rolling Window Lottery"></iframe>
+  </div>
+</div>
+
+<script>
+(function() {
+  var trigger  = document.getElementById('lotteryTrigger');
+  var overlay  = document.getElementById('lotteryOverlay');
+  var modal    = document.getElementById('lotteryModal');
+  var closeBtn = document.getElementById('lotteryClose');
+  var iframe   = modal.querySelector('iframe');
+  var loaded   = false;
+
+  function openModal() {
+    if (!loaded) { iframe.src = 'rolling-window-animated.html?embed'; loaded = true; }
+    overlay.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    setTimeout(function() { iframe.focus(); }, 50);
+  }
+  function closeModal() {
+    overlay.classList.remove('open');
+    document.body.style.overflow = '';
+    trigger.focus();
+  }
+
+  trigger.addEventListener('click', openModal);
+  closeBtn.addEventListener('click', closeModal);
+  overlay.addEventListener('click', function(e) { if (!modal.contains(e.target)) closeModal(); });
+  document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeModal(); });
+})();
+</script>
+
+
+<script>
+(function() {
+  var canvas = document.getElementById('heatmapIcon');
+  if (!canvas) return;
+  var dpr = window.devicePixelRatio || 1;
+  var S = 120, COLS = 10, ROWS = 10;
+  canvas.width  = Math.round(S * dpr);
+  canvas.height = Math.round(S * dpr);
+  canvas.style.width  = S + 'px';
+  canvas.style.height = S + 'px';
+  var ctx = canvas.getContext('2d');
+  ctx.scale(dpr, dpr);
+  var cw = S / COLS, ch = S / ROWS, gap = 1.5;
+
+  var diagSteps = COLS + ROWS - 2; // 18 diagonals
+  var period = 2.5; // seconds per full wave sweep
+
+  function iv(r, c) {
+    var d = c - r;
+    return d < 0 ? 0 : Math.max(0, 1 - d / COLS);
+  }
+
+  function frame(ts) {
+    var t = ts / 1000;
+    ctx.clearRect(0, 0, S, S);
+    for (var r = 0; r < ROWS; r++) {
+      for (var c = 0; c < COLS; c++) {
+        var v = iv(r, c);
+        if (v > 0) {
+          var phase = Math.PI * 2 * (t / period - (c + r) / diagSteps);
+          var shimmer = Math.pow(Math.max(0, Math.sin(phase)), 6) * 0.5;
+          var rr = Math.round(shimmer * 120);
+          var gg = Math.round(122 + shimmer * 133);
+          var bb = Math.round(51 + shimmer * 180);
+          ctx.fillStyle = 'rgba(' + rr + ',' + gg + ',' + bb + ',' + (0.1 + v * 0.9).toFixed(2) + ')';
+        } else {
+          ctx.fillStyle = 'rgba(0,0,0,0.05)';
+        }
+        ctx.fillRect(c * cw + gap / 2, r * ch + gap / 2, cw - gap, ch - gap);
+      }
+    }
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
 })();
 </script>
 

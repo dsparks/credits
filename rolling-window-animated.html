@@ -1,0 +1,1658 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rolling Window Example — Team-Building Credits</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,300;1,8..60,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shared.css">
+<style>
+body { overflow: hidden; height: 100vh; height: 100dvh; }
+.site-nav { position: relative; }
+
+/* ── Slide deck structure ── */
+.slide-viewport {
+  height: calc(100vh - 39px);
+  height: calc(100dvh - 39px);
+  display: flex;
+  flex-direction: column;
+}
+
+.slide-area {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 2rem 1.5rem;
+}
+
+.slide {
+  display: none;
+  max-width: 820px;
+  width: 100%;
+}
+
+.slide.active { display: block; }
+
+/* ── Slide typography ── */
+.slide .section-label {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--text-tertiary);
+  margin-bottom: 0.5rem;
+}
+
+.slide h2 {
+  font-family: var(--serif);
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  line-height: 1.2;
+  margin-bottom: 0.75rem;
+  color: var(--text);
+}
+
+.slide p {
+  font-size: 1rem;
+  line-height: 1.7;
+  margin-bottom: 0.75rem;
+  color: var(--text);
+}
+
+/* ── Example tables (original layout — winner slides) ── */
+.example-tables {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1.3fr;
+  gap: 1rem;
+  margin-top: 0.75rem;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+}
+
+.example-table-section h4 {
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-tertiary);
+  margin-bottom: 0.4rem;
+}
+
+.example-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.68rem;
+}
+
+.example-table th {
+  font-weight: 600;
+  text-align: left;
+  padding: 0.2rem 0.4rem;
+  border-bottom: 1px solid var(--rule);
+  font-size: 0.6rem;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.example-table th.r { text-align: right; }
+
+.example-table td {
+  padding: 0.15rem 0.4rem;
+  border-bottom: 1px solid var(--rule-light);
+}
+
+.example-table td.r { text-align: right; }
+.example-table td.team { font-weight: 600; }
+
+.example-table tr.in-window { background: #e4edf8; }
+.example-table tr.winner { background: #fef3cd; }
+.example-table tr.struck td.team,
+.example-table tr.struck td.r { text-decoration: line-through; opacity: 0.4; }
+.example-table tr.new-entry { background: #e4edf8; }
+
+.bids-scroll {
+  max-height: 400px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--rule) transparent;
+}
+
+/* ── Rolling window note ── */
+.rolling-window-note {
+  margin-top: 0.85rem;
+  background: rgba(0, 122, 51, 0.07);
+  padding: 0.75rem 0.85rem;
+  font-family: var(--serif);
+  color: var(--text);
+  border-left: 2px solid var(--accent);
+}
+
+.rolling-window-note p {
+  margin: 0 0 0.45rem 0;
+  font-size: 0.88rem;
+  line-height: 1.4;
+}
+
+.rolling-window-note p:last-child { margin-bottom: 0; }
+
+/* ── Slide content + floating wheel overlay ── */
+.slide-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  overflow: hidden;
+  position: relative;
+}
+
+.wheel-float {
+  position: absolute;
+  z-index: 50;
+  filter: drop-shadow(0 4px 14px rgba(0,0,0,0.10));
+  visibility: hidden; /* JS positions and reveals on each slide */
+}
+
+.wheel-wrap {
+  position: relative;
+}
+
+.wheel-pointer {
+  position: absolute;
+  top: -4px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-top: 15px solid var(--text);
+  z-index: 2;
+  filter: drop-shadow(0 1px 2px rgba(0,0,0,0.2));
+}
+
+canvas { display: block; }
+
+
+/* ── Controls bar ── */
+.slide-progress {
+  height: 2px;
+  background: var(--rule-light);
+}
+
+.slide-progress-bar {
+  height: 100%;
+  background: var(--accent);
+  transition: width 0.2s ease;
+}
+
+.slide-controls {
+  border-top: 1px solid var(--rule);
+  padding: 0.6rem 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--bg);
+  user-select: none;
+}
+
+.slide-counter {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  color: var(--text-tertiary);
+  min-width: 80px;
+  text-align: center;
+}
+
+.slide-btn {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 0.35rem 1rem;
+  border: 1px solid var(--rule);
+  background: var(--white);
+  color: var(--text);
+  cursor: pointer;
+  transition: background 0.1s;
+}
+
+.slide-btn:hover { background: var(--surface); }
+.slide-btn:disabled { opacity: 0.3; cursor: default; }
+.slide-btn:disabled:hover { background: var(--white); }
+
+@media (max-width: 700px) {
+  .wheel-float { display: none; }
+  .example-tables { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<nav class="site-nav">
+  <div class="site-nav-inner">
+    <a class="site-nav-title" href="index.html">Team-Building Credits</a>
+    <a class="nav-tab" href="index.html">Proposal</a>
+    <a class="nav-tab" href="presentation.html">Slides</a>
+    <a class="nav-tab" href="simulator.html">Simulator</a>
+    <a class="nav-tab active" href="rolling-window-animated.html">Rolling Window</a>
+  </div>
+</nav>
+
+<div class="slide-viewport">
+  <div class="slide-progress">
+    <div class="slide-progress-bar" id="progressBar"></div>
+  </div>
+
+  <div class="slide-content">
+  <div class="slide-area" id="slideArea">
+
+    <!-- ── Slide 0: Lottery for pick 1 ── -->
+    <div class="slide active" data-assemble="0">
+      <div class="section-label">Rolling Window Example</div>
+      <h2>Lottery for pick 1</h2>
+      <div class="example-tables">
+        <div class="example-table-section">
+          <h4>All bids</h4>
+          <div class="bids-scroll">
+            <table class="example-table">
+              <thead><tr><th>Team</th><th class="r">Bid</th></tr></thead>
+              <tbody>
+                <tr class="in-window"><td class="team">BRK</td><td class="r">151</td></tr>
+                <tr class="in-window"><td class="team">WAS</td><td class="r">150</td></tr>
+                <tr class="in-window"><td class="team">SAC</td><td class="r">125</td></tr>
+                <tr class="in-window"><td class="team">IND</td><td class="r">110</td></tr>
+                <tr><td class="team">NOP</td><td class="r">101</td></tr>
+                <tr><td class="team">UTA</td><td class="r">100</td></tr>
+                <tr><td class="team">DAL</td><td class="r">100</td></tr>
+                <tr><td class="team">CHI</td><td class="r">100</td></tr>
+                <tr><td class="team">MEM</td><td class="r">99</td></tr>
+                <tr><td class="team">MIL</td><td class="r">80</td></tr>
+                <tr><td class="team">POR</td><td class="r">75</td></tr>
+                <tr><td class="team">ATL</td><td class="r">75</td></tr>
+                <tr><td class="team">LAC</td><td class="r">66</td></tr>
+                <tr><td class="team">BRK</td><td class="r">51</td></tr>
+                <tr><td class="team">CHA</td><td class="r">51</td></tr>
+                <tr><td class="team">ORL</td><td class="r">50</td></tr>
+                <tr><td class="team">PHI</td><td class="r">50</td></tr>
+                <tr><td class="team">GSW</td><td class="r">50</td></tr>
+                <tr><td class="team">MIA</td><td class="r">50</td></tr>
+                <tr><td class="team">TOR</td><td class="r">50</td></tr>
+                <tr><td class="team">LAL</td><td class="r">12</td></tr>
+                <tr><td class="team">DEN</td><td class="r">11</td></tr>
+                <tr><td class="team">MIN</td><td class="r">10</td></tr>
+                <tr><td class="team">CLE</td><td class="r">10</td></tr>
+                <tr><td class="team">HOU</td><td class="r">10</td></tr>
+                <tr><td class="team">NYK</td><td class="r">5</td></tr>
+                <tr><td class="team">BOS</td><td class="r">5</td></tr>
+                <tr><td class="team">SAS</td><td class="r">1</td></tr>
+                <tr><td class="team">DET</td><td class="r">0</td></tr>
+                <tr><td class="team">OKC</td><td class="r">0</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="example-table-section">
+          <h4>Lottery for pick 1</h4>
+          <table class="example-table">
+            <thead><tr><th>Team</th><th class="r">Bid</th><th class="r">Prob.</th></tr></thead>
+            <tbody>
+              <tr><td class="team">BRK</td><td class="r">151</td><td class="r">28.2%</td></tr>
+              <tr><td class="team">WAS</td><td class="r">150</td><td class="r">28.0%</td></tr>
+              <tr><td class="team">SAC</td><td class="r">125</td><td class="r">23.3%</td></tr>
+              <tr><td class="team">IND</td><td class="r">110</td><td class="r">20.5%</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="example-table-section">
+          <h4>Allocated picks</h4>
+          <table class="example-table">
+            <thead><tr><th>Team</th><th class="r">Pick</th><th class="r">Bid</th><th class="r">Charged</th></tr></thead>
+            <tbody><tr><td colspan="4" style="color:var(--text-tertiary);font-style:italic;padding:0.3rem 0.4rem">—</td></tr></tbody>
+          </table>
+          <div class="rolling-window-note">
+            <p>All 30 teams submit bids; the four highest bids are put into a "window", and a lottery is held among those four to award the first pick.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Slide 1: SAC wins pick 1 ── -->
+    <div class="slide" data-spin="0">
+      <div class="section-label">Rolling Window Example</div>
+      <h2>SAC wins pick 1</h2>
+      <div class="example-tables">
+        <div class="example-table-section">
+          <h4>All bids</h4>
+          <div class="bids-scroll">
+            <table class="example-table">
+              <thead><tr><th>Team</th><th class="r">Bid</th></tr></thead>
+              <tbody>
+                <tr><td class="team">BRK</td><td class="r">151</td></tr>
+                <tr><td class="team">WAS</td><td class="r">150</td></tr>
+                <tr><td class="team">SAC</td><td class="r">125</td></tr>
+                <tr><td class="team">IND</td><td class="r">110</td></tr>
+                <tr><td class="team">NOP</td><td class="r">101</td></tr>
+                <tr><td class="team">UTA</td><td class="r">100</td></tr>
+                <tr><td class="team">DAL</td><td class="r">100</td></tr>
+                <tr><td class="team">CHI</td><td class="r">100</td></tr>
+                <tr><td class="team">MEM</td><td class="r">99</td></tr>
+                <tr><td class="team">MIL</td><td class="r">80</td></tr>
+                <tr><td class="team">POR</td><td class="r">75</td></tr>
+                <tr><td class="team">ATL</td><td class="r">75</td></tr>
+                <tr><td class="team">LAC</td><td class="r">66</td></tr>
+                <tr><td class="team">BRK</td><td class="r">51</td></tr>
+                <tr><td class="team">CHA</td><td class="r">51</td></tr>
+                <tr><td class="team">ORL</td><td class="r">50</td></tr>
+                <tr><td class="team">PHI</td><td class="r">50</td></tr>
+                <tr><td class="team">GSW</td><td class="r">50</td></tr>
+                <tr><td class="team">MIA</td><td class="r">50</td></tr>
+                <tr><td class="team">TOR</td><td class="r">50</td></tr>
+                <tr><td class="team">LAL</td><td class="r">12</td></tr>
+                <tr><td class="team">DEN</td><td class="r">11</td></tr>
+                <tr><td class="team">MIN</td><td class="r">10</td></tr>
+                <tr><td class="team">CLE</td><td class="r">10</td></tr>
+                <tr><td class="team">HOU</td><td class="r">10</td></tr>
+                <tr><td class="team">NYK</td><td class="r">5</td></tr>
+                <tr><td class="team">BOS</td><td class="r">5</td></tr>
+                <tr><td class="team">SAS</td><td class="r">1</td></tr>
+                <tr><td class="team">DET</td><td class="r">0</td></tr>
+                <tr><td class="team">OKC</td><td class="r">0</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="example-table-section">
+          <h4>Lottery for pick 1</h4>
+          <table class="example-table">
+            <thead><tr><th>Team</th><th class="r">Bid</th><th class="r">Prob.</th></tr></thead>
+            <tbody>
+              <tr><td class="team">BRK</td><td class="r">151</td><td class="r">28.2%</td></tr>
+              <tr><td class="team">WAS</td><td class="r">150</td><td class="r">28.0%</td></tr>
+              <tr class="winner"><td class="team">SAC</td><td class="r">125</td><td class="r">23.3%</td></tr>
+              <tr><td class="team">IND</td><td class="r">110</td><td class="r">20.5%</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="example-table-section">
+          <h4>Allocated picks</h4>
+          <table class="example-table">
+            <thead><tr><th>Team</th><th class="r">Pick</th><th class="r">Bid</th><th class="r">Charged</th></tr></thead>
+            <tbody>
+              <tr class="winner"><td class="team">SAC</td><td class="r">1</td><td class="r">125</td><td class="r">117</td></tr>
+            </tbody>
+          </table>
+          <div class="rolling-window-note">
+            <p>SAC wins the drawing for the first window and is awarded the first pick.</p>
+            <p>They are charged 117 Credits &mdash; the average of their own bid (125) and the lowest bid in their window (110), rounded down.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Slide 2: Lottery for pick 2 ── -->
+    <div class="slide" data-transition="1">
+      <div class="section-label">Rolling Window Example</div>
+      <h2>Lottery for pick 2</h2>
+      <div class="example-tables">
+        <div class="example-table-section">
+          <h4>All bids</h4>
+          <div class="bids-scroll">
+            <table class="example-table">
+              <thead><tr><th>Team</th><th class="r">Bid</th></tr></thead>
+              <tbody>
+                <tr><td class="team">BRK</td><td class="r">151</td></tr>
+                <tr><td class="team">WAS</td><td class="r">150</td></tr>
+                <tr class="struck"><td class="team">SAC</td><td class="r">125</td></tr>
+                <tr><td class="team">IND</td><td class="r">110</td></tr>
+                <tr class="new-entry"><td class="team">NOP</td><td class="r">101</td></tr>
+                <tr><td class="team">UTA</td><td class="r">100</td></tr>
+                <tr><td class="team">DAL</td><td class="r">100</td></tr>
+                <tr><td class="team">CHI</td><td class="r">100</td></tr>
+                <tr><td class="team">MEM</td><td class="r">99</td></tr>
+                <tr><td class="team">MIL</td><td class="r">80</td></tr>
+                <tr><td class="team">POR</td><td class="r">75</td></tr>
+                <tr><td class="team">ATL</td><td class="r">75</td></tr>
+                <tr><td class="team">LAC</td><td class="r">66</td></tr>
+                <tr><td class="team">BRK</td><td class="r">51</td></tr>
+                <tr><td class="team">CHA</td><td class="r">51</td></tr>
+                <tr><td class="team">ORL</td><td class="r">50</td></tr>
+                <tr><td class="team">PHI</td><td class="r">50</td></tr>
+                <tr><td class="team">GSW</td><td class="r">50</td></tr>
+                <tr><td class="team">MIA</td><td class="r">50</td></tr>
+                <tr><td class="team">TOR</td><td class="r">50</td></tr>
+                <tr><td class="team">LAL</td><td class="r">12</td></tr>
+                <tr><td class="team">DEN</td><td class="r">11</td></tr>
+                <tr><td class="team">MIN</td><td class="r">10</td></tr>
+                <tr><td class="team">CLE</td><td class="r">10</td></tr>
+                <tr><td class="team">HOU</td><td class="r">10</td></tr>
+                <tr><td class="team">NYK</td><td class="r">5</td></tr>
+                <tr><td class="team">BOS</td><td class="r">5</td></tr>
+                <tr><td class="team">SAS</td><td class="r">1</td></tr>
+                <tr><td class="team">DET</td><td class="r">0</td></tr>
+                <tr><td class="team">OKC</td><td class="r">0</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="example-table-section">
+          <h4>Lottery for pick 2</h4>
+          <table class="example-table">
+            <thead><tr><th>Team</th><th class="r">Bid</th><th class="r">Prob.</th></tr></thead>
+            <tbody>
+              <tr><td class="team">BRK</td><td class="r">151</td><td class="r">29.5%</td></tr>
+              <tr><td class="team">WAS</td><td class="r">150</td><td class="r">29.3%</td></tr>
+              <tr><td class="team">IND</td><td class="r">110</td><td class="r">21.5%</td></tr>
+              <tr class="new-entry"><td class="team">NOP</td><td class="r">101</td><td class="r">19.7%</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="example-table-section">
+          <h4>Allocated picks</h4>
+          <table class="example-table">
+            <thead><tr><th>Team</th><th class="r">Pick</th><th class="r">Bid</th><th class="r">Charged</th></tr></thead>
+            <tbody>
+              <tr><td class="team">SAC</td><td class="r">1</td><td class="r">125</td><td class="r">117</td></tr>
+            </tbody>
+          </table>
+          <div class="rolling-window-note">
+            <p>With SAC removed, the next-highest bidder (NOP) is moved into the window for the second pick.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Slide 3: WAS wins pick 2 ── -->
+    <div class="slide" data-spin="1">
+      <div class="section-label">Rolling Window Example</div>
+      <h2>WAS wins pick 2</h2>
+      <div class="example-tables">
+        <div class="example-table-section">
+          <h4>All bids</h4>
+          <div class="bids-scroll">
+            <table class="example-table">
+              <thead><tr><th>Team</th><th class="r">Bid</th></tr></thead>
+              <tbody>
+                <tr><td class="team">BRK</td><td class="r">151</td></tr>
+                <tr><td class="team">WAS</td><td class="r">150</td></tr>
+                <tr class="struck"><td class="team">SAC</td><td class="r">125</td></tr>
+                <tr><td class="team">IND</td><td class="r">110</td></tr>
+                <tr><td class="team">NOP</td><td class="r">101</td></tr>
+                <tr><td class="team">UTA</td><td class="r">100</td></tr>
+                <tr><td class="team">DAL</td><td class="r">100</td></tr>
+                <tr><td class="team">CHI</td><td class="r">100</td></tr>
+                <tr><td class="team">MEM</td><td class="r">99</td></tr>
+                <tr><td class="team">MIL</td><td class="r">80</td></tr>
+                <tr><td class="team">POR</td><td class="r">75</td></tr>
+                <tr><td class="team">ATL</td><td class="r">75</td></tr>
+                <tr><td class="team">LAC</td><td class="r">66</td></tr>
+                <tr><td class="team">BRK</td><td class="r">51</td></tr>
+                <tr><td class="team">CHA</td><td class="r">51</td></tr>
+                <tr><td class="team">ORL</td><td class="r">50</td></tr>
+                <tr><td class="team">PHI</td><td class="r">50</td></tr>
+                <tr><td class="team">GSW</td><td class="r">50</td></tr>
+                <tr><td class="team">MIA</td><td class="r">50</td></tr>
+                <tr><td class="team">TOR</td><td class="r">50</td></tr>
+                <tr><td class="team">LAL</td><td class="r">12</td></tr>
+                <tr><td class="team">DEN</td><td class="r">11</td></tr>
+                <tr><td class="team">MIN</td><td class="r">10</td></tr>
+                <tr><td class="team">CLE</td><td class="r">10</td></tr>
+                <tr><td class="team">HOU</td><td class="r">10</td></tr>
+                <tr><td class="team">NYK</td><td class="r">5</td></tr>
+                <tr><td class="team">BOS</td><td class="r">5</td></tr>
+                <tr><td class="team">SAS</td><td class="r">1</td></tr>
+                <tr><td class="team">DET</td><td class="r">0</td></tr>
+                <tr><td class="team">OKC</td><td class="r">0</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="example-table-section">
+          <h4>Lottery for pick 2</h4>
+          <table class="example-table">
+            <thead><tr><th>Team</th><th class="r">Bid</th><th class="r">Prob.</th></tr></thead>
+            <tbody>
+              <tr><td class="team">BRK</td><td class="r">151</td><td class="r">29.5%</td></tr>
+              <tr class="winner"><td class="team">WAS</td><td class="r">150</td><td class="r">29.3%</td></tr>
+              <tr><td class="team">IND</td><td class="r">110</td><td class="r">21.5%</td></tr>
+              <tr><td class="team">NOP</td><td class="r">101</td><td class="r">19.7%</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="example-table-section">
+          <h4>Allocated picks</h4>
+          <table class="example-table">
+            <thead><tr><th>Team</th><th class="r">Pick</th><th class="r">Bid</th><th class="r">Charged</th></tr></thead>
+            <tbody>
+              <tr><td class="team">SAC</td><td class="r">1</td><td class="r">125</td><td class="r">117</td></tr>
+              <tr class="winner"><td class="team">WAS</td><td class="r">2</td><td class="r">150</td><td class="r">125</td></tr>
+            </tbody>
+          </table>
+          <div class="rolling-window-note">
+            <p>WAS wins the lottery for the second pick, and is charged 125 Credits &mdash; halfway between their bid (150) and the lowest bid in their window (101), rounded down.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Slide 4: Lottery for pick 3 ── -->
+    <div class="slide" data-transition="2">
+      <div class="section-label">Rolling Window Example</div>
+      <h2>Lottery for pick 3</h2>
+      <div class="example-tables">
+        <div class="example-table-section">
+          <h4>All bids</h4>
+          <div class="bids-scroll">
+            <table class="example-table">
+              <thead><tr><th>Team</th><th class="r">Bid</th></tr></thead>
+              <tbody>
+                <tr><td class="team">BRK</td><td class="r">151</td></tr>
+                <tr class="struck"><td class="team">WAS</td><td class="r">150</td></tr>
+                <tr class="struck"><td class="team">SAC</td><td class="r">125</td></tr>
+                <tr><td class="team">IND</td><td class="r">110</td></tr>
+                <tr><td class="team">NOP</td><td class="r">101</td></tr>
+                <tr class="new-entry"><td class="team">UTA</td><td class="r">100</td></tr>
+                <tr><td class="team">DAL</td><td class="r">100</td></tr>
+                <tr><td class="team">CHI</td><td class="r">100</td></tr>
+                <tr><td class="team">MEM</td><td class="r">99</td></tr>
+                <tr><td class="team">MIL</td><td class="r">80</td></tr>
+                <tr><td class="team">POR</td><td class="r">75</td></tr>
+                <tr><td class="team">ATL</td><td class="r">75</td></tr>
+                <tr><td class="team">LAC</td><td class="r">66</td></tr>
+                <tr><td class="team">BRK</td><td class="r">51</td></tr>
+                <tr><td class="team">CHA</td><td class="r">51</td></tr>
+                <tr><td class="team">ORL</td><td class="r">50</td></tr>
+                <tr><td class="team">PHI</td><td class="r">50</td></tr>
+                <tr><td class="team">GSW</td><td class="r">50</td></tr>
+                <tr><td class="team">MIA</td><td class="r">50</td></tr>
+                <tr><td class="team">TOR</td><td class="r">50</td></tr>
+                <tr><td class="team">LAL</td><td class="r">12</td></tr>
+                <tr><td class="team">DEN</td><td class="r">11</td></tr>
+                <tr><td class="team">MIN</td><td class="r">10</td></tr>
+                <tr><td class="team">CLE</td><td class="r">10</td></tr>
+                <tr><td class="team">HOU</td><td class="r">10</td></tr>
+                <tr><td class="team">NYK</td><td class="r">5</td></tr>
+                <tr><td class="team">BOS</td><td class="r">5</td></tr>
+                <tr><td class="team">SAS</td><td class="r">1</td></tr>
+                <tr><td class="team">DET</td><td class="r">0</td></tr>
+                <tr><td class="team">OKC</td><td class="r">0</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="example-table-section">
+          <h4>Lottery for pick 3</h4>
+          <table class="example-table">
+            <thead><tr><th>Team</th><th class="r">Bid</th><th class="r">Prob.</th></tr></thead>
+            <tbody>
+              <tr><td class="team">BRK</td><td class="r">151</td><td class="r">32.7%</td></tr>
+              <tr><td class="team">IND</td><td class="r">110</td><td class="r">23.8%</td></tr>
+              <tr><td class="team">NOP</td><td class="r">101</td><td class="r">21.9%</td></tr>
+              <tr class="new-entry"><td class="team">UTA</td><td class="r">100</td><td class="r">21.6%</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="example-table-section">
+          <h4>Allocated picks</h4>
+          <table class="example-table">
+            <thead><tr><th>Team</th><th class="r">Pick</th><th class="r">Bid</th><th class="r">Charged</th></tr></thead>
+            <tbody>
+              <tr><td class="team">SAC</td><td class="r">1</td><td class="r">125</td><td class="r">117</td></tr>
+              <tr><td class="team">WAS</td><td class="r">2</td><td class="r">150</td><td class="r">125</td></tr>
+            </tbody>
+          </table>
+          <div class="rolling-window-note">
+            <p>WAS is removed; UTA is added to the next window.</p>
+            <p>Note that UTA, DAL, and CHI all bid 100; UTA's higher rank is by virtue of random tiebreaker.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Slide 5: IND wins pick 3 ── -->
+    <div class="slide" data-spin="2">
+      <div class="section-label">Rolling Window Example</div>
+      <h2>IND wins pick 3</h2>
+      <div class="example-tables">
+        <div class="example-table-section">
+          <h4>All bids</h4>
+          <div class="bids-scroll">
+            <table class="example-table">
+              <thead><tr><th>Team</th><th class="r">Bid</th></tr></thead>
+              <tbody>
+                <tr><td class="team">BRK</td><td class="r">151</td></tr>
+                <tr class="struck"><td class="team">WAS</td><td class="r">150</td></tr>
+                <tr class="struck"><td class="team">SAC</td><td class="r">125</td></tr>
+                <tr><td class="team">IND</td><td class="r">110</td></tr>
+                <tr><td class="team">NOP</td><td class="r">101</td></tr>
+                <tr><td class="team">UTA</td><td class="r">100</td></tr>
+                <tr><td class="team">DAL</td><td class="r">100</td></tr>
+                <tr><td class="team">CHI</td><td class="r">100</td></tr>
+                <tr><td class="team">MEM</td><td class="r">99</td></tr>
+                <tr><td class="team">MIL</td><td class="r">80</td></tr>
+                <tr><td class="team">POR</td><td class="r">75</td></tr>
+                <tr><td class="team">ATL</td><td class="r">75</td></tr>
+                <tr><td class="team">LAC</td><td class="r">66</td></tr>
+                <tr><td class="team">BRK</td><td class="r">51</td></tr>
+                <tr><td class="team">CHA</td><td class="r">51</td></tr>
+                <tr><td class="team">ORL</td><td class="r">50</td></tr>
+                <tr><td class="team">PHI</td><td class="r">50</td></tr>
+                <tr><td class="team">GSW</td><td class="r">50</td></tr>
+                <tr><td class="team">MIA</td><td class="r">50</td></tr>
+                <tr><td class="team">TOR</td><td class="r">50</td></tr>
+                <tr><td class="team">LAL</td><td class="r">12</td></tr>
+                <tr><td class="team">DEN</td><td class="r">11</td></tr>
+                <tr><td class="team">MIN</td><td class="r">10</td></tr>
+                <tr><td class="team">CLE</td><td class="r">10</td></tr>
+                <tr><td class="team">HOU</td><td class="r">10</td></tr>
+                <tr><td class="team">NYK</td><td class="r">5</td></tr>
+                <tr><td class="team">BOS</td><td class="r">5</td></tr>
+                <tr><td class="team">SAS</td><td class="r">1</td></tr>
+                <tr><td class="team">DET</td><td class="r">0</td></tr>
+                <tr><td class="team">OKC</td><td class="r">0</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="example-table-section">
+          <h4>Lottery for pick 3</h4>
+          <table class="example-table">
+            <thead><tr><th>Team</th><th class="r">Bid</th><th class="r">Prob.</th></tr></thead>
+            <tbody>
+              <tr><td class="team">BRK</td><td class="r">151</td><td class="r">32.7%</td></tr>
+              <tr class="winner"><td class="team">IND</td><td class="r">110</td><td class="r">23.8%</td></tr>
+              <tr><td class="team">NOP</td><td class="r">101</td><td class="r">21.9%</td></tr>
+              <tr><td class="team">UTA</td><td class="r">100</td><td class="r">21.6%</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="example-table-section">
+          <h4>Allocated picks</h4>
+          <table class="example-table">
+            <thead><tr><th>Team</th><th class="r">Pick</th><th class="r">Bid</th><th class="r">Charged</th></tr></thead>
+            <tbody>
+              <tr><td class="team">SAC</td><td class="r">1</td><td class="r">125</td><td class="r">117</td></tr>
+              <tr><td class="team">WAS</td><td class="r">2</td><td class="r">150</td><td class="r">125</td></tr>
+              <tr class="winner"><td class="team">IND</td><td class="r">3</td><td class="r">110</td><td class="r">105</td></tr>
+            </tbody>
+          </table>
+          <div class="rolling-window-note">
+            <p>IND wins the lottery for the third pick.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Slide 6: Lottery for pick 4 ── -->
+    <div class="slide" data-transition="3">
+      <div class="section-label">Rolling Window Example</div>
+      <h2>Lottery for pick 4</h2>
+      <div class="example-tables">
+        <div class="example-table-section">
+          <h4>All bids</h4>
+          <div class="bids-scroll">
+            <table class="example-table">
+              <thead><tr><th>Team</th><th class="r">Bid</th></tr></thead>
+              <tbody>
+                <tr><td class="team">BRK</td><td class="r">151</td></tr>
+                <tr class="struck"><td class="team">WAS</td><td class="r">150</td></tr>
+                <tr class="struck"><td class="team">SAC</td><td class="r">125</td></tr>
+                <tr class="struck"><td class="team">IND</td><td class="r">110</td></tr>
+                <tr><td class="team">NOP</td><td class="r">101</td></tr>
+                <tr><td class="team">UTA</td><td class="r">100</td></tr>
+                <tr class="new-entry"><td class="team">DAL</td><td class="r">100</td></tr>
+                <tr><td class="team">CHI</td><td class="r">100</td></tr>
+                <tr><td class="team">MEM</td><td class="r">99</td></tr>
+                <tr><td class="team">MIL</td><td class="r">80</td></tr>
+                <tr><td class="team">POR</td><td class="r">75</td></tr>
+                <tr><td class="team">ATL</td><td class="r">75</td></tr>
+                <tr><td class="team">LAC</td><td class="r">66</td></tr>
+                <tr><td class="team">BRK</td><td class="r">51</td></tr>
+                <tr><td class="team">CHA</td><td class="r">51</td></tr>
+                <tr><td class="team">ORL</td><td class="r">50</td></tr>
+                <tr><td class="team">PHI</td><td class="r">50</td></tr>
+                <tr><td class="team">GSW</td><td class="r">50</td></tr>
+                <tr><td class="team">MIA</td><td class="r">50</td></tr>
+                <tr><td class="team">TOR</td><td class="r">50</td></tr>
+                <tr><td class="team">LAL</td><td class="r">12</td></tr>
+                <tr><td class="team">DEN</td><td class="r">11</td></tr>
+                <tr><td class="team">MIN</td><td class="r">10</td></tr>
+                <tr><td class="team">CLE</td><td class="r">10</td></tr>
+                <tr><td class="team">HOU</td><td class="r">10</td></tr>
+                <tr><td class="team">NYK</td><td class="r">5</td></tr>
+                <tr><td class="team">BOS</td><td class="r">5</td></tr>
+                <tr><td class="team">SAS</td><td class="r">1</td></tr>
+                <tr><td class="team">DET</td><td class="r">0</td></tr>
+                <tr><td class="team">OKC</td><td class="r">0</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="example-table-section">
+          <h4>Lottery for pick 4</h4>
+          <table class="example-table">
+            <thead><tr><th>Team</th><th class="r">Bid</th><th class="r">Prob.</th></tr></thead>
+            <tbody>
+              <tr><td class="team">BRK</td><td class="r">151</td><td class="r">33.4%</td></tr>
+              <tr><td class="team">NOP</td><td class="r">101</td><td class="r">22.3%</td></tr>
+              <tr><td class="team">UTA</td><td class="r">100</td><td class="r">22.1%</td></tr>
+              <tr class="new-entry"><td class="team">DAL</td><td class="r">100</td><td class="r">22.1%</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="example-table-section">
+          <h4>Allocated picks</h4>
+          <table class="example-table">
+            <thead><tr><th>Team</th><th class="r">Pick</th><th class="r">Bid</th><th class="r">Charged</th></tr></thead>
+            <tbody>
+              <tr><td class="team">SAC</td><td class="r">1</td><td class="r">125</td><td class="r">117</td></tr>
+              <tr><td class="team">WAS</td><td class="r">2</td><td class="r">150</td><td class="r">125</td></tr>
+              <tr><td class="team">IND</td><td class="r">3</td><td class="r">110</td><td class="r">105</td></tr>
+            </tbody>
+          </table>
+          <div class="rolling-window-note">
+            <p>IND is removed; DAL enters the window.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Slide 7: BRK wins pick 4 ── -->
+    <div class="slide" data-spin="3">
+      <div class="section-label">Rolling Window Example</div>
+      <h2>BRK wins pick 4</h2>
+      <div class="example-tables">
+        <div class="example-table-section">
+          <h4>All bids</h4>
+          <div class="bids-scroll">
+            <table class="example-table">
+              <thead><tr><th>Team</th><th class="r">Bid</th></tr></thead>
+              <tbody>
+                <tr><td class="team">BRK</td><td class="r">151</td></tr>
+                <tr class="struck"><td class="team">WAS</td><td class="r">150</td></tr>
+                <tr class="struck"><td class="team">SAC</td><td class="r">125</td></tr>
+                <tr class="struck"><td class="team">IND</td><td class="r">110</td></tr>
+                <tr><td class="team">NOP</td><td class="r">101</td></tr>
+                <tr><td class="team">UTA</td><td class="r">100</td></tr>
+                <tr><td class="team">DAL</td><td class="r">100</td></tr>
+                <tr><td class="team">CHI</td><td class="r">100</td></tr>
+                <tr><td class="team">MEM</td><td class="r">99</td></tr>
+                <tr><td class="team">MIL</td><td class="r">80</td></tr>
+                <tr><td class="team">POR</td><td class="r">75</td></tr>
+                <tr><td class="team">ATL</td><td class="r">75</td></tr>
+                <tr><td class="team">LAC</td><td class="r">66</td></tr>
+                <tr><td class="team">BRK</td><td class="r">51</td></tr>
+                <tr><td class="team">CHA</td><td class="r">51</td></tr>
+                <tr><td class="team">ORL</td><td class="r">50</td></tr>
+                <tr><td class="team">PHI</td><td class="r">50</td></tr>
+                <tr><td class="team">GSW</td><td class="r">50</td></tr>
+                <tr><td class="team">MIA</td><td class="r">50</td></tr>
+                <tr><td class="team">TOR</td><td class="r">50</td></tr>
+                <tr><td class="team">LAL</td><td class="r">12</td></tr>
+                <tr><td class="team">DEN</td><td class="r">11</td></tr>
+                <tr><td class="team">MIN</td><td class="r">10</td></tr>
+                <tr><td class="team">CLE</td><td class="r">10</td></tr>
+                <tr><td class="team">HOU</td><td class="r">10</td></tr>
+                <tr><td class="team">NYK</td><td class="r">5</td></tr>
+                <tr><td class="team">BOS</td><td class="r">5</td></tr>
+                <tr><td class="team">SAS</td><td class="r">1</td></tr>
+                <tr><td class="team">DET</td><td class="r">0</td></tr>
+                <tr><td class="team">OKC</td><td class="r">0</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="example-table-section">
+          <h4>Lottery for pick 4</h4>
+          <table class="example-table">
+            <thead><tr><th>Team</th><th class="r">Bid</th><th class="r">Prob.</th></tr></thead>
+            <tbody>
+              <tr class="winner"><td class="team">BRK</td><td class="r">151</td><td class="r">33.4%</td></tr>
+              <tr><td class="team">NOP</td><td class="r">101</td><td class="r">22.3%</td></tr>
+              <tr><td class="team">UTA</td><td class="r">100</td><td class="r">22.1%</td></tr>
+              <tr><td class="team">DAL</td><td class="r">100</td><td class="r">22.1%</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="example-table-section">
+          <h4>Allocated picks</h4>
+          <table class="example-table">
+            <thead><tr><th>Team</th><th class="r">Pick</th><th class="r">Bid</th><th class="r">Charged</th></tr></thead>
+            <tbody>
+              <tr><td class="team">SAC</td><td class="r">1</td><td class="r">125</td><td class="r">117</td></tr>
+              <tr><td class="team">WAS</td><td class="r">2</td><td class="r">150</td><td class="r">125</td></tr>
+              <tr><td class="team">IND</td><td class="r">3</td><td class="r">110</td><td class="r">105</td></tr>
+              <tr class="winner"><td class="team">BRK</td><td class="r">4</td><td class="r">151</td><td class="r">125</td></tr>
+            </tbody>
+          </table>
+          <div class="rolling-window-note">
+            <p>BRK wins the fourth pick. They were the highest bidder overall, but "fell" to the fourth pick.</p>
+            <p>They are charged 125 Credits &mdash; the midpoint between their bid (151) and the lowest bid in their window (100), rounded down.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Slide 8: Lottery for pick 5 ── -->
+    <div class="slide" data-transition="4">
+      <div class="section-label">Rolling Window Example</div>
+      <h2>Lottery for pick 5</h2>
+      <div class="example-tables">
+        <div class="example-table-section">
+          <h4>All bids</h4>
+          <div class="bids-scroll">
+            <table class="example-table">
+              <thead><tr><th>Team</th><th class="r">Bid</th></tr></thead>
+              <tbody>
+                <tr class="struck"><td class="team">BRK</td><td class="r">151</td></tr>
+                <tr class="struck"><td class="team">WAS</td><td class="r">150</td></tr>
+                <tr class="struck"><td class="team">SAC</td><td class="r">125</td></tr>
+                <tr class="struck"><td class="team">IND</td><td class="r">110</td></tr>
+                <tr><td class="team">NOP</td><td class="r">101</td></tr>
+                <tr><td class="team">UTA</td><td class="r">100</td></tr>
+                <tr><td class="team">DAL</td><td class="r">100</td></tr>
+                <tr class="new-entry"><td class="team">CHI</td><td class="r">100</td></tr>
+                <tr><td class="team">MEM</td><td class="r">99</td></tr>
+                <tr><td class="team">MIL</td><td class="r">80</td></tr>
+                <tr><td class="team">POR</td><td class="r">75</td></tr>
+                <tr><td class="team">ATL</td><td class="r">75</td></tr>
+                <tr><td class="team">LAC</td><td class="r">66</td></tr>
+                <tr><td class="team">BRK</td><td class="r">51</td></tr>
+                <tr><td class="team">CHA</td><td class="r">51</td></tr>
+                <tr><td class="team">ORL</td><td class="r">50</td></tr>
+                <tr><td class="team">PHI</td><td class="r">50</td></tr>
+                <tr><td class="team">GSW</td><td class="r">50</td></tr>
+                <tr><td class="team">MIA</td><td class="r">50</td></tr>
+                <tr><td class="team">TOR</td><td class="r">50</td></tr>
+                <tr><td class="team">LAL</td><td class="r">12</td></tr>
+                <tr><td class="team">DEN</td><td class="r">11</td></tr>
+                <tr><td class="team">MIN</td><td class="r">10</td></tr>
+                <tr><td class="team">CLE</td><td class="r">10</td></tr>
+                <tr><td class="team">HOU</td><td class="r">10</td></tr>
+                <tr><td class="team">NYK</td><td class="r">5</td></tr>
+                <tr><td class="team">BOS</td><td class="r">5</td></tr>
+                <tr><td class="team">SAS</td><td class="r">1</td></tr>
+                <tr><td class="team">DET</td><td class="r">0</td></tr>
+                <tr><td class="team">OKC</td><td class="r">0</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="example-table-section">
+          <h4>Lottery for pick 5</h4>
+          <table class="example-table">
+            <thead><tr><th>Team</th><th class="r">Bid</th><th class="r">Prob.</th></tr></thead>
+            <tbody>
+              <tr><td class="team">NOP</td><td class="r">101</td><td class="r">25.2%</td></tr>
+              <tr><td class="team">UTA</td><td class="r">100</td><td class="r">24.9%</td></tr>
+              <tr><td class="team">DAL</td><td class="r">100</td><td class="r">24.9%</td></tr>
+              <tr class="new-entry"><td class="team">CHI</td><td class="r">100</td><td class="r">24.9%</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="example-table-section">
+          <h4>Allocated picks</h4>
+          <table class="example-table">
+            <thead><tr><th>Team</th><th class="r">Pick</th><th class="r">Bid</th><th class="r">Charged</th></tr></thead>
+            <tbody>
+              <tr><td class="team">SAC</td><td class="r">1</td><td class="r">125</td><td class="r">117</td></tr>
+              <tr><td class="team">WAS</td><td class="r">2</td><td class="r">150</td><td class="r">125</td></tr>
+              <tr><td class="team">IND</td><td class="r">3</td><td class="r">110</td><td class="r">105</td></tr>
+              <tr><td class="team">BRK</td><td class="r">4</td><td class="r">151</td><td class="r">125</td></tr>
+            </tbody>
+          </table>
+          <div class="rolling-window-note">
+            <p>All four highest bidders have been allocated picks. The lottery proceeds by rolling through the rest of the bidders.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Slide 9: CHI wins pick 5 ── -->
+    <div class="slide" data-spin="4">
+      <div class="section-label">Rolling Window Example</div>
+      <h2>CHI wins pick 5</h2>
+      <div class="example-tables">
+        <div class="example-table-section">
+          <h4>All bids</h4>
+          <div class="bids-scroll">
+            <table class="example-table">
+              <thead><tr><th>Team</th><th class="r">Bid</th></tr></thead>
+              <tbody>
+                <tr class="struck"><td class="team">BRK</td><td class="r">151</td></tr>
+                <tr class="struck"><td class="team">WAS</td><td class="r">150</td></tr>
+                <tr class="struck"><td class="team">SAC</td><td class="r">125</td></tr>
+                <tr class="struck"><td class="team">IND</td><td class="r">110</td></tr>
+                <tr><td class="team">NOP</td><td class="r">101</td></tr>
+                <tr><td class="team">UTA</td><td class="r">100</td></tr>
+                <tr><td class="team">DAL</td><td class="r">100</td></tr>
+                <tr><td class="team">CHI</td><td class="r">100</td></tr>
+                <tr><td class="team">MEM</td><td class="r">99</td></tr>
+                <tr><td class="team">MIL</td><td class="r">80</td></tr>
+                <tr><td class="team">POR</td><td class="r">75</td></tr>
+                <tr><td class="team">ATL</td><td class="r">75</td></tr>
+                <tr><td class="team">LAC</td><td class="r">66</td></tr>
+                <tr><td class="team">BRK</td><td class="r">51</td></tr>
+                <tr><td class="team">CHA</td><td class="r">51</td></tr>
+                <tr><td class="team">ORL</td><td class="r">50</td></tr>
+                <tr><td class="team">PHI</td><td class="r">50</td></tr>
+                <tr><td class="team">GSW</td><td class="r">50</td></tr>
+                <tr><td class="team">MIA</td><td class="r">50</td></tr>
+                <tr><td class="team">TOR</td><td class="r">50</td></tr>
+                <tr><td class="team">LAL</td><td class="r">12</td></tr>
+                <tr><td class="team">DEN</td><td class="r">11</td></tr>
+                <tr><td class="team">MIN</td><td class="r">10</td></tr>
+                <tr><td class="team">CLE</td><td class="r">10</td></tr>
+                <tr><td class="team">HOU</td><td class="r">10</td></tr>
+                <tr><td class="team">NYK</td><td class="r">5</td></tr>
+                <tr><td class="team">BOS</td><td class="r">5</td></tr>
+                <tr><td class="team">SAS</td><td class="r">1</td></tr>
+                <tr><td class="team">DET</td><td class="r">0</td></tr>
+                <tr><td class="team">OKC</td><td class="r">0</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="example-table-section">
+          <h4>Lottery for pick 5</h4>
+          <table class="example-table">
+            <thead><tr><th>Team</th><th class="r">Bid</th><th class="r">Prob.</th></tr></thead>
+            <tbody>
+              <tr><td class="team">NOP</td><td class="r">101</td><td class="r">25.2%</td></tr>
+              <tr><td class="team">UTA</td><td class="r">100</td><td class="r">24.9%</td></tr>
+              <tr><td class="team">DAL</td><td class="r">100</td><td class="r">24.9%</td></tr>
+              <tr class="winner"><td class="team">CHI</td><td class="r">100</td><td class="r">24.9%</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="example-table-section">
+          <h4>Allocated picks</h4>
+          <table class="example-table">
+            <thead><tr><th>Team</th><th class="r">Pick</th><th class="r">Bid</th><th class="r">Charged</th></tr></thead>
+            <tbody>
+              <tr><td class="team">SAC</td><td class="r">1</td><td class="r">125</td><td class="r">117</td></tr>
+              <tr><td class="team">WAS</td><td class="r">2</td><td class="r">150</td><td class="r">125</td></tr>
+              <tr><td class="team">IND</td><td class="r">3</td><td class="r">110</td><td class="r">105</td></tr>
+              <tr><td class="team">BRK</td><td class="r">4</td><td class="r">151</td><td class="r">125</td></tr>
+              <tr class="winner"><td class="team">CHI</td><td class="r">5</td><td class="r">100</td><td class="r">100</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Slide 10: Lottery for pick 6 ── -->
+    <div class="slide" data-round="">
+      <div class="section-label">Rolling Window Example</div>
+      <h2>Lottery for pick 6</h2>
+      <div class="example-tables">
+        <div class="example-table-section">
+          <h4>All bids</h4>
+          <div class="bids-scroll">
+            <table class="example-table">
+              <thead><tr><th>Team</th><th class="r">Bid</th></tr></thead>
+              <tbody>
+                <tr class="struck"><td class="team">BRK</td><td class="r">151</td></tr>
+                <tr class="struck"><td class="team">WAS</td><td class="r">150</td></tr>
+                <tr class="struck"><td class="team">SAC</td><td class="r">125</td></tr>
+                <tr class="struck"><td class="team">IND</td><td class="r">110</td></tr>
+                <tr><td class="team">NOP</td><td class="r">101</td></tr>
+                <tr><td class="team">UTA</td><td class="r">100</td></tr>
+                <tr><td class="team">DAL</td><td class="r">100</td></tr>
+                <tr class="struck"><td class="team">CHI</td><td class="r">100</td></tr>
+                <tr class="new-entry"><td class="team">MEM</td><td class="r">99</td></tr>
+                <tr><td class="team">MIL</td><td class="r">80</td></tr>
+                <tr><td class="team">POR</td><td class="r">75</td></tr>
+                <tr><td class="team">ATL</td><td class="r">75</td></tr>
+                <tr><td class="team">LAC</td><td class="r">66</td></tr>
+                <tr><td class="team">BRK</td><td class="r">51</td></tr>
+                <tr><td class="team">CHA</td><td class="r">51</td></tr>
+                <tr><td class="team">ORL</td><td class="r">50</td></tr>
+                <tr><td class="team">PHI</td><td class="r">50</td></tr>
+                <tr><td class="team">GSW</td><td class="r">50</td></tr>
+                <tr><td class="team">MIA</td><td class="r">50</td></tr>
+                <tr><td class="team">TOR</td><td class="r">50</td></tr>
+                <tr><td class="team">LAL</td><td class="r">12</td></tr>
+                <tr><td class="team">DEN</td><td class="r">11</td></tr>
+                <tr><td class="team">MIN</td><td class="r">10</td></tr>
+                <tr><td class="team">CLE</td><td class="r">10</td></tr>
+                <tr><td class="team">HOU</td><td class="r">10</td></tr>
+                <tr><td class="team">NYK</td><td class="r">5</td></tr>
+                <tr><td class="team">BOS</td><td class="r">5</td></tr>
+                <tr><td class="team">SAS</td><td class="r">1</td></tr>
+                <tr><td class="team">DET</td><td class="r">0</td></tr>
+                <tr><td class="team">OKC</td><td class="r">0</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="example-table-section">
+          <h4>Lottery for pick 6</h4>
+          <table class="example-table">
+            <thead><tr><th>Team</th><th class="r">Bid</th><th class="r">Prob.</th></tr></thead>
+            <tbody>
+              <tr><td class="team">NOP</td><td class="r">101</td><td class="r">25.3%</td></tr>
+              <tr><td class="team">UTA</td><td class="r">100</td><td class="r">25.0%</td></tr>
+              <tr><td class="team">DAL</td><td class="r">100</td><td class="r">25.0%</td></tr>
+              <tr class="new-entry"><td class="team">MEM</td><td class="r">99</td><td class="r">24.8%</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="example-table-section">
+          <h4>Allocated picks</h4>
+          <table class="example-table">
+            <thead><tr><th>Team</th><th class="r">Pick</th><th class="r">Bid</th><th class="r">Charged</th></tr></thead>
+            <tbody>
+              <tr><td class="team">SAC</td><td class="r">1</td><td class="r">125</td><td class="r">117</td></tr>
+              <tr><td class="team">WAS</td><td class="r">2</td><td class="r">150</td><td class="r">125</td></tr>
+              <tr><td class="team">IND</td><td class="r">3</td><td class="r">110</td><td class="r">105</td></tr>
+              <tr><td class="team">BRK</td><td class="r">4</td><td class="r">151</td><td class="r">125</td></tr>
+              <tr><td class="team">CHI</td><td class="r">5</td><td class="r">100</td><td class="r">100</td></tr>
+            </tbody>
+          </table>
+          <div class="rolling-window-note">
+            <p>This process continues, until all 30 picks are assigned.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /slide-area -->
+
+  <div class="wheel-float">
+    <div class="wheel-wrap">
+      <div class="wheel-pointer"></div>
+      <canvas id="wheel-canvas" width="250" height="250"></canvas>
+    </div>
+  </div>
+
+  <div class="slide-controls">
+    <button class="slide-btn" id="prevBtn" disabled>← Prev</button>
+    <span class="slide-counter" id="counter">1 / 11</span>
+    <button class="slide-btn" id="nextBtn">Next →</button>
+  </div>
+  </div><!-- /slide-content -->
+</div><!-- /slide-viewport -->
+
+<script>
+// ─── Round data ─────────────────────────────────────────────────────────────
+// Predetermined outcomes matching the rolling-window-slides.html example exactly.
+
+const ROUNDS = [
+  {
+    pick: 1,
+    teams: [
+      { name: 'BRK', bid: 151, color: '#000000' },
+      { name: 'WAS', bid: 150, color: '#002B5C' },
+      { name: 'SAC', bid: 125, color: '#5A2D82' },
+      { name: 'IND', bid: 110, color: '#FDBB30' },
+    ],
+    winnerIdx: 2,  // SAC
+    charged: 117,
+  },
+  {
+    pick: 2,
+    teams: [
+      { name: 'BRK', bid: 151, color: '#000000' },
+      { name: 'WAS', bid: 150, color: '#002B5C' },
+      { name: 'IND', bid: 110, color: '#FDBB30' },
+      { name: 'NOP', bid: 101, color: '#85714D' },
+    ],
+    winnerIdx: 1,  // WAS
+    charged: 125,
+  },
+  {
+    pick: 3,
+    teams: [
+      { name: 'BRK', bid: 151, color: '#000000' },
+      { name: 'IND', bid: 110, color: '#FDBB30' },
+      { name: 'NOP', bid: 101, color: '#85714D' },
+      { name: 'UTA', bid: 100, color: '#00471B' },
+    ],
+    winnerIdx: 1,  // IND
+    charged: 105,
+  },
+  {
+    pick: 4,
+    teams: [
+      { name: 'BRK', bid: 151, color: '#000000' },
+      { name: 'NOP', bid: 101, color: '#85714D' },
+      { name: 'UTA', bid: 100, color: '#00471B' },
+      { name: 'DAL', bid: 100, color: '#00538C' },
+    ],
+    winnerIdx: 0,  // BRK
+    charged: 125,
+  },
+  {
+    pick: 5,
+    teams: [
+      { name: 'NOP', bid: 101, color: '#85714D' },
+      { name: 'UTA', bid: 100, color: '#00471B' },
+      { name: 'DAL', bid: 100, color: '#00538C' },
+      { name: 'CHI', bid: 100, color: '#CE1141' },
+    ],
+    winnerIdx: 3,  // CHI
+    charged: 100,
+  },
+];
+
+// Which slide index each round lives on
+const ROUND_SLIDE = [0, 2, 4, 6, 8];
+
+// ─── Wheel state per round ───────────────────────────────────────────────────
+
+const wheelState = ROUNDS.map(() => ({ rotation: 0, spun: false, animating: false }));
+let animationGen = 0;
+
+// ─── Canvas drawing ──────────────────────────────────────────────────────────
+
+function drawWheel(roundIdx, highlightIdx = -1) {
+  const canvas = document.getElementById('wheel-canvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const teams = ROUNDS[roundIdx].teams;
+  const total = teams.reduce((s, t) => s + t.bid, 0);
+  const rot   = wheelState[roundIdx].rotation;
+  const CX    = canvas.width  / 2;
+  const CY    = canvas.height / 2;
+  const R     = CX - 7;
+
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  // Outer ring
+  ctx.beginPath();
+  ctx.arc(CX, CY, R + 4, 0, Math.PI * 2);
+  ctx.fillStyle = '#ccc8c0';
+  ctx.fill();
+
+  // Wedges
+  let angle = -Math.PI / 2 + rot;
+  teams.forEach((team, i) => {
+    const sweep = (team.bid / total) * Math.PI * 2;
+    const end   = angle + sweep;
+
+    ctx.beginPath();
+    ctx.moveTo(CX, CY);
+    ctx.arc(CX, CY, R, angle, end);
+    ctx.closePath();
+    ctx.fillStyle = (i === highlightIdx) ? lighten(team.color, 0.4) : team.color;
+    ctx.fill();
+    ctx.strokeStyle = 'rgba(255,255,255,0.7)';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    // Label
+    const mid  = angle + sweep / 2;
+    const norm = ((mid % (Math.PI * 2)) + Math.PI * 2) % (Math.PI * 2);
+    const r    = R * 0.62;
+    const x    = CX + Math.cos(mid) * r;
+    const y    = CY + Math.sin(mid) * r;
+
+    ctx.save();
+    ctx.translate(x, y);
+    let textAngle = mid;
+    if (norm > Math.PI / 2 && norm < Math.PI * 1.5) textAngle += Math.PI;
+    ctx.rotate(textAngle);
+    ctx.textAlign    = 'center';
+    ctx.textBaseline = 'middle';
+
+    // Outline for readability on any background
+    ctx.font        = 'bold 12px "IBM Plex Mono", monospace';
+    ctx.strokeStyle = 'rgba(0,0,0,0.45)';
+    ctx.lineWidth   = 3;
+    ctx.strokeText(team.name, 0, -7);
+    ctx.font        = '10px "IBM Plex Mono", monospace';
+    ctx.strokeText(team.bid + ' cr', 0, 6);
+
+    ctx.fillStyle = 'rgba(255,255,255,0.97)';
+    ctx.font      = 'bold 12px "IBM Plex Mono", monospace';
+    ctx.fillText(team.name, 0, -7);
+    ctx.font      = '10px "IBM Plex Mono", monospace';
+    ctx.fillText(team.bid + ' cr', 0, 6);
+
+    ctx.restore();
+    angle = end;
+  });
+
+  // Center cap
+  ctx.beginPath();
+  ctx.arc(CX, CY, 20, 0, Math.PI * 2);
+  ctx.fillStyle = '#faf8f4';
+  ctx.fill();
+  ctx.strokeStyle = '#d4d0c8';
+  ctx.lineWidth = 1.5;
+  ctx.stroke();
+
+  ctx.beginPath();
+  ctx.arc(CX, CY, 6, 0, Math.PI * 2);
+  ctx.fillStyle = '#1a1a1a';
+  ctx.fill();
+}
+
+function lighten(hex, amt) {
+  const r = parseInt(hex.slice(1, 3), 16);
+  const g = parseInt(hex.slice(3, 5), 16);
+  const b = parseInt(hex.slice(5, 7), 16);
+  return `rgb(${Math.round(r + (255-r)*amt)},${Math.round(g + (255-g)*amt)},${Math.round(b + (255-b)*amt)})`;
+}
+
+// ─── Spin target calculation ──────────────────────────────────────────────────
+
+function spinTarget(roundIdx) {
+  const { teams, winnerIdx } = ROUNDS[roundIdx];
+  const total    = teams.reduce((s, t) => s + t.bid, 0);
+  const curRot   = wheelState[roundIdx].rotation;
+  let cumulative = 0;
+  for (let i = 0; i < winnerIdx; i++) {
+    cumulative += (teams[i].bid / total) * Math.PI * 2;
+  }
+  const sweep    = (teams[winnerIdx].bid / total) * Math.PI * 2;
+  const localMid = cumulative + sweep / 2;
+  // Smallest positive delta to align winner's midpoint with pointer (top = -π/2)
+  let delta = ((-curRot - localMid) % (Math.PI * 2) + Math.PI * 2) % (Math.PI * 2);
+  const extra = (5 + Math.floor(Math.random() * 4)) * Math.PI * 2;
+  return curRot + delta + extra;
+}
+
+// ─── Spin animation ───────────────────────────────────────────────────────────
+
+function spin(roundIdx) {
+  const ws = wheelState[roundIdx];
+  if (ws.spun || ws.animating) return;
+  ws.animating = true;
+  const myGen = animationGen;
+
+  const target   = spinTarget(roundIdx);
+  const startRot = ws.rotation;
+  const dur      = 3200 + Math.random() * 900;
+  let   start    = null;
+
+  function frame(ts) {
+    if (animationGen !== myGen) { ws.animating = false; return; }
+    if (!start) start = ts;
+    const t     = Math.min((ts - start) / dur, 1);
+    const eased = 1 - Math.pow(1 - t, 4);  // quartic ease-out
+    ws.rotation = startRot + (target - startRot) * eased;
+    drawWheel(roundIdx, -1);
+
+    if (t < 1) {
+      requestAnimationFrame(frame);
+    } else {
+      ws.rotation  = target;
+      ws.animating = false;
+      ws.spun      = true;
+      setTimeout(() => { if (animationGen === myGen) drawWheel(roundIdx, ROUNDS[roundIdx].winnerIdx); }, 250);
+    }
+  }
+
+  requestAnimationFrame(frame);
+}
+
+// ─── Wheel assemble animation ────────────────────────────────────────────────
+// Plays on first arrival at a "Lottery for pick N" slide.
+// The four wedges slide in radially from outside, staggered slightly.
+
+function animateAssemble(roundIdx, onComplete) {
+  const canvas = document.getElementById('wheel-canvas');
+  const ctx    = canvas.getContext('2d');
+  const CX     = canvas.width  / 2;
+  const CY     = canvas.height / 2;
+  const R      = CX - 7;
+  const teams  = ROUNDS[roundIdx].teams;
+  const total  = teams.reduce((s, t) => s + t.bid, 0);
+  const baseRot = wheelState[roundIdx].rotation;
+
+  const dur = 1100;
+  let start = null;
+  const myGen = animationGen;
+
+  function easeOut(t) { return 1 - Math.pow(1 - t, 3); }
+
+  function frame(ts) {
+    if (animationGen !== myGen) return;
+    if (!start) start = ts;
+    const t = Math.min((ts - start) / dur, 1);
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Outer ring
+    ctx.beginPath();
+    ctx.arc(CX, CY, R + 4, 0, Math.PI * 2);
+    ctx.fillStyle = '#ccc8c0';
+    ctx.fill();
+
+    let angle = -Math.PI / 2 + baseRot;
+
+    teams.forEach((team, i) => {
+      const sweep = (team.bid / total) * Math.PI * 2;
+      const end   = angle + sweep;
+      const mid   = angle + sweep / 2;
+
+      // Stagger: wedge i starts entering at t = i * 0.12
+      const delay = i * 0.12;
+      const te    = Math.max(0, Math.min(1, (t - delay) / (1 - delay)));
+      const ee    = easeOut(te);
+      const radial = (1 - ee) * (R + 80);
+      const alpha  = ee;
+
+      if (alpha > 0.01) {
+        const sx = Math.cos(mid) * radial;
+        const sy = Math.sin(mid) * radial;
+
+        ctx.save();
+        ctx.globalAlpha = alpha;
+
+        ctx.beginPath();
+        ctx.moveTo(CX + sx, CY + sy);
+        ctx.arc(CX + sx, CY + sy, R, angle, end);
+        ctx.closePath();
+        ctx.fillStyle = team.color;
+        ctx.fill();
+        ctx.strokeStyle = 'rgba(255,255,255,0.7)';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+
+        if (sweep > 0.2 && radial < R * 0.4) {
+          const lr = R * 0.62;
+          const lx = CX + sx + Math.cos(mid) * lr;
+          const ly = CY + sy + Math.sin(mid) * lr;
+          const norm = ((mid % (Math.PI * 2)) + Math.PI * 2) % (Math.PI * 2);
+          let ta = mid;
+          if (norm > Math.PI / 2 && norm < Math.PI * 1.5) ta += Math.PI;
+          ctx.save();
+          ctx.translate(lx, ly);
+          ctx.rotate(ta);
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          ctx.font = 'bold 12px "IBM Plex Mono", monospace';
+          ctx.strokeStyle = 'rgba(0,0,0,0.45)';
+          ctx.lineWidth = 3;
+          ctx.strokeText(team.name, 0, -7);
+          ctx.font = '10px "IBM Plex Mono", monospace';
+          ctx.strokeText(team.bid + ' cr', 0, 6);
+          ctx.fillStyle = 'rgba(255,255,255,0.97)';
+          ctx.font = 'bold 12px "IBM Plex Mono", monospace';
+          ctx.fillText(team.name, 0, -7);
+          ctx.font = '10px "IBM Plex Mono", monospace';
+          ctx.fillText(team.bid + ' cr', 0, 6);
+          ctx.restore();
+        }
+
+        ctx.restore();
+      }
+
+      angle = end;
+    });
+
+    // Center cap
+    ctx.beginPath();
+    ctx.arc(CX, CY, 20, 0, Math.PI * 2);
+    ctx.fillStyle = '#faf8f4';
+    ctx.fill();
+    ctx.strokeStyle = '#d4d0c8';
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.arc(CX, CY, 6, 0, Math.PI * 2);
+    ctx.fillStyle = '#1a1a1a';
+    ctx.fill();
+
+    if (t < 1) {
+      requestAnimationFrame(frame);
+    } else {
+      onComplete();
+    }
+  }
+
+  requestAnimationFrame(frame);
+}
+
+// ─── Wheel transition animation ───────────────────────────────────────────────
+// Plays when arriving at a setup slide for rounds 1–4:
+// the previous winner slides radially out, the new entrant slides in,
+// and the remaining teams' wedges morph to their new proportions.
+
+function animateTransition(roundIdx, onComplete) {
+  const prevRound = ROUNDS[roundIdx - 1];
+  const canvas    = document.getElementById('wheel-canvas');
+  const ctx       = canvas.getContext('2d');
+  const CX        = canvas.width  / 2;
+  const CY        = canvas.height / 2;
+  const R         = CX - 7;
+  const baseRot   = wheelState[roundIdx].rotation; // inherited from previous round's spin
+
+  const winner    = prevRound.teams[prevRound.winnerIdx];
+  const prevNames = new Set(prevRound.teams.map(t => t.name));
+  const newTeam   = ROUNDS[roundIdx].teams.find(t => !prevNames.has(t.name));
+
+  const dur = 1100;
+  let start = null;
+  const myGen = animationGen;
+
+  function easeInOut(t) { return t < 0.5 ? 2*t*t : -1 + (4 - 2*t) * t; }
+
+  function frame(ts) {
+    if (animationGen !== myGen) return;
+    if (!start) start = ts;
+    const t = Math.min((ts - start) / dur, 1);
+    const e = easeInOut(t);
+
+    // Build modified team list: winner's effective bid fades to 0,
+    // new team's effective bid grows from 0, others unchanged.
+    const modTeams = prevRound.teams.map((team, i) => ({
+      ...team,
+      effBid:   i === prevRound.winnerIdx ? team.bid * (1 - e) : team.bid,
+      isWinner: i === prevRound.winnerIdx,
+      isNew:    false,
+    }));
+    if (newTeam) {
+      modTeams.push({ ...newTeam, effBid: newTeam.bid * e, isWinner: false, isNew: true });
+    }
+    const modTotal = modTeams.reduce((s, tm) => s + tm.effBid, 0);
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Outer ring
+    ctx.beginPath();
+    ctx.arc(CX, CY, R + 4, 0, Math.PI * 2);
+    ctx.fillStyle = '#ccc8c0';
+    ctx.fill();
+
+    let angle = -Math.PI / 2 + baseRot;
+
+    modTeams.forEach(team => {
+      if (!modTotal) return;
+      const sweep = (team.effBid / modTotal) * Math.PI * 2;
+      const end   = angle + sweep;
+      const mid   = angle + sweep / 2;
+
+      let radial = 0;
+      let alpha  = 1;
+      if (team.isWinner) { radial = e * (R + 65);       alpha = 1 - e; }
+      else if (team.isNew) { radial = (1 - e) * (R + 65); alpha = e; }
+
+      if (sweep > 0.001 && alpha > 0.01) {
+        const sx = Math.cos(mid) * radial;
+        const sy = Math.sin(mid) * radial;
+
+        ctx.save();
+        ctx.globalAlpha = alpha;
+
+        // Wedge drawn from shifted center so it physically moves outward
+        ctx.beginPath();
+        ctx.moveTo(CX + sx, CY + sy);
+        ctx.arc(CX + sx, CY + sy, R, angle, end);
+        ctx.closePath();
+        ctx.fillStyle = team.isWinner ? lighten(team.color, 0.35) : team.color;
+        ctx.fill();
+        ctx.strokeStyle = 'rgba(255,255,255,0.7)';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+
+        // Label: only while wedge is still mostly inside the wheel
+        if (sweep > 0.2 && radial < R * 0.4) {
+          const lr = R * 0.62;
+          const lx = CX + sx + Math.cos(mid) * lr;
+          const ly = CY + sy + Math.sin(mid) * lr;
+          const norm = ((mid % (Math.PI * 2)) + Math.PI * 2) % (Math.PI * 2);
+          let ta = mid;
+          if (norm > Math.PI / 2 && norm < Math.PI * 1.5) ta += Math.PI;
+          ctx.save();
+          ctx.translate(lx, ly);
+          ctx.rotate(ta);
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          ctx.font = 'bold 12px "IBM Plex Mono", monospace';
+          ctx.strokeStyle = 'rgba(0,0,0,0.45)';
+          ctx.lineWidth = 3;
+          ctx.strokeText(team.name, 0, -7);
+          ctx.fillStyle = 'rgba(255,255,255,0.97)';
+          ctx.fillText(team.name, 0, -7);
+          ctx.restore();
+        }
+
+        ctx.restore();
+      }
+
+      angle = end;
+    });
+
+    // Center cap
+    ctx.beginPath();
+    ctx.arc(CX, CY, 20, 0, Math.PI * 2);
+    ctx.fillStyle = '#faf8f4';
+    ctx.fill();
+    ctx.strokeStyle = '#d4d0c8';
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.arc(CX, CY, 6, 0, Math.PI * 2);
+    ctx.fillStyle = '#1a1a1a';
+    ctx.fill();
+
+    if (t < 1) {
+      requestAnimationFrame(frame);
+    } else {
+      onComplete();
+    }
+  }
+
+  requestAnimationFrame(frame);
+}
+
+// ─── Slide navigation ─────────────────────────────────────────────────────────
+
+const slides = [...document.querySelectorAll('.slide')];
+const total  = slides.length;
+let current  = 0;
+
+function positionWheelForSlide() {
+  const slide    = slides[current];
+  const sections = slide.querySelectorAll('.example-table-section');
+  const wf       = document.querySelector('.wheel-float');
+  if (sections.length < 2) { wf.style.visibility = 'hidden'; return; }
+  const centerCol = sections[1];
+  const leftCol   = sections[0];
+  const contentR  = document.querySelector('.slide-content').getBoundingClientRect();
+  const centerR   = centerCol.getBoundingClientRect();
+  const leftR     = leftCol.getBoundingClientRect();
+  const colW      = Math.round(centerR.width);
+  const canvas    = document.getElementById('wheel-canvas');
+  if (colW > 0 && canvas.width !== colW) { canvas.width = colW; canvas.height = colW; }
+  wf.style.left       = Math.round(centerR.left - contentR.left) + 'px';
+  wf.style.bottom     = Math.max(0, Math.round(contentR.bottom - leftR.bottom)) + 'px';
+  wf.style.top        = 'auto';
+  wf.style.transform  = 'none';
+  wf.style.visibility = 'visible';
+}
+
+function showSlide(n) {
+  if (n < 0 || n >= total) return;
+  slides[current].classList.remove('active');
+  current = n;
+  slides[current].classList.add('active');
+  updateControls();
+  positionWheelForSlide();
+
+  // Cancel any running animation before starting a new one
+  animationGen++;
+  const myGen = animationGen;
+
+  const assembleAttr = slides[current].dataset.assemble;
+  const spinAttr     = slides[current].dataset.spin;
+  const transAttr    = slides[current].dataset.transition;
+
+  if (assembleAttr !== undefined && assembleAttr !== '') {
+    // Assemble slide: four wedges fly in from outside
+    const roundIdx = parseInt(assembleAttr);
+    wheelState[roundIdx].rotation = 0;
+    animateAssemble(roundIdx, () => { if (animationGen === myGen) drawWheel(roundIdx, -1); });
+  } else if (spinAttr !== undefined && spinAttr !== '') {
+    // Spin slide: wheel already shows correct roster from previous transition/assemble
+    const roundIdx = parseInt(spinAttr);
+    const ws = wheelState[roundIdx];
+    ws.spun = false;
+    ws.animating = false;
+    drawWheel(roundIdx, -1);
+    setTimeout(() => { if (animationGen === myGen) spin(roundIdx); }, 350);
+  } else if (transAttr !== undefined && transAttr !== '') {
+    // Transition slide: swap out winner, swap in new entrant
+    const roundIdx = parseInt(transAttr);
+    wheelState[roundIdx].rotation = wheelState[roundIdx - 1].rotation;
+    animateTransition(roundIdx, () => { if (animationGen === myGen) drawWheel(roundIdx, -1); });
+  }
+  // Neutral slides: leave wheel as-is
+}
+
+function nextSlide() { showSlide(current + 1); }
+function prevSlide() { showSlide(current - 1); }
+
+function updateControls() {
+  document.getElementById('prevBtn').disabled = (current === 0);
+  document.getElementById('nextBtn').disabled = (current === total - 1);
+  document.getElementById('counter').textContent = `${current + 1} / ${total}`;
+  const pct = total > 1 ? (current / (total - 1)) * 100 : 100;
+  document.getElementById('progressBar').style.width = pct + '%';
+}
+
+document.getElementById('prevBtn').addEventListener('click', prevSlide);
+document.getElementById('nextBtn').addEventListener('click', nextSlide);
+
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); nextSlide(); }
+  if (e.key === 'ArrowLeft')                   { e.preventDefault(); prevSlide(); }
+  if (e.key === 'Home')                         { e.preventDefault(); showSlide(0); }
+  if (e.key === 'End')                          { e.preventDefault(); showSlide(total - 1); }
+});
+
+let touchStartX = 0;
+document.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, { passive: true });
+document.addEventListener('touchend', e => {
+  const delta = touchStartX - e.changedTouches[0].clientX;
+  if (Math.abs(delta) > 50) delta > 0 ? nextSlide() : prevSlide();
+});
+
+// Kick off the assemble animation for the initial slide
+updateControls();
+positionWheelForSlide();
+window.addEventListener('resize', positionWheelForSlide);
+animationGen++;
+const initGen = animationGen;
+wheelState[0].rotation = 0;
+animateAssemble(0, () => { if (animationGen === initGen) drawWheel(0, -1); });
+</script>
+<script>
+if (location.search.includes('embed')) {
+  document.querySelector('.site-nav').style.display = 'none';
+  var s = document.createElement('style');
+  s.textContent = '.slide-viewport { height: 100vh; height: 100dvh; }';
+  document.head.appendChild(s);
+}
+</script>
+</body>
+</html>

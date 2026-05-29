@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rolling Window Lottery — Team-Building Credits</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,300;1,8..60,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shared.css">
+<style>
+.page {
+  max-width: 1040px;
+  margin: 0 auto;
+  padding: 2.5rem 1.5rem 5rem;
+}
+
+.round-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.round-label {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--accent);
+  margin-bottom: 0.4rem;
+}
+
+.round-desc {
+  font-family: var(--serif);
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  min-height: 1.5em;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: 210px 1fr 210px;
+  gap: 2.5rem;
+  align-items: start;
+}
+
+/* ---- Panels ---- */
+
+.panel-label {
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  text-transform: uppercase;
+  letter-spacing: 0.13em;
+  color: var(--text-tertiary);
+  margin-bottom: 0.8rem;
+}
+
+/* ---- Bid list ---- */
+
+.bid-list { list-style: none; }
+
+.bid-item {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.32rem 0;
+  border-bottom: 1px solid var(--rule-light);
+  transition: opacity 0.35s ease;
+}
+
+.bid-item:last-child { border-bottom: none; }
+
+.team-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.team-abbr {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  width: 2.2rem;
+  flex-shrink: 0;
+  transition: color 0.3s;
+}
+
+.bar-wrap {
+  flex: 1;
+  height: 5px;
+  background: var(--rule-light);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.bar-fill {
+  height: 100%;
+  border-radius: 3px;
+  background: var(--rule);
+  transition: background 0.3s;
+}
+
+.bid-num {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  color: var(--text-tertiary);
+  width: 2.8rem;
+  text-align: right;
+  flex-shrink: 0;
+  transition: color 0.3s;
+}
+
+.bid-item.active .team-abbr { color: var(--text); }
+.bid-item.active .bid-num { color: var(--text); font-weight: 600; }
+.bid-item.inactive { opacity: 0.32; }
+.bid-item.eliminated { opacity: 0.22; }
+.bid-item.eliminated .team-abbr { text-decoration: line-through; }
+
+/* ---- Wheel panel ---- */
+
+.wheel-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.wheel-wrap {
+  position: relative;
+}
+
+.pointer {
+  position: absolute;
+  top: -4px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 9px solid transparent;
+  border-right: 9px solid transparent;
+  border-top: 17px solid var(--text);
+  z-index: 2;
+  filter: drop-shadow(0 1px 3px rgba(0,0,0,0.2));
+}
+
+canvas { display: block; }
+
+.spin-btn {
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  padding: 0.6rem 1.8rem;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.15s, transform 0.1s, opacity 0.2s;
+}
+
+.spin-btn:hover:not(:disabled) { background: var(--accent-light); }
+.spin-btn:active:not(:disabled) { transform: scale(0.97); }
+.spin-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.reset-btn {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  color: var(--text-tertiary);
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-decoration: underline;
+  padding: 0;
+}
+.reset-btn:hover { color: var(--text-secondary); }
+
+/* ---- Pick list ---- */
+
+.pick-list { list-style: none; }
+
+.pick-item {
+  display: flex;
+  align-items: baseline;
+  gap: 0.45rem;
+  padding: 0.4rem 0;
+  border-bottom: 1px solid var(--rule-light);
+  font-family: var(--mono);
+  font-size: 0.78rem;
+}
+
+.pick-item:last-child { border-bottom: none; }
+
+.pick-num {
+  font-size: 0.62rem;
+  color: var(--text-tertiary);
+  width: 1.1rem;
+  flex-shrink: 0;
+}
+
+.pick-team {
+  font-weight: 600;
+  flex: 1;
+}
+
+.pick-empty .pick-team { color: var(--rule); font-weight: 400; }
+
+.pick-price {
+  font-size: 0.65rem;
+  color: var(--text-tertiary);
+}
+
+.pick-new { animation: flash 1.4s ease forwards; }
+
+@keyframes flash {
+  0%   { background: var(--surface); }
+  100% { background: transparent; }
+}
+
+/* ---- Modal ---- */
+
+#modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(26,26,26,0.5);
+  backdrop-filter: blur(3px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 500;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.28s ease;
+}
+
+#modal.open {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.modal-card {
+  background: var(--bg);
+  border-radius: 8px;
+  padding: 2rem 2.25rem;
+  max-width: 400px;
+  width: 90%;
+  text-align: center;
+  box-shadow: 0 24px 64px rgba(0,0,0,0.22), 0 0 0 1px rgba(0,0,0,0.06);
+}
+
+.modal-pick-tag {
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--accent);
+  margin-bottom: 0.7rem;
+}
+
+.modal-badge {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  margin: 0 auto 0.9rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: 0.02em;
+}
+
+.modal-headline {
+  font-family: var(--serif);
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1.2;
+  margin-bottom: 1.5rem;
+}
+
+.vickrey-box {
+  background: var(--surface);
+  border-radius: 5px;
+  padding: 0.95rem 1.1rem;
+  margin-bottom: 1.5rem;
+  text-align: left;
+}
+
+.vickrey-header {
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--text-tertiary);
+  margin-bottom: 0.65rem;
+}
+
+.vickrey-row {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  margin-bottom: 0.22rem;
+}
+
+.vickrey-row .val { color: var(--text); }
+
+.vickrey-rule {
+  height: 1px;
+  background: var(--rule);
+  margin: 0.55rem 0;
+}
+
+.vickrey-row.charged {
+  font-weight: 600;
+  color: var(--text);
+}
+.vickrey-row.charged .val { color: var(--accent); }
+
+.vickrey-row.saved {
+  font-size: 0.7rem;
+  color: var(--text-tertiary);
+}
+
+.modal-next-btn {
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  padding: 0.6rem 1.8rem;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.modal-next-btn:hover { background: var(--accent-light); }
+
+/* ---- Complete ---- */
+
+.complete-note {
+  text-align: center;
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  margin-top: 1.25rem;
+  line-height: 1.6;
+}
+
+@media (max-width: 780px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+  .bid-panel { order: 2; }
+  .wheel-panel { order: 1; }
+  .results-panel { order: 3; }
+}
+</style>
+</head>
+<body>
+
+<nav class="site-nav">
+  <div class="site-nav-inner">
+    <a href="index.html" class="site-nav-title">Team-Building Credits</a>
+    <a href="index.html" class="nav-tab">Proposal</a>
+    <a href="presentation.html" class="nav-tab">Slides</a>
+    <a href="simulator.html" class="nav-tab">Simulator</a>
+    <a href="lottery-animation.html" class="nav-tab active">Lottery</a>
+  </div>
+</nav>
+
+<div class="page">
+
+  <div class="round-header">
+    <div class="round-label" id="round-label">Round 1 of 5 — Pick #1</div>
+    <div class="round-desc" id="round-desc">The top 4 Credit holders enter a weighted lottery. Larger bids earn larger slices of the wheel.</div>
+  </div>
+
+  <div class="layout">
+
+    <div class="bid-panel">
+      <div class="panel-label">Team Bids</div>
+      <ul class="bid-list" id="bid-list"></ul>
+    </div>
+
+    <div class="wheel-panel">
+      <div class="wheel-wrap">
+        <div class="pointer"></div>
+        <canvas id="wheel-canvas" width="380" height="380"></canvas>
+      </div>
+      <button class="spin-btn" id="spin-btn">Spin for Pick #1</button>
+      <button class="reset-btn" id="reset-btn" style="display:none">Start over</button>
+    </div>
+
+    <div class="results-panel">
+      <div class="panel-label">Draft Order</div>
+      <ul class="pick-list" id="pick-list"></ul>
+      <div class="complete-note" id="complete-note" style="display:none"></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Winner modal -->
+<div id="modal">
+  <div class="modal-card">
+    <div class="modal-pick-tag" id="modal-pick-tag">Pick #1</div>
+    <div class="modal-badge" id="modal-badge">OKC</div>
+    <div class="modal-headline" id="modal-headline">OKC Thunder wins!</div>
+    <div class="vickrey-box">
+      <div class="vickrey-header">Vickrey Pricing</div>
+      <div class="vickrey-row">
+        <span>Winning bid</span>
+        <span class="val" id="v-win">195 cr</span>
+      </div>
+      <div class="vickrey-row">
+        <span>4th-place bid</span>
+        <span class="val" id="v-4th">110 cr</span>
+      </div>
+      <div class="vickrey-rule"></div>
+      <div class="vickrey-row charged">
+        <span>Credits charged</span>
+        <span class="val" id="v-charged">152 cr</span>
+      </div>
+      <div class="vickrey-row saved">
+        <span>Saved vs. full bid</span>
+        <span id="v-saved">43 cr</span>
+      </div>
+    </div>
+    <button class="modal-next-btn" id="modal-next-btn">Pick #2 →</button>
+  </div>
+</div>
+
+<script>
+// ─── Data ──────────────────────────────────────────────────────────────────
+
+const TEAMS = [
+  { name: 'OKC', full: 'Thunder',       bid: 195, color: '#1D428A' },
+  { name: 'WAS', full: 'Wizards',       bid: 165, color: '#C8102E' },
+  { name: 'DET', full: 'Pistons',       bid: 140, color: '#F57F29' },
+  { name: 'CHA', full: 'Hornets',       bid: 110, color: '#00788C' },
+  { name: 'POR', full: 'Trail Blazers', bid:  85, color: '#552583' },
+  { name: 'SAS', full: 'Spurs',         bid:  70, color: '#8B9093' },
+  { name: 'BKN', full: 'Nets',          bid:  45, color: '#444444' },
+  { name: 'NOP', full: 'Pelicans',      bid:  30, color: '#B4975A' },
+];
+
+const TOTAL_PICKS  = 5;
+const WINDOW_SIZE  = 4;
+
+// ─── State ─────────────────────────────────────────────────────────────────
+
+let remaining   = [];
+let eliminated  = [];
+let results     = [];
+let round       = 1;
+let spinning    = false;
+let rotation    = 0;
+
+let animStart   = null;
+let animFrom    = 0;
+let animTo      = 0;
+let animDur     = 0;
+let pendingWinnerIdx = -1;
+
+// ─── Canvas ────────────────────────────────────────────────────────────────
+
+const canvas  = document.getElementById('wheel-canvas');
+const ctx     = canvas.getContext('2d');
+const CX      = canvas.width  / 2;
+const CY      = canvas.height / 2;
+const RADIUS  = 172;
+
+// ─── Helpers ───────────────────────────────────────────────────────────────
+
+function top4() {
+  return remaining.slice(0, WINDOW_SIZE);
+}
+
+function totalBids(teams) {
+  return teams.reduce((s, t) => s + t.bid, 0);
+}
+
+function weightedRandom(teams) {
+  const total = totalBids(teams);
+  let r = Math.random() * total;
+  for (let i = 0; i < teams.length; i++) {
+    r -= teams[i].bid;
+    if (r <= 0) return i;
+  }
+  return teams.length - 1;
+}
+
+function easeOut(t) {
+  // quartic ease-out for a satisfying deceleration
+  return 1 - Math.pow(1 - t, 4);
+}
+
+// ─── Wheel Drawing ─────────────────────────────────────────────────────────
+
+function drawWheel(rot, highlightIdx = -1) {
+  const teams = top4();
+  const total = totalBids(teams);
+
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  // Outer ring
+  ctx.beginPath();
+  ctx.arc(CX, CY, RADIUS + 4, 0, Math.PI * 2);
+  ctx.fillStyle = '#ccc8c0';
+  ctx.fill();
+
+  // Wedges
+  let angle = -Math.PI / 2 + rot;
+
+  teams.forEach((team, i) => {
+    const sweep = (team.bid / total) * Math.PI * 2;
+    const end   = angle + sweep;
+
+    ctx.beginPath();
+    ctx.moveTo(CX, CY);
+    ctx.arc(CX, CY, RADIUS, angle, end);
+    ctx.closePath();
+
+    if (i === highlightIdx) {
+      // Pulse: draw a lighter version of the winning wedge
+      ctx.fillStyle = lighten(team.color, 0.35);
+    } else {
+      ctx.fillStyle = team.color;
+    }
+    ctx.fill();
+
+    ctx.strokeStyle = 'rgba(255,255,255,0.65)';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    // Label
+    const mid = angle + sweep / 2;
+    drawLabel(team, mid, sweep);
+
+    angle = end;
+  });
+
+  // Center cap
+  ctx.beginPath();
+  ctx.arc(CX, CY, 24, 0, Math.PI * 2);
+  ctx.fillStyle = '#faf8f4';
+  ctx.fill();
+  ctx.strokeStyle = '#d4d0c8';
+  ctx.lineWidth = 1.5;
+  ctx.stroke();
+
+  ctx.beginPath();
+  ctx.arc(CX, CY, 7, 0, Math.PI * 2);
+  ctx.fillStyle = '#1a1a1a';
+  ctx.fill();
+}
+
+function drawLabel(team, midAngle, sweep) {
+  if (sweep < 0.22) return;
+
+  const r = RADIUS * 0.62;
+  const x = CX + Math.cos(midAngle) * r;
+  const y = CY + Math.sin(midAngle) * r;
+
+  ctx.save();
+  ctx.translate(x, y);
+
+  // Rotate text so it reads radially outward; flip for left-half wedges
+  const norm = ((midAngle % (Math.PI * 2)) + Math.PI * 2) % (Math.PI * 2);
+  let textAngle = midAngle;
+  if (norm > Math.PI / 2 && norm < Math.PI * 1.5) {
+    textAngle += Math.PI;
+  }
+  ctx.rotate(textAngle);
+
+  ctx.textAlign    = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillStyle    = 'rgba(255,255,255,0.96)';
+
+  ctx.font = 'bold 13px "IBM Plex Mono", monospace';
+  ctx.fillText(team.name, 0, -8);
+
+  ctx.font = '10px "IBM Plex Mono", monospace';
+  ctx.fillText(team.bid + ' cr', 0, 7);
+
+  ctx.restore();
+}
+
+function lighten(hex, amount) {
+  // Parse hex and blend toward white
+  const r = parseInt(hex.slice(1, 3), 16);
+  const g = parseInt(hex.slice(3, 5), 16);
+  const b = parseInt(hex.slice(5, 7), 16);
+  const lr = Math.round(r + (255 - r) * amount);
+  const lg = Math.round(g + (255 - g) * amount);
+  const lb = Math.round(b + (255 - b) * amount);
+  return `rgb(${lr},${lg},${lb})`;
+}
+
+// ─── Spin Target Calculation ────────────────────────────────────────────────
+
+function spinTarget(winnerIdx) {
+  const teams = top4();
+  const total = totalBids(teams);
+
+  let cumulative = 0;
+  for (let i = 0; i < winnerIdx; i++) {
+    cumulative += (teams[i].bid / total) * Math.PI * 2;
+  }
+  const sweep = (teams[winnerIdx].bid / total) * Math.PI * 2;
+  const localMid = cumulative + sweep / 2;
+
+  // We want: (-π/2 + rot + localMid) ≡ -π/2  (mod 2π)
+  // → rot + localMid ≡ 0  (mod 2π)
+  // → Δrot = (-rotation - localMid) mod 2π  (smallest positive delta)
+  let delta = ((-rotation - localMid) % (Math.PI * 2) + Math.PI * 2) % (Math.PI * 2);
+
+  // Add 5–8 full rotations for drama
+  const extra = (5 + Math.floor(Math.random() * 4)) * Math.PI * 2;
+  return rotation + delta + extra;
+}
+
+// ─── Animation Loop ────────────────────────────────────────────────────────
+
+function animFrame(ts) {
+  if (!animStart) animStart = ts;
+  const elapsed  = ts - animStart;
+  const progress = Math.min(elapsed / animDur, 1);
+  const eased    = easeOut(progress);
+
+  rotation = animFrom + (animTo - animFrom) * eased;
+  drawWheel(rotation);
+
+  if (progress < 1) {
+    requestAnimationFrame(animFrame);
+  } else {
+    rotation = animTo;
+    // Brief pause, then flash the winning wedge and open modal
+    setTimeout(() => {
+      drawWheel(rotation, pendingWinnerIdx);
+      setTimeout(openModal, 420);
+    }, 180);
+  }
+}
+
+// ─── Spin ──────────────────────────────────────────────────────────────────
+
+function startSpin() {
+  if (spinning || round > TOTAL_PICKS) return;
+  spinning = true;
+
+  pendingWinnerIdx = weightedRandom(top4());
+
+  document.getElementById('spin-btn').disabled = true;
+
+  animFrom  = rotation;
+  animTo    = spinTarget(pendingWinnerIdx);
+  animDur   = 3300 + Math.random() * 900;
+  animStart = null;
+
+  requestAnimationFrame(animFrame);
+}
+
+// ─── Modal ─────────────────────────────────────────────────────────────────
+
+function openModal() {
+  const teams   = top4();
+  const winner  = teams[pendingWinnerIdx];
+  const fourth  = teams[WINDOW_SIZE - 1];
+  const charged = Math.round((winner.bid + fourth.bid) / 2);
+  const saved   = winner.bid - charged;
+
+  results.push({ pick: round, team: winner, charged });
+
+  document.getElementById('modal-pick-tag').textContent = `Pick #${round}`;
+  document.getElementById('modal-badge').textContent    = winner.name;
+  document.getElementById('modal-badge').style.background = winner.color;
+  document.getElementById('modal-headline').textContent = `${winner.name} ${winner.full} wins!`;
+  document.getElementById('v-win').textContent     = winner.bid + ' cr';
+  document.getElementById('v-4th').textContent     = fourth.bid + ' cr';
+  document.getElementById('v-charged').textContent = charged + ' cr';
+  document.getElementById('v-saved').textContent   = saved + ' cr';
+
+  const isLast = round >= TOTAL_PICKS;
+  document.getElementById('modal-next-btn').textContent =
+    isLast ? 'See Results' : `Pick #${round + 1} →`;
+
+  document.getElementById('modal').classList.add('open');
+}
+
+function closeModal() {
+  document.getElementById('modal').classList.remove('open');
+
+  const winner = results[results.length - 1].team;
+  eliminated.push(winner);
+  remaining = remaining.filter(t => t.name !== winner.name);
+
+  round++;
+  spinning = false;
+
+  updateBidList();
+  updatePickList();
+
+  if (round > TOTAL_PICKS) {
+    showComplete();
+  } else {
+    document.getElementById('round-label').textContent =
+      `Round ${round} of ${TOTAL_PICKS} — Pick #${round}`;
+    document.getElementById('round-desc').textContent =
+      `Competing: ${top4().map(t => t.name).join(', ')}. Bid weights determine slice sizes.`;
+    document.getElementById('spin-btn').textContent = `Spin for Pick #${round}`;
+    document.getElementById('spin-btn').disabled = false;
+    drawWheel(rotation);
+  }
+}
+
+// ─── UI Updates ────────────────────────────────────────────────────────────
+
+function updateBidList() {
+  const list       = document.getElementById('bid-list');
+  const top4names  = new Set(top4().map(t => t.name));
+  const elim       = new Set(eliminated.map(t => t.name));
+  const maxBid     = TEAMS[0].bid;
+
+  list.innerHTML = '';
+
+  // Show all teams sorted by bid (winners stay in place, greyed)
+  [...remaining, ...eliminated]
+    .sort((a, b) => b.bid - a.bid)
+    .forEach(team => {
+      const isActive  = top4names.has(team.name);
+      const isElim    = elim.has(team.name);
+
+      let cls = 'bid-item';
+      if      (isElim)   cls += ' eliminated';
+      else if (isActive) cls += ' active';
+      else               cls += ' inactive';
+
+      const barPct = Math.round((team.bid / maxBid) * 100);
+      const barColor = (isActive && !isElim) ? team.color : '#d4d0c8';
+
+      const result = results.find(r => r.team.name === team.name);
+      const rightLabel = isElim
+        ? `#${result ? result.pick : '?'}`
+        : team.bid;
+
+      const li = document.createElement('li');
+      li.className = cls;
+      li.innerHTML = `
+        <span class="team-dot" style="background:${team.color}"></span>
+        <span class="team-abbr">${team.name}</span>
+        <div class="bar-wrap"><div class="bar-fill" style="width:${barPct}%;background:${barColor}"></div></div>
+        <span class="bid-num">${rightLabel}</span>
+      `;
+      list.appendChild(li);
+    });
+}
+
+function updatePickList() {
+  const list = document.getElementById('pick-list');
+  list.innerHTML = '';
+
+  for (let i = 1; i <= TOTAL_PICKS; i++) {
+    const r  = results.find(r => r.pick === i);
+    const li = document.createElement('li');
+
+    if (r) {
+      li.className = 'pick-item' + (r.pick === round - 1 ? ' pick-new' : '');
+      li.innerHTML = `
+        <span class="pick-num">#${i}</span>
+        <span class="pick-team" style="color:${r.team.color}">${r.team.name}</span>
+        <span class="pick-price">${r.charged} cr</span>
+      `;
+    } else {
+      li.className = 'pick-item pick-empty';
+      li.innerHTML = `
+        <span class="pick-num">#${i}</span>
+        <span class="pick-team">—</span>
+        <span class="pick-price"></span>
+      `;
+    }
+
+    list.appendChild(li);
+  }
+}
+
+function showComplete() {
+  document.getElementById('spin-btn').style.display  = 'none';
+  document.getElementById('reset-btn').style.display = 'block';
+  document.getElementById('round-label').textContent = 'Lottery Complete';
+  document.getElementById('round-desc').textContent  = '';
+
+  const totalCharged = results.reduce((s, r) => s + r.charged, 0);
+  const totalBid     = results.reduce((s, r) => s + r.team.bid, 0);
+  const totalSaved   = totalBid - totalCharged;
+
+  const note = document.getElementById('complete-note');
+  note.style.display = 'block';
+  note.innerHTML =
+    `${totalSaved} Credits saved across all 5 picks<br>via Vickrey pricing.`;
+}
+
+// ─── Init / Reset ──────────────────────────────────────────────────────────
+
+function reset() {
+  remaining  = [...TEAMS].sort((a, b) => b.bid - a.bid);
+  eliminated = [];
+  results    = [];
+  round      = 1;
+  spinning   = false;
+  rotation   = 0;
+
+  document.getElementById('spin-btn').style.display  = 'block';
+  document.getElementById('spin-btn').disabled       = false;
+  document.getElementById('spin-btn').textContent    = 'Spin for Pick #1';
+  document.getElementById('reset-btn').style.display = 'none';
+  document.getElementById('round-label').textContent = 'Round 1 of 5 — Pick #1';
+  document.getElementById('round-desc').textContent  = 'The top 4 Credit holders enter a weighted lottery. Larger bids earn larger slices of the wheel.';
+  document.getElementById('complete-note').style.display = 'none';
+
+  updateBidList();
+  updatePickList();
+  drawWheel(0);
+}
+
+document.getElementById('spin-btn').addEventListener('click', startSpin);
+document.getElementById('modal-next-btn').addEventListener('click', closeModal);
+document.getElementById('reset-btn').addEventListener('click', reset);
+
+reset();
+</script>
+</body>
+</html>

@@ -1,5 +1,5 @@
-    <!-- Slide 12: Rolling Window Example - Pick 1 setup -->
-    <div class="slide">
+    <!-- Slide: Lottery for pick 1 -->
+    <div class="slide" data-assemble="0">
       <div class="section-label">Rolling Window Example</div>
       <h2>Lottery for pick 1</h2>
       <div class="example-tables">
@@ -57,15 +57,19 @@
         </div>
         <div class="example-table-section">
           <h4>Allocated picks</h4>
-    <div class="rolling-window-note">
-      <p>All 30 teams submit bids; the four highest bids are put into a “window”, and a lottery is held among those four to award the first pick.</p>
-    </div>
+          <table class="example-table">
+            <thead><tr><th>Team</th><th class="r">Pick</th><th class="r">Bid</th><th class="r">Charged</th></tr></thead>
+            <tbody><tr><td colspan="4" style="color:var(--text-tertiary);font-style:italic;padding:0.3rem 0.4rem">—</td></tr></tbody>
+          </table>
+          <div class="rolling-window-note">
+            <p>All 30 teams submit bids; the four highest bids are put into a "window", and a lottery is held among those four to award the first pick.</p>
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- Slide 13: SAC wins pick 1 -->
-    <div class="slide">
+    <!-- Slide: SAC wins pick 1 -->
+    <div class="slide" data-spin="0">
       <div class="section-label">Rolling Window Example</div>
       <h2>SAC wins pick 1</h2>
       <div class="example-tables">
@@ -124,21 +128,21 @@
         <div class="example-table-section">
           <h4>Allocated picks</h4>
           <table class="example-table">
-            <thead><tr><th>Team</th><th class="r">Pick</th><th class="r">Bid</th><th class="r">Credits charged</th></tr></thead>
+            <thead><tr><th>Team</th><th class="r">Pick</th><th class="r">Bid</th><th class="r">Charged</th></tr></thead>
             <tbody>
               <tr class="winner"><td class="team">SAC</td><td class="r">1</td><td class="r">125</td><td class="r">117</td></tr>
             </tbody>
           </table>
+          <div class="rolling-window-note">
+            <p>SAC wins the drawing for the first window and is awarded the first pick.</p>
+            <p>They are charged 117 Credits &mdash; the average of their own bid (125) and the lowest bid in their window (110), rounded down.</p>
+          </div>
         </div>
-            <div class="rolling-window-note">
-      <p>SAC wins the drawing for the first window and is awarded the first pick.</p>
-      <p>They are charged 117 Credits &mdash; the average of their own bid (125) and the lowest bid in their window (110), rounded down.</p>
-    </div>
       </div>
     </div>
 
-    <!-- Slide 14: Lottery for pick 2 -->
-    <div class="slide">
+    <!-- Slide: Lottery for pick 2 -->
+    <div class="slide" data-transition="1">
       <div class="section-label">Rolling Window Example</div>
       <h2>Lottery for pick 2</h2>
       <div class="example-tables">
@@ -197,20 +201,20 @@
         <div class="example-table-section">
           <h4>Allocated picks</h4>
           <table class="example-table">
-            <thead><tr><th>Team</th><th class="r">Pick</th><th class="r">Bid</th><th class="r">Credits charged</th></tr></thead>
+            <thead><tr><th>Team</th><th class="r">Pick</th><th class="r">Bid</th><th class="r">Charged</th></tr></thead>
             <tbody>
               <tr><td class="team">SAC</td><td class="r">1</td><td class="r">125</td><td class="r">117</td></tr>
             </tbody>
           </table>
+          <div class="rolling-window-note">
+            <p>With SAC removed, the next-highest bidder (NOP) is moved into the window for the second pick.</p>
+          </div>
         </div>
-            <div class="rolling-window-note">
-      <p>With SAC removed, the next-highest bidder (NOP) is moved into the window for the second pick.</p>
-    </div>
       </div>
     </div>
 
-    <!-- Slide 15: WAS wins pick 2 -->
-    <div class="slide">
+    <!-- Slide: WAS wins pick 2 -->
+    <div class="slide" data-spin="1">
       <div class="section-label">Rolling Window Example</div>
       <h2>WAS wins pick 2</h2>
       <div class="example-tables">
@@ -269,21 +273,21 @@
         <div class="example-table-section">
           <h4>Allocated picks</h4>
           <table class="example-table">
-            <thead><tr><th>Team</th><th class="r">Pick</th><th class="r">Bid</th><th class="r">Credits charged</th></tr></thead>
+            <thead><tr><th>Team</th><th class="r">Pick</th><th class="r">Bid</th><th class="r">Charged</th></tr></thead>
             <tbody>
               <tr><td class="team">SAC</td><td class="r">1</td><td class="r">125</td><td class="r">117</td></tr>
               <tr class="winner"><td class="team">WAS</td><td class="r">2</td><td class="r">150</td><td class="r">125</td></tr>
             </tbody>
           </table>
+          <div class="rolling-window-note">
+            <p>WAS wins the lottery for the second pick, and is charged 125 Credits &mdash; halfway between their bid (150) and the lowest bid in their window (101), rounded down.</p>
+          </div>
         </div>
-            <div class="rolling-window-note">
-      <p>WAS wins the lottery for the second pick, and are charged 125 Credits &mdash; halfway between their bid (150) and the lowest bid in their window (101), rounded down.</p>
-    </div>
       </div>
     </div>
 
-    <!-- Slide 16: Lottery for pick 3 -->
-    <div class="slide">
+    <!-- Slide: Lottery for pick 3 -->
+    <div class="slide" data-transition="2">
       <div class="section-label">Rolling Window Example</div>
       <h2>Lottery for pick 3</h2>
       <div class="example-tables">
@@ -342,22 +346,22 @@
         <div class="example-table-section">
           <h4>Allocated picks</h4>
           <table class="example-table">
-            <thead><tr><th>Team</th><th class="r">Pick</th><th class="r">Bid</th><th class="r">Credits charged</th></tr></thead>
+            <thead><tr><th>Team</th><th class="r">Pick</th><th class="r">Bid</th><th class="r">Charged</th></tr></thead>
             <tbody>
               <tr><td class="team">SAC</td><td class="r">1</td><td class="r">125</td><td class="r">117</td></tr>
               <tr><td class="team">WAS</td><td class="r">2</td><td class="r">150</td><td class="r">125</td></tr>
             </tbody>
           </table>
+          <div class="rolling-window-note">
+            <p>WAS is removed; UTA is added to the next window.</p>
+            <p>Note that UTA, DAL, and CHI all bid 100; UTA's higher rank is by virtue of random tiebreaker.</p>
+          </div>
         </div>
-            <div class="rolling-window-note">
-      <p>WAS is removed; UTA is added to the next window.</p>
-      <p>Note that UTA, DAL, and CHI all bid 100; UTA’s higher rank is by virtue of random tiebreaker.</p>
-    </div>
       </div>
     </div>
 
-    <!-- Slide 17: IND wins pick 3 -->
-    <div class="slide">
+    <!-- Slide: IND wins pick 3 -->
+    <div class="slide" data-spin="2">
       <div class="section-label">Rolling Window Example</div>
       <h2>IND wins pick 3</h2>
       <div class="example-tables">
@@ -416,22 +420,22 @@
         <div class="example-table-section">
           <h4>Allocated picks</h4>
           <table class="example-table">
-            <thead><tr><th>Team</th><th class="r">Pick</th><th class="r">Bid</th><th class="r">Credits charged</th></tr></thead>
+            <thead><tr><th>Team</th><th class="r">Pick</th><th class="r">Bid</th><th class="r">Charged</th></tr></thead>
             <tbody>
               <tr><td class="team">SAC</td><td class="r">1</td><td class="r">125</td><td class="r">117</td></tr>
               <tr><td class="team">WAS</td><td class="r">2</td><td class="r">150</td><td class="r">125</td></tr>
               <tr class="winner"><td class="team">IND</td><td class="r">3</td><td class="r">110</td><td class="r">105</td></tr>
             </tbody>
           </table>
+          <div class="rolling-window-note">
+            <p>IND wins the lottery for the third pick.</p>
+          </div>
         </div>
-            <div class="rolling-window-note">
-      <p>IND wins the lottery for the third pick.</p>
-    </div>
       </div>
     </div>
 
-    <!-- Slide 18: Lottery for pick 4 -->
-    <div class="slide">
+    <!-- Slide: Lottery for pick 4 -->
+    <div class="slide" data-transition="3">
       <div class="section-label">Rolling Window Example</div>
       <h2>Lottery for pick 4</h2>
       <div class="example-tables">
@@ -490,22 +494,22 @@
         <div class="example-table-section">
           <h4>Allocated picks</h4>
           <table class="example-table">
-            <thead><tr><th>Team</th><th class="r">Pick</th><th class="r">Bid</th><th class="r">Credits charged</th></tr></thead>
+            <thead><tr><th>Team</th><th class="r">Pick</th><th class="r">Bid</th><th class="r">Charged</th></tr></thead>
             <tbody>
               <tr><td class="team">SAC</td><td class="r">1</td><td class="r">125</td><td class="r">117</td></tr>
               <tr><td class="team">WAS</td><td class="r">2</td><td class="r">150</td><td class="r">125</td></tr>
               <tr><td class="team">IND</td><td class="r">3</td><td class="r">110</td><td class="r">105</td></tr>
             </tbody>
           </table>
+          <div class="rolling-window-note">
+            <p>IND is removed; DAL enters the window.</p>
+          </div>
         </div>
-            <div class="rolling-window-note">
-      <p>IND is removed; DAL enters the window.</p>
-    </div>
       </div>
     </div>
 
-    <!-- Slide 19: BRK wins pick 4 -->
-    <div class="slide">
+    <!-- Slide: BRK wins pick 4 -->
+    <div class="slide" data-spin="3">
       <div class="section-label">Rolling Window Example</div>
       <h2>BRK wins pick 4</h2>
       <div class="example-tables">
@@ -564,7 +568,7 @@
         <div class="example-table-section">
           <h4>Allocated picks</h4>
           <table class="example-table">
-            <thead><tr><th>Team</th><th class="r">Pick</th><th class="r">Bid</th><th class="r">Credits charged</th></tr></thead>
+            <thead><tr><th>Team</th><th class="r">Pick</th><th class="r">Bid</th><th class="r">Charged</th></tr></thead>
             <tbody>
               <tr><td class="team">SAC</td><td class="r">1</td><td class="r">125</td><td class="r">117</td></tr>
               <tr><td class="team">WAS</td><td class="r">2</td><td class="r">150</td><td class="r">125</td></tr>
@@ -572,16 +576,16 @@
               <tr class="winner"><td class="team">BRK</td><td class="r">4</td><td class="r">151</td><td class="r">125</td></tr>
             </tbody>
           </table>
+          <div class="rolling-window-note">
+            <p>BRK wins the fourth pick. They were the highest bidder overall, but "fell" to the fourth pick.</p>
+            <p>They are charged 125 Credits &mdash; the midpoint between their bid (151) and the lowest bid in their window (100), rounded down.</p>
+          </div>
         </div>
-            <div class="rolling-window-note">
-      <p>BRK wins the fourth pick. They were the highest bidder overall, but “fell” to the fourth pick.</p>
-      <p>They are charged 125 Credits &mdash; the midpoint between their bid (151) and the lowest bid in their window (100), rounded down.</p>
-    </div>
       </div>
     </div>
 
-    <!-- Slide 20: Lottery for pick 5 -->
-    <div class="slide">
+    <!-- Slide: Lottery for pick 5 -->
+    <div class="slide" data-transition="4">
       <div class="section-label">Rolling Window Example</div>
       <h2>Lottery for pick 5</h2>
       <div class="example-tables">
@@ -640,7 +644,7 @@
         <div class="example-table-section">
           <h4>Allocated picks</h4>
           <table class="example-table">
-            <thead><tr><th>Team</th><th class="r">Pick</th><th class="r">Bid</th><th class="r">Credits charged</th></tr></thead>
+            <thead><tr><th>Team</th><th class="r">Pick</th><th class="r">Bid</th><th class="r">Charged</th></tr></thead>
             <tbody>
               <tr><td class="team">SAC</td><td class="r">1</td><td class="r">125</td><td class="r">117</td></tr>
               <tr><td class="team">WAS</td><td class="r">2</td><td class="r">150</td><td class="r">125</td></tr>
@@ -648,15 +652,15 @@
               <tr><td class="team">BRK</td><td class="r">4</td><td class="r">151</td><td class="r">125</td></tr>
             </tbody>
           </table>
+          <div class="rolling-window-note">
+            <p>All four highest bidders have been allocated picks. The lottery proceeds by rolling through the rest of the bidders.</p>
+          </div>
         </div>
-            <div class="rolling-window-note">
-      <p>All four highest bidders have been allocated picks. The lottery proceeds by rolling through the rest of the bidders.</p>
-    </div>
       </div>
     </div>
 
-    <!-- Slide 21: CHI wins pick 5 -->
-    <div class="slide">
+    <!-- Slide: CHI wins pick 5 -->
+    <div class="slide" data-spin="4">
       <div class="section-label">Rolling Window Example</div>
       <h2>CHI wins pick 5</h2>
       <div class="example-tables">
@@ -715,7 +719,7 @@
         <div class="example-table-section">
           <h4>Allocated picks</h4>
           <table class="example-table">
-            <thead><tr><th>Team</th><th class="r">Pick</th><th class="r">Bid</th><th class="r">Credits charged</th></tr></thead>
+            <thead><tr><th>Team</th><th class="r">Pick</th><th class="r">Bid</th><th class="r">Charged</th></tr></thead>
             <tbody>
               <tr><td class="team">SAC</td><td class="r">1</td><td class="r">125</td><td class="r">117</td></tr>
               <tr><td class="team">WAS</td><td class="r">2</td><td class="r">150</td><td class="r">125</td></tr>
@@ -728,8 +732,8 @@
       </div>
     </div>
 
-    <!-- Slide 22: Lottery for pick 6 -->
-    <div class="slide">
+    <!-- Slide: Lottery for pick 6 -->
+    <div class="slide" data-round="">
       <div class="section-label">Rolling Window Example</div>
       <h2>Lottery for pick 6</h2>
       <div class="example-tables">
@@ -784,14 +788,11 @@
               <tr class="new-entry"><td class="team">MEM</td><td class="r">99</td><td class="r">24.8%</td></tr>
             </tbody>
           </table>
-    <div class="rolling-window-note">
-      <p>This process continues, until all 30 picks are assigned.</p>
-    </div>
         </div>
         <div class="example-table-section">
           <h4>Allocated picks</h4>
           <table class="example-table">
-            <thead><tr><th>Team</th><th class="r">Pick</th><th class="r">Bid</th><th class="r">Credits charged</th></tr></thead>
+            <thead><tr><th>Team</th><th class="r">Pick</th><th class="r">Bid</th><th class="r">Charged</th></tr></thead>
             <tbody>
               <tr><td class="team">SAC</td><td class="r">1</td><td class="r">125</td><td class="r">117</td></tr>
               <tr><td class="team">WAS</td><td class="r">2</td><td class="r">150</td><td class="r">125</td></tr>
@@ -800,6 +801,9 @@
               <tr><td class="team">CHI</td><td class="r">5</td><td class="r">100</td><td class="r">100</td></tr>
             </tbody>
           </table>
+          <div class="rolling-window-note">
+            <p>This process continues, until all 30 picks are assigned.</p>
+          </div>
         </div>
       </div>
     </div>
