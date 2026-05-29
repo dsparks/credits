@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body {
+  width: 400px; height: 400px; overflow: hidden;
+  background: #fff;
+  display: flex; align-items: center; justify-content: center;
+}
+.wheel-wrap {
+  position: relative;
+  width: 290px; height: 290px;
+}
+.wheel-pointer {
+  position: absolute; top: -18px; left: 50%;
+  transform: translateX(-50%);
+  width: 0; height: 0;
+  border-left: 13px solid transparent;
+  border-right: 13px solid transparent;
+  border-top: 19px solid #1c1a17;
+  z-index: 2;
+}
+.wheel {
+  width: 290px; height: 290px; border-radius: 50%;
+  background: conic-gradient(#C0392B 0 31.58%, #E67E22 31.58% 57.89%, #2980B9 57.89% 78.95%, #8E44AD 78.95% 100%);
+  box-shadow: 0 0 0 4px #d0cbc2;
+  transform: rotate(22deg);
+  position: relative;
+}
+.wheel-center {
+  position: absolute; top: 50%; left: 50%;
+  width: 22%; height: 22%; border-radius: 50%; background: #fff;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+</style>
+</head>
+<body>
+<div class="wheel-wrap">
+  <div class="wheel-pointer"></div>
+  <div class="wheel"><div class="wheel-center"></div></div>
+</div>
+</body>
+</html>
