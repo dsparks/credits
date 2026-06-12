@@ -147,6 +147,7 @@ body { overflow: hidden; height: 100vh; height: 100dvh; }
   padding: 4rem 3.5rem;
   background: var(--text);
   color: var(--white);
+  position: relative;
 }
 
 .accent-card h2 {
@@ -339,6 +340,46 @@ body { overflow: hidden; height: 100vh; height: 100dvh; }
 .slide-btn:disabled { opacity: 0.3; cursor: default; }
 .slide-btn:disabled:hover { background: var(--white); }
 
+.lottery-demo-jump {
+  position: absolute;
+  right: 2.1rem;
+  bottom: 2rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 0.75rem 0.95rem;
+  border: 2px solid rgba(255, 255, 255, 0.92);
+  border-radius: 6px;
+  background: var(--accent);
+  color: var(--white);
+  cursor: pointer;
+  max-width: 15rem;
+  text-align: left;
+  line-height: 1.35;
+  box-shadow: 0 5px 0 #003f1b;
+  transition: background 0.12s, border-color 0.12s, box-shadow 0.12s, transform 0.12s;
+}
+
+.lottery-demo-jump::after {
+  content: "\2192";
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.lottery-demo-jump:hover {
+  background: #008236;
+  border-color: var(--white);
+  transform: translateY(-1px);
+}
+
+.lottery-demo-jump:active {
+  box-shadow: 0 2px 0 #003f1b;
+  transform: translateY(3px);
+}
+
 .slide-progress {
   height: 2px;
   background: var(--rule-light);
@@ -446,6 +487,11 @@ canvas { display: block; }
   .deck-footer { flex-direction: column; gap: 0.35rem; }
   .example-tables { grid-template-columns: 1fr; }
   .wheel-float { display: none; }
+  .lottery-demo-jump {
+    position: static;
+    margin-top: 1rem;
+    max-width: none;
+  }
 }
 </style>
 </head>
@@ -455,6 +501,7 @@ canvas { display: block; }
   <div class="site-nav-inner">
     <a class="site-nav-title" href="index.html">Team-Building Credits</a>
     <a class="nav-tab" href="index.html">Proposal</a>
+    <a class="nav-tab active" href="pitch.html">Pitch</a>
     <a class="nav-tab" href="simulator.html">Simulator</a>
   </div>
 </nav>
@@ -630,6 +677,7 @@ canvas { display: block; }
           Drew Cannon &middot; David Sparks &middot; Mike Zarren<br>
           Boston Celtics
         </div>
+        <button class="lottery-demo-jump" type="button" onclick="nextSlide()">See the Rolling Window Lottery in action</button>
       </div>
     </div>
 
