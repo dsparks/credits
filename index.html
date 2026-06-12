@@ -545,14 +545,8 @@ hr {
 </head>
 <body>
 
-<nav class="site-nav">
-  <div class="site-nav-inner">
-    <a class="site-nav-title" href="index.html">Team-Building Credits</a>
-    <a class="nav-tab active" href="index.html">Proposal</a>
-    <a class="nav-tab" href="pitch.html">Pitch</a>
-    <a class="nav-tab" href="simulator.html">Simulator</a>
-  </div>
-</nav>
+<div data-site-nav></div>
+<script src="site-nav.js"></script>
 
 <div class="page">
 
@@ -570,7 +564,7 @@ hr {
       <button class="glider-btn glider-prev" aria-label="Previous slide">&#8249;</button>
       <div class="glider-viewport">
         <div class="glider-track" id="gliderTrack">
-          <div class="glider-slide gs-two-tone" aria-hidden="true"><p>Tanking is bad; so is unpredictability.</p><p>Let's change those incentives and give teams the reins!</p></div>
+          <div class="glider-slide gs-two-tone" aria-hidden="true"><p>Tanking is bad; so is unpredictability.</p><p>Let&rsquo;s change those incentives and give teams the reins!</p></div>
           <div class="glider-slide gs-dark"><p>Team-Building Credits sever the connection between losing and draft position, and give teams direct control over their rebuilding strategy.</p></div>
           <div class="glider-slide gs-green" aria-hidden="true"><p>The league distributes ≈100 Credits to each team, each year. Fewer Credits go to teams who advance in the playoffs.</p></div>
           <div class="glider-slide gs-rule" aria-hidden="true"><p>Credits are used to bid for draft position in a <i>Rolling Window Lottery.</i></p></div>
@@ -607,7 +601,7 @@ hr {
 
     <p>For competitive balance reasons, and for fans to have hope, we should want to give teams in need of talent an advantage in acquiring good young prospects. Unfortunately, the way the league has historically identified teams in &ldquo;need&rdquo; of talent is to look at regular season losses, and this measure of need has become a target which teams can strategically pursue, to the detriment of the basketball product.</p>
 
-    <p>The "3-2-1 Lottery" mostly eliminates the incentive to lose games, but in doing so it takes away one tool for relieving teams with true talent needs.</p>
+    <p>The &ldquo;3-2-1 Lottery&rdquo; mostly eliminates the incentive to lose games, but in doing so it takes away one tool for relieving teams with true talent needs.</p>
 
     <p>But nearly all proposed other lottery reforms either fail to disentangle &ldquo;need&rdquo; from losing, or they introduce more variance and thus unpredictability. Counting wins after a certain point in the season creates an incentive for good teams to lose early, and doesn&rsquo;t help teams that simply cannot win at any point. Restricting pick protections to narrow ranges just causes teams to pool toward those breakpoints. Considering record across multiple seasons creates an incentive to keep losing once you&rsquo;ve started.</p>
     </div>
@@ -721,10 +715,10 @@ hr {
     </div>
     <div class="qa-item">
       <div class="question">Why the Rolling-Window Lottery?</div>
-      <div class="answer"><p>The Rolling-Window Lottery gives teams significant control over where they pick, as pick allocations are largely dictated by bid size. However, a small infusion of lottery luck ensures that teams can’t perfectly aim for a particular spot in the draft. At the same time, the Vickrey-style debiting ensures that high bidders get substantial Credit savings if they slip in the draft.</p>
+      <div class="answer"><p>The Rolling-Window Lottery gives teams significant control over where they pick, as pick allocations are largely dictated by bid size. However, a small infusion of lottery luck ensures that teams can&rsquo;t perfectly aim for a particular spot in the draft. At the same time, the Vickrey-style debiting ensures that high bidders get substantial Credit savings if they slip in the draft.</p>
         <p>We prefer this model to several others we considered:</p>
        <ul>
-          <li><b>Deterministic bid order</b> &mdash; picks allocated in order of bid, with random tiebreakers. Almost no randomness; high bidders can’t fall, low bidders can’t rise.</li>
+          <li><b>Deterministic bid order</b> &mdash; picks allocated in order of bid, with random tiebreakers. Almost no randomness; high bidders can&rsquo;t fall, low bidders can&rsquo;t rise.</li>
           <li><b>Full lottery</b> &mdash; each pick is drawn from a lottery over all bidders, weighted by bid. Highest randomness; greatest potential for high bidders to fall and low bidders to jump.</li>
           <li><b>Top-N lottery</b> &mdash; top several picks awarded by lottery, all other picks allocated in order of bid. Moderate randomness; high bidders unlikely to fall far, some small probability low bidders jump.</li>
         </ul>
@@ -732,16 +726,16 @@ hr {
     </div>
     <div class="qa-item">
       <div class="question">How will the draft-pick penalty for teams in the Second Apron be implemented?</div>
-      <div class="answer"><p>The first step of the penalty is easily carried over: we can simply “freeze” that team’s first round draft slot in the seventh following season, preventing them from trading it.</p>
+      <div class="answer"><p>The first step of the penalty is easily carried over: we can simply &ldquo;freeze&rdquo; that team&rsquo;s first round draft slot in the seventh following season, preventing them from trading it.</p>
         <p>If a team is in the Second Apron for at least 2 of the next 4 cap-years, that team would then be prevented from bidding Credits toward that frozen pick, ensuring that it lands at the end of the first round.</p>
-        <p>This would be slightly less harsh than the current penalty since other teams could also bid 0 and thus this pick could be randomly drawn to be higher than 30 if there are other teams bidding zero. More importantly, the penalized team could still carry that year’s Credits over to a future year, so the penalty is less harsh than it is now, where all your “pick quality equity” for that year is taken away.</p>
+        <p>This would be slightly less harsh than the current penalty since other teams could also bid 0 and thus this pick could be randomly drawn to be higher than 30 if there are other teams bidding zero. More importantly, the penalized team could still carry that year&rsquo;s Credits over to a future year, so the penalty is less harsh than it is now, where all your &ldquo;pick quality equity&rdquo; for that year is taken away.</p>
     </div>
     </div>
     <div class="qa-item">
       <div class="question">How will this system handle expansion?</div>
       <div class="answer"><p>It sounds like current expansion discussions will be implemented prior to this system, but regardless, the Team-Building Credits system handles expansion straightforwardly.</p>
         <p>Unlike other systems that require fixed ranges of picks, the Rolling Window Lottery works for any number of picks – the lottery simply rolls through a few additional windows.</p>
-        <p>The only thing that would need to be determined in an expansion scenario after 2034 is how many Credits the team would be allocated initially. This is not really different than how the league determined, during previous expansions, how teams were eligible for top picks. And of course, as it effectively has before, the league could limit the picks for which an expansion team is eligible – it wouldn’t be hard to say “Expansion Team X can’t be in the top 3 lottery windows, regardless of how much they bid.”</p>
+        <p>The only thing that would need to be determined in an expansion scenario after 2034 is how many Credits the team would be allocated initially. This is not really different than how the league determined, during previous expansions, how teams were eligible for top picks. And of course, as it effectively has before, the league could limit the picks for which an expansion team is eligible – it wouldn&rsquo;t be hard to say &ldquo;Expansion Team X can&rsquo;t be in the top 3 lottery windows, regardless of how much they bid.&rdquo;</p>
     </div>
     </div>
     <div class="qa-item">
@@ -780,12 +774,12 @@ hr {
       </div>
     </div>
     <div class="qa-item">
-      <div class="question">Isn’t this Team-Building Credits plan too complicated for fans to follow?</div>
+      <div class="question">Isn&rsquo;t this Team-Building Credits plan too complicated for fans to follow?</div>
       <div class="answer"><p>Complicated? You mean, like this?</p>
-        <div class="pick-code-block"><code>Minnesota conveys to Detroit the right to swap Detroit’s own 2026 first round draft pick (the “Detroit Pick”) for the “Minnesota/Utah Pick” (defined below), provided that Minnesota’s own 2026 first round draft pick (the “Minnesota Pick”) is not among the first 19 picks in the 2026 NBA Draft. If the Minnesota Pick is not among the first 19 picks in the 2026 NBA Draft, the foregoing swap right shall be deemed exercised by Detroit if the Minnesota/Utah Pick is more favorable than the Detroit Pick and shall be deemed extinguished if the Minnesota/Utah Pick is less favorable than the Detroit Pick (for clarity, the determination of whether the Minnesota/Utah Pick is more or less favorable than the Detroit Pick shall be made once it is determined which team’s first round draft pick is the Minnesota/Utah Pick). If the Minnesota Pick is among the first 19 picks in the 2026 NBA Draft, then Minnesota’s obligation to convey the foregoing swap right shall be extinguished. (Conley - Ivey - Huerter - Saric - CHI - DET - MIN, 2/3/2026)
+        <div class="pick-code-block"><code>Minnesota conveys to Detroit the right to swap Detroit&rsquo;s own 2026 first round draft pick (the &ldquo;Detroit Pick&rdquo;) for the &ldquo;Minnesota/Utah Pick&rdquo; (defined below), provided that Minnesota&rsquo;s own 2026 first round draft pick (the &ldquo;Minnesota Pick&rdquo;) is not among the first 19 picks in the 2026 NBA Draft. If the Minnesota Pick is not among the first 19 picks in the 2026 NBA Draft, the foregoing swap right shall be deemed exercised by Detroit if the Minnesota/Utah Pick is more favorable than the Detroit Pick and shall be deemed extinguished if the Minnesota/Utah Pick is less favorable than the Detroit Pick (for clarity, the determination of whether the Minnesota/Utah Pick is more or less favorable than the Detroit Pick shall be made once it is determined which team&rsquo;s first round draft pick is the Minnesota/Utah Pick). If the Minnesota Pick is among the first 19 picks in the 2026 NBA Draft, then Minnesota&rsquo;s obligation to convey the foregoing swap right shall be extinguished. (Conley - Ivey - Huerter - Saric - CHI - DET - MIN, 2/3/2026)
 
-The Minnesota/Utah Pick shall be the Minnesota Pick; provided that, if Utah exercises its right to swap Utah’s own 2026 first round draft pick (the “Utah Pick”) for the Minnesota Pick pursuant to the July 6, 2022 trade involving Rudy Gobert et al. (see endnote 61), then the Minnesota/Utah Pick shall instead be the Utah Pick.</code></div>
-        <p>But seriously &#8211; think of Team-Building Credits as taking the current system, and replacing &#8220;losses&#8221; as an asset with &#8220;Credits.&#8221; It&#8217;s a little more elegant and flexible, but not really more complicated.</p>
+The Minnesota/Utah Pick shall be the Minnesota Pick; provided that, if Utah exercises its right to swap Utah&rsquo;s own 2026 first round draft pick (the &ldquo;Utah Pick&rdquo;) for the Minnesota Pick pursuant to the July 6, 2022 trade involving Rudy Gobert et al. (see endnote 61), then the Minnesota/Utah Pick shall instead be the Utah Pick.</code></div>
+        <p>But seriously &#8211; think of Team-Building Credits as taking the current system, and replacing &ldquo;losses&rdquo; as an asset with &ldquo;Credits.&rdquo; It&rsquo;s a little more elegant and flexible, but not really more complicated.</p>
       </div>
     </div>
     <div class="qa-item">

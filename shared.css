@@ -43,7 +43,12 @@ a:hover { color: var(--accent-light); }
   padding: 0 1.5rem;
   display: flex;
   align-items: baseline;
+  overflow-x: auto;
+  white-space: nowrap;
+  scrollbar-width: none;
 }
+
+.site-nav-inner::-webkit-scrollbar { display: none; }
 
 .site-nav-title {
   font-family: var(--mono);
@@ -55,6 +60,7 @@ a:hover { color: var(--accent-light); }
   text-decoration: none;
   letter-spacing: 0.03em;
   text-transform: uppercase;
+  flex: 0 0 auto;
 }
 
 .site-nav-title:hover { color: var(--accent); }
@@ -68,6 +74,7 @@ a:hover { color: var(--accent-light); }
   padding: 0.7rem 0.85rem;
   position: relative;
   letter-spacing: 0.02em;
+  flex: 0 0 auto;
 }
 
 .nav-tab:hover { color: var(--text); }

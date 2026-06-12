@@ -234,15 +234,8 @@ canvas { display: block; }
 </head>
 <body>
 
-<nav class="site-nav">
-  <div class="site-nav-inner">
-    <a class="site-nav-title" href="index.html">Team-Building Credits</a>
-    <a class="nav-tab" href="index.html">Proposal</a>
-    <a class="nav-tab" href="presentation.html">Slides</a>
-    <a class="nav-tab" href="simulator.html">Simulator</a>
-    <a class="nav-tab active" href="rolling-window-animated.html">Rolling Window</a>
-  </div>
-</nav>
+<div data-site-nav></div>
+<script src="site-nav.js"></script>
 
 <div class="slide-viewport">
   <div class="slide-progress">
@@ -316,7 +309,7 @@ canvas { display: block; }
             <tbody><tr><td colspan="4" style="color:var(--text-tertiary);font-style:italic;padding:0.3rem 0.4rem">—</td></tr></tbody>
           </table>
           <div class="rolling-window-note">
-            <p>All 30 teams submit bids; the four highest bids are put into a "window", and a lottery is held among those four to award the first pick.</p>
+            <p>All 30 teams submit bids; the four highest bids are put into a &ldquo;window&rdquo;, and a lottery is held among those four to award the first pick.</p>
           </div>
         </div>
       </div>
@@ -608,7 +601,7 @@ canvas { display: block; }
           </table>
           <div class="rolling-window-note">
             <p>WAS is removed; UTA is added to the next window.</p>
-            <p>Note that UTA, DAL, and CHI all bid 100; UTA's higher rank is by virtue of random tiebreaker.</p>
+            <p>Note that UTA, DAL, and CHI all bid 100; UTA&rsquo;s higher rank is by virtue of random tiebreaker.</p>
           </div>
         </div>
       </div>
@@ -831,7 +824,7 @@ canvas { display: block; }
             </tbody>
           </table>
           <div class="rolling-window-note">
-            <p>BRK wins the fourth pick. They were the highest bidder overall, but "fell" to the fourth pick.</p>
+            <p>BRK wins the fourth pick. They were the highest bidder overall, but &ldquo;fell&rdquo; to the fourth pick.</p>
             <p>They are charged 125 Credits &mdash; the midpoint between their bid (151) and the lowest bid in their window (100), rounded down.</p>
           </div>
         </div>
